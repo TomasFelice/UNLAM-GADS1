@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        List<String> errors = ex.getBindingResult().getFieldErrors().stream()
+        List<FieldValidationError> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(this::formatFieldError)
                 .toList();
         return problemDetail(HttpStatus.BAD_REQUEST, "La solicitud contiene datos inválidos.",
@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
     }
 
     private ProblemDetail problemDetail(HttpStatus status, String detail, String code,
-                                         HttpServletRequest request, List<String> errors) {
+                                         HttpServletRequest request, List<FieldValidationError> errors) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
         problemDetail.setTitle(status.getReasonPhrase());
         problemDetail.setProperty("code", code);
@@ -89,7 +89,10 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
-    private String formatFieldError(FieldError fieldError) {
-        return "%s: %s".formatted(fieldError.getField(), fieldError.getDefaultMessage());
+    private FieldValidationError formatFieldError(FieldError fieldError) {
+        return new FieldValidationError(fieldError.getField(), fieldError.getDefaultMessage());
+    }
+
+    public record FieldValidationError(String field, String message) {
     }
 }

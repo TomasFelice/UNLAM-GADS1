@@ -13,6 +13,9 @@ public record LoginResponse(
         @Schema(description = "Segundos hasta que el token expira", example = "28800")
         long expiresInSeconds,
 
+        @Schema(description = "Indica que sólo se permite cambiar la contraseña antes de continuar")
+        boolean mustChangePassword,
+
         @Schema(description = "Datos mínimos del usuario autenticado, para que el frontend no tenga que decodificar el JWT")
         UserSummary user
 ) {

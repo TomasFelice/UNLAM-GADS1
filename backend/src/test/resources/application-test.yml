@@ -6,3 +6,7 @@ app:
     expiration-minutes: 60
   cors:
     allowed-origins: http://localhost:5173
+  security:
+    # Los IT históricos de E1 reutilizan la cuenta semilla entre métodos. La política
+    # obligatoria se cubre en pruebas específicas de acceso, no se desactiva fuera de test.
+    enforce-password-change: false

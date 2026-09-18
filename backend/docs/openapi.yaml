@@ -4,15 +4,29 @@ info:
   description: API del CRM de salones de eventos corporativos — UNLaM GADS1.
   version: v1
 servers:
-- url: http://localhost:8080
+- url: http://localhost:53103
   description: Generated server url
 security:
 - bearerAuth: []
 tags:
-- name: Opportunities
-  description: Gestión de oportunidades (BE-OPP-01..03/05/06)
+- name: Origins
+  description: Orígenes comerciales del tenant
+- name: Loss reasons
+  description: Motivos de pérdida del tenant
+- name: EventTypes
+  description: Tipos configurables de evento
 - name: Venues
   description: Salones (BE-OFF-01)
+- name: Stages
+  description: "Etapas del embudo comercial (BE-CAT-01, DP-06)"
+- name: Activity types
+  description: Tipos de actividad del tenant
+- name: Opportunities
+  description: Gestión de oportunidades (BE-OPP-01..03/05/06)
+- name: Activities
+  description: Lectura tenant-aware del historial comercial
+- name: Users
+  description: Administración de usuarios y responsables
 - name: Auth
   description: Autenticación (BE-SEC-01)
 - name: EventServices
@@ -21,15 +35,70 @@ tags:
   description: Gestión de contactos (BE-CUS-04..07)
 - name: Companies
   description: Gestión de empresas (BE-CUS-01..03)
-- name: Stages
-  description: "Etapas del embudo comercial (BE-CAT-01, DP-06)"
 paths:
+  /api/v1/users/{id}:
+    get:
+      tags:
+      - Users
+      summary: Obtiene un usuario del tenant (sólo ADMIN)
+      operationId: getById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Usuario encontrado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "403":
+          description: Rol insuficiente
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "404":
+          description: Usuario inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+    put:
+      tags:
+      - Users
+      summary: "Actualiza perfil, rol y estado (sólo ADMIN)"
+      operationId: update
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
   /api/v1/opportunities/{id}:
     get:
       tags:
       - Opportunities
       summary: "Detalle de una oportunidad, con cliente, salón y etapa resueltos (BE-OPP-03)"
-      operationId: getById
+      operationId: getById_1
       parameters:
       - name: id
         in: path
@@ -54,7 +123,7 @@ paths:
       tags:
       - Opportunities
       summary: "Edita una oportunidad abierta (no cambia etapa, responsable ni estado)"
-      operationId: update
+      operationId: update_1
       parameters:
       - name: id
         in: path
@@ -92,7 +161,8 @@ paths:
       tags:
       - Contacts
       summary: Detalle de un contacto
-      operationId: getById_1
+      description: Para SELLER exige asignación directa o una oportunidad propia relacionada.
+      operationId: getById_2
       parameters:
       - name: id
         in: path
@@ -117,7 +187,7 @@ paths:
       tags:
       - Contacts
       summary: Edita un contacto
-      operationId: update_1
+      operationId: update_2
       parameters:
       - name: id
         in: path
@@ -156,7 +226,9 @@ paths:
       tags:
       - Companies
       summary: "Detalle de una empresa, con sus contactos (BE-CUS-03)"
-      operationId: getById_2
+      description: Para SELLER exige asignación directa o una oportunidad propia;
+        los contactos anidados también se filtran por ese alcance.
+      operationId: getById_3
       parameters:
       - name: id
         in: path
@@ -181,7 +253,7 @@ paths:
       tags:
       - Companies
       summary: Edita una empresa
-      operationId: update_2
+      operationId: update_3
       parameters:
       - name: id
         in: path
@@ -214,18 +286,196 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/CompanyResponse"
+  /api/v1/users:
+    get:
+      tags:
+      - Users
+      summary: Lista usuarios del tenant (sólo ADMIN)
+      operationId: list
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: role
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - ADMIN
+          - SELLER
+          - SALES_MANAGER
+      - name: active
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "lastName,asc"
+      responses:
+        "200":
+          description: Listado paginado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseUserResponse"
+        "403":
+          description: Rol insuficiente
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseUserResponse"
+    post:
+      tags:
+      - Users
+      summary: Crea un usuario con contraseña temporal (sólo ADMIN)
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+  /api/v1/users/{id}/reset-password:
+    post:
+      tags:
+      - Users
+      summary: Restablece la contraseña temporal e invalida sesiones (sólo ADMIN)
+      operationId: resetPassword
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
   /api/v1/opportunities:
     get:
       tags:
       - Opportunities
-      summary: "Lista oportunidades del tenant, paginado"
-      operationId: list
+      summary: "Lista oportunidades visibles, paginado"
+      description: SELLER ve sólo sus oportunidades; ADMIN y SALES_MANAGER ven todas
+        las del tenant.
+      operationId: list_1
       parameters:
-      - name: pageable
+      - name: q
         in: query
-        required: true
+        required: false
         schema:
-          $ref: "#/components/schemas/Pageable"
+          type: string
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - ABIERTA
+          - GANADA
+          - PERDIDA
+      - name: stageId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: originId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: salesRepId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: venueId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: companyId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: contactId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: eventFrom
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: eventTo
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "eventStart,desc"
       responses:
         "200":
           description: OK
@@ -237,7 +487,7 @@ paths:
       tags:
       - Opportunities
       summary: Crea una oportunidad
-      operationId: create
+      operationId: create_1
       requestBody:
         content:
           application/json:
@@ -319,14 +569,64 @@ paths:
     get:
       tags:
       - Contacts
-      summary: "Lista contactos del tenant, paginado"
-      operationId: list_1
+      summary: "Lista contactos visibles, paginado"
+      description: ADMIN y SALES_MANAGER ven el tenant completo. SELLER ve asignaciones
+        directas y contactos relacionados con oportunidades propias.
+      operationId: list_2
       parameters:
-      - name: pageable
+      - name: q
         in: query
-        required: true
+        required: false
         schema:
-          $ref: "#/components/schemas/Pageable"
+          type: string
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - POTENCIAL
+          - CLIENTE
+          - INACTIVO
+          - NO_CONTACTAR
+      - name: originId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: salesRepId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: companyId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "lastName,asc"
       responses:
         "200":
           description: OK
@@ -338,7 +638,7 @@ paths:
       tags:
       - Contacts
       summary: Crea un contacto
-      operationId: create_1
+      operationId: create_2
       requestBody:
         content:
           application/json:
@@ -374,14 +674,58 @@ paths:
     get:
       tags:
       - Companies
-      summary: "Lista empresas del tenant, paginado"
-      operationId: list_2
+      summary: "Lista empresas visibles, paginado"
+      description: ADMIN y SALES_MANAGER ven el tenant completo. SELLER ve asignaciones
+        directas y empresas relacionadas con oportunidades propias.
+      operationId: list_3
       parameters:
-      - name: pageable
+      - name: q
         in: query
-        required: true
+        required: false
         schema:
-          $ref: "#/components/schemas/Pageable"
+          type: string
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - POTENCIAL
+          - CLIENTE
+          - INACTIVO
+          - NO_CONTACTAR
+      - name: originId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: salesRepId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "businessName,asc"
       responses:
         "200":
           description: OK
@@ -393,7 +737,7 @@ paths:
       tags:
       - Companies
       summary: Crea una empresa
-      operationId: create_2
+      operationId: create_3
       requestBody:
         content:
           application/json:
@@ -451,12 +795,29 @@ paths:
               schema:
                 $ref: "#/components/schemas/LoginResponse"
       security: []
+  /api/v1/auth/change-password:
+    post:
+      tags:
+      - Auth
+      summary: Cambia la contraseña del usuario autenticado e invalida sus sesiones
+      operationId: changePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+        required: true
+      responses:
+        "204":
+          description: Contraseña actualizada
+        "422":
+          description: La contraseña actual es incorrecta o no cambió
   /api/v1/venues:
     get:
       tags:
       - Venues
       summary: Lista los salones del tenant
-      operationId: list_3
+      operationId: list_4
       responses:
         "200":
           description: OK
@@ -471,7 +832,7 @@ paths:
       tags:
       - Venues
       summary: Detalle de un salón
-      operationId: getById_3
+      operationId: getById_4
       parameters:
       - name: id
         in: path
@@ -492,12 +853,27 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/VenueResponse"
+  /api/v1/users/assignable:
+    get:
+      tags:
+      - Users
+      summary: Lista responsables disponibles según el rol actual
+      operationId: assignable
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponse"
   /api/v1/stages:
     get:
       tags:
       - Stages
       summary: "Lista las etapas del tenant, ordenadas por posición"
-      operationId: list_4
+      operationId: list_5
       responses:
         "200":
           description: OK
@@ -507,12 +883,155 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/StageResponse"
+  /api/v1/origins:
+    get:
+      tags:
+      - Origins
+      summary: Lista orígenes comerciales
+      operationId: list_6
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OriginResponse"
+  /api/v1/opportunities/{id}/stage-history:
+    get:
+      tags:
+      - Opportunities
+      summary: Lista el historial append-only de etapas en orden cronológico
+      operationId: stageHistory
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageHistoryResponse"
+  /api/v1/opportunities/{id}/activities:
+    get:
+      tags:
+      - Activities
+      summary: Lista actividades de una oportunidad visible
+      operationId: byOpportunity
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "occurredAt,desc"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseActivityResponse"
   /api/v1/opportunities/board:
     get:
       tags:
       - Opportunities
-      summary: "Oportunidades agrupadas por etapa, una columna por etapa (BE-OPP-06)"
+      summary: "Oportunidades visibles agrupadas por etapa, una columna por etapa\
+        \ (BE-OPP-06)"
+      description: SELLER ve sólo sus oportunidades; ADMIN y SALES_MANAGER ven todas
+        las del tenant.
       operationId: board
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - ABIERTA
+          - GANADA
+          - PERDIDA
+      - name: stageId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: originId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: salesRepId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: venueId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: companyId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: contactId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: eventFrom
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: eventTo
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
       responses:
         "200":
           description: OK
@@ -520,12 +1039,42 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/OpportunityBoardResponse"
+  /api/v1/loss-reasons:
+    get:
+      tags:
+      - Loss reasons
+      summary: Lista motivos de pérdida
+      operationId: list_7
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LossReasonResponse"
+  /api/v1/event-types:
+    get:
+      tags:
+      - EventTypes
+      summary: Lista los tipos de evento del tenant
+      operationId: list_8
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventTypeResponse"
   /api/v1/event-services:
     get:
       tags:
       - EventServices
       summary: Lista los servicios adicionales del tenant
-      operationId: list_5
+      operationId: list_9
       responses:
         "200":
           description: OK
@@ -540,7 +1089,7 @@ paths:
       tags:
       - EventServices
       summary: Detalle de un servicio adicional
-      operationId: getById_4
+      operationId: getById_5
       parameters:
       - name: id
         in: path
@@ -561,8 +1110,185 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/EventServiceResponse"
+  /api/v1/contacts/{id}/activities:
+    get:
+      tags:
+      - Activities
+      summary: Lista actividades de un contacto visible
+      operationId: byContact
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "occurredAt,desc"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseActivityResponse"
+  /api/v1/companies/{id}/activities:
+    get:
+      tags:
+      - Activities
+      summary: Lista actividades de una empresa visible
+      operationId: byCompany
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "occurredAt,desc"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseActivityResponse"
+  /api/v1/activity-types:
+    get:
+      tags:
+      - Activity types
+      summary: Lista tipos de actividad
+      operationId: list_10
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityTypeResponse"
+  /api/v1/activities:
+    get:
+      tags:
+      - Activities
+      summary: "Lista actividades visibles, ordenadas y paginadas"
+      operationId: list_11
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "occurredAt,desc"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseActivityResponse"
 components:
   schemas:
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - SELLER
+          - SALES_MANAGER
+        active:
+          type: boolean
+      required:
+      - email
+      - firstName
+      - lastName
+      - role
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - SELLER
+          - SALES_MANAGER
+        active:
+          type: boolean
+        mustChangePassword:
+          type: boolean
     UpdateOpportunityRequest:
       type: object
       properties:
@@ -578,6 +1304,9 @@ components:
         venueId:
           type: integer
           format: int64
+        eventTypeId:
+          type: integer
+          format: int64
         estimatedValue:
           type: number
         probability:
@@ -585,7 +1314,10 @@ components:
           format: int32
           maximum: 100
           minimum: 0
-        eventDate:
+        eventStart:
+          type: string
+          format: date-time
+        eventEnd:
           type: string
           format: date-time
         attendeeCount:
@@ -598,11 +1330,19 @@ components:
         originId:
           type: integer
           format: int64
+        serviceIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+          uniqueItems: true
         notes:
           type: string
       required:
       - attendeeCount
-      - eventDate
+      - eventEnd
+      - eventStart
+      - eventTypeId
       - title
       - venueId
     OpportunityResponse:
@@ -628,6 +1368,9 @@ components:
         stageId:
           type: integer
           format: int64
+        eventTypeId:
+          type: integer
+          format: int64
         status:
           type: string
           enum:
@@ -636,12 +1379,31 @@ components:
           - PERDIDA
         estimatedValue:
           type: number
-        eventDate:
+        eventStart:
+          type: string
+          format: date-time
+        eventEnd:
           type: string
           format: date-time
         attendeeCount:
           type: integer
           format: int32
+        serviceIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+          uniqueItems: true
+        companyName:
+          type: string
+        contactName:
+          type: string
+        salesRepName:
+          type: string
+        venueName:
+          type: string
+        stageName:
+          type: string
     ContactRequest:
       type: object
       properties:
@@ -723,9 +1485,13 @@ components:
     CompanyRequest:
       type: object
       properties:
-        name:
+        legalName:
           type: string
           example: Eventos del Sur SA
+          minLength: 1
+        businessName:
+          type: string
+          example: Eventos del Sur
           minLength: 1
         cuit:
           type: string
@@ -744,6 +1510,9 @@ components:
         address:
           type: string
           example: "Av. Rivadavia 4500, San Justo"
+        locality:
+          type: string
+          example: San Justo
         website:
           type: string
           example: https://eventosdelsur.com
@@ -757,7 +1526,8 @@ components:
         salesRepId:
           type: integer
           format: int64
-          description: "Id del usuario responsable comercial, si ya está asignado"
+          description: "Id del responsable. Si se omite, el backend aplica la herencia\
+            \ de DP-02"
         originId:
           type: integer
           format: int64
@@ -765,7 +1535,8 @@ components:
         notes:
           type: string
       required:
-      - name
+      - businessName
+      - legalName
       - status
     CompanyResponse:
       type: object
@@ -773,7 +1544,9 @@ components:
         id:
           type: integer
           format: int64
-        name:
+        legalName:
+          type: string
+        businessName:
           type: string
         cuit:
           type: string
@@ -782,6 +1555,8 @@ components:
         email:
           type: string
         phone:
+          type: string
+        locality:
           type: string
         status:
           type: string
@@ -793,6 +1568,37 @@ components:
         salesRepId:
           type: integer
           format: int64
+    CreateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - SELLER
+          - SALES_MANAGER
+        temporaryPassword:
+          type: string
+      required:
+      - email
+      - firstName
+      - lastName
+      - role
+    ResetPasswordRequest:
+      type: object
+      properties:
+        temporaryPassword:
+          type: string
     CreateOpportunityRequest:
       type: object
       properties:
@@ -821,6 +1627,9 @@ components:
           type: integer
           format: int64
           description: Etapa inicial — debe ser una etapa abierta (DP-06)
+        eventTypeId:
+          type: integer
+          format: int64
         estimatedValue:
           type: number
         probability:
@@ -828,7 +1637,10 @@ components:
           format: int32
           maximum: 100
           minimum: 0
-        eventDate:
+        eventStart:
+          type: string
+          format: date-time
+        eventEnd:
           type: string
           format: date-time
         attendeeCount:
@@ -841,12 +1653,19 @@ components:
         originId:
           type: integer
           format: int64
+        serviceIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+          uniqueItems: true
         notes:
           type: string
       required:
       - attendeeCount
-      - eventDate
-      - salesRepId
+      - eventEnd
+      - eventStart
+      - eventTypeId
       - stageId
       - title
       - venueId
@@ -895,6 +1714,9 @@ components:
           format: int64
           description: Segundos hasta que el token expira
           example: 28800
+        mustChangePassword:
+          type: boolean
+          description: Indica que sólo se permite cambiar la contraseña antes de continuar
         user:
           $ref: "#/components/schemas/UserSummary"
           description: "Datos mínimos del usuario autenticado, para que el frontend\
@@ -913,6 +1735,16 @@ components:
           type: string
         role:
           type: string
+    ChangePasswordRequest:
+      type: object
+      properties:
+        currentPassword:
+          type: string
+          minLength: 1
+        newPassword:
+          type: string
+      required:
+      - currentPassword
     VenueResponse:
       type: object
       properties:
@@ -928,8 +1760,39 @@ components:
           type: number
         address:
           type: string
-        active:
-          type: boolean
+        locality:
+          type: string
+        description:
+          type: string
+        equipment:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum:
+          - DISPONIBLE
+          - MANTENIMIENTO
+          - INACTIVO
+    PageResponseUserResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserResponse"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
     StageResponse:
       type: object
       properties:
@@ -949,21 +1812,16 @@ components:
           - LOST
         active:
           type: boolean
-    Pageable:
+    OriginResponse:
       type: object
       properties:
-        page:
+        id:
           type: integer
-          format: int32
-          minimum: 0
-        size:
-          type: integer
-          format: int32
-          minimum: 1
-        sort:
-          type: array
-          items:
-            type: string
+          format: int64
+        name:
+          type: string
+        active:
+          type: boolean
     PageResponseOpportunityResponse:
       type: object
       properties:
@@ -989,8 +1847,13 @@ components:
         id:
           type: integer
           format: int64
-        name:
+        legalName:
           type: string
+        businessName:
+          type: string
+        salesRepId:
+          type: integer
+          format: int64
     ContactSummaryResponse:
       type: object
       properties:
@@ -1010,6 +1873,12 @@ components:
           - CLIENTE
           - INACTIVO
           - NO_CONTACTAR
+        companyId:
+          type: integer
+          format: int64
+        salesRepId:
+          type: integer
+          format: int64
     OpportunityDetailResponse:
       type: object
       properties:
@@ -1029,6 +1898,9 @@ components:
           $ref: "#/components/schemas/VenueResponse"
         stage:
           $ref: "#/components/schemas/StageResponse"
+        eventTypeId:
+          type: integer
+          format: int64
         status:
           type: string
           enum:
@@ -1042,7 +1914,10 @@ components:
         probability:
           type: integer
           format: int32
-        eventDate:
+        eventStart:
+          type: string
+          format: date-time
+        eventEnd:
           type: string
           format: date-time
         attendeeCount:
@@ -1060,8 +1935,99 @@ components:
         lossReasonId:
           type: integer
           format: int64
+        serviceIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+          uniqueItems: true
         notes:
           type: string
+    StageHistoryResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fromStage:
+          $ref: "#/components/schemas/StageResponse"
+        toStage:
+          $ref: "#/components/schemas/StageResponse"
+        changedAt:
+          type: string
+          format: date-time
+        author:
+          $ref: "#/components/schemas/UserSummaryResponse"
+        note:
+          type: string
+    UserSummaryResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+    ActivityResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        type:
+          $ref: "#/components/schemas/ActivityTypeResponse"
+        occurredAt:
+          type: string
+          format: date-time
+        companyId:
+          type: integer
+          format: int64
+        contactId:
+          type: integer
+          format: int64
+        opportunityId:
+          type: integer
+          format: int64
+        description:
+          type: string
+        result:
+          type: string
+        author:
+          $ref: "#/components/schemas/UserSummaryResponse"
+        createdAt:
+          type: string
+          format: date-time
+    ActivityTypeResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        active:
+          type: boolean
+    PageResponseActivityResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/ActivityResponse"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
     OpportunityBoardResponse:
       type: object
       properties:
@@ -1081,6 +2047,26 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/OpportunityResponse"
+    LossReasonResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        active:
+          type: boolean
+    EventTypeResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        active:
+          type: boolean
     EventServiceResponse:
       type: object
       properties:
@@ -1174,7 +2160,9 @@ components:
         id:
           type: integer
           format: int64
-        name:
+        legalName:
+          type: string
+        businessName:
           type: string
         cuit:
           type: string
@@ -1185,6 +2173,8 @@ components:
         phone:
           type: string
         address:
+          type: string
+        locality:
           type: string
         website:
           type: string

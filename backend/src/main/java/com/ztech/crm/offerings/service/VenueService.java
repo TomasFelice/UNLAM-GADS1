@@ -42,8 +42,8 @@ public class VenueService {
     @Transactional(readOnly = true)
     public VenueResponse getActiveOrThrow(Long id) {
         Venue venue = getOwnedOrThrow(id);
-        if (!venue.isActive()) {
-            throw new BusinessException("VENUE_INACTIVE", "El salón seleccionado no está activo.");
+        if (!venue.isAvailable()) {
+            throw new BusinessException("VENUE_UNAVAILABLE", "El salón seleccionado no está disponible.");
         }
         return venueMapper.toResponse(venue);
     }

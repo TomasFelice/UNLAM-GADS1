@@ -4,9 +4,19 @@ Thumbs.db
 .vscode/
 .idea/
 *.iml
+*.suo
+*.sw?
 
-# .claude/ se versiona (contexto y specs compartidos con el equipo y con la
-# instancia de frontend), salvo la config local de la herramienta.
+# El contexto y las specs compartidos se versionan en docs/.
+# .claude/ conserva enlaces de compatibilidad; la configuración local no se versiona.
 .claude/settings.local.json
 
 # frontend/ y backend/ tienen su propio .gitignore para build artifacts.
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Logs
+*.log
+npm-debug.log*

@@ -1,0 +1,210 @@
+.pantalla {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+  min-height: 100dvh;
+}
+
+@media (max-width: 900px) {
+  .pantalla {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Columna del formulario ------------------------------------------------- */
+.columnaForm {
+  display: flex;
+  flex-direction: column;
+  padding: var(--e-6);
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-4);
+}
+
+.cabecera a {
+  text-decoration: none;
+}
+
+.centro {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--e-10);
+}
+
+.caja {
+  width: 100%;
+  max-width: 380px;
+}
+
+.titulo {
+  font-size: var(--texto-2xl);
+  letter-spacing: -0.025em;
+  color: var(--marca-indigo);
+}
+
+.bajada {
+  margin-top: var(--e-2);
+  color: var(--tinta-500);
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+  margin-top: var(--e-8);
+}
+
+.errorGeneral,
+.exito {
+  margin-top: var(--e-4);
+  padding: var(--e-3);
+  border-radius: var(--radio-md);
+  font-size: var(--texto-sm);
+}
+
+.errorGeneral {
+  border: 1px solid var(--peligro-borde);
+  background: var(--peligro-fondo);
+  color: var(--peligro);
+}
+
+.exito {
+  border: 1px solid var(--exito-borde);
+  background: var(--exito-fondo);
+  color: var(--exito);
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  flex-wrap: wrap;
+  margin-top: var(--e-1);
+}
+
+.recordar {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  font-size: var(--texto-sm);
+  color: var(--tinta-600);
+  cursor: pointer;
+}
+
+.recordar input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--marca-violeta);
+}
+
+.olvide {
+  font-size: var(--texto-sm);
+}
+
+.aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-2);
+  margin-top: var(--e-6);
+  padding: var(--e-3);
+  border: 1px solid var(--info-borde);
+  border-radius: var(--radio-md);
+  background: var(--info-fondo);
+  font-size: var(--texto-sm);
+  line-height: 1.45;
+  color: var(--info);
+}
+
+.aviso svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pie {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e-2);
+  font-size: var(--texto-sm);
+  color: var(--tinta-300);
+}
+
+.pie a {
+  color: var(--tinta-500);
+  text-decoration: none;
+}
+
+.pie a:hover {
+  color: var(--marca-violeta);
+}
+
+/* --- Panel de marca ---------------------------------------------------------- */
+.columnaMarca {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: var(--e-12);
+  background: var(--marca-indigo-profundo);
+  overflow: hidden;
+}
+
+.columnaMarca::before {
+  content: "";
+  position: absolute;
+  inset: -20% -30% auto -20%;
+  height: 120%;
+  background:
+    radial-gradient(50% 40% at 20% 18%, rgba(46, 149, 163, 0.35), transparent 70%),
+    radial-gradient(46% 42% at 84% 72%, rgba(108, 72, 156, 0.45), transparent 70%);
+}
+
+.marcaContenido {
+  position: relative;
+  max-width: 30rem;
+}
+
+.marcaLema {
+  margin-top: var(--e-8);
+  font-family: var(--fuente-titulos);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  color: #fff;
+  text-wrap: balance;
+}
+
+.garantias {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+  margin: var(--e-8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.garantias li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-3);
+  font-size: var(--texto-base);
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.garantias svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--marca-turquesa-claro);
+}
+
+@media (max-width: 900px) {
+  .columnaMarca {
+    display: none;
+  }
+}

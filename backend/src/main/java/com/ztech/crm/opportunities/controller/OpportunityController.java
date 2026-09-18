@@ -8,14 +8,19 @@ import com.ztech.crm.opportunities.dto.response.OpportunityDetailResponse;
 import com.ztech.crm.opportunities.dto.response.OpportunityResponse;
 import com.ztech.crm.opportunities.service.ChangeStageService;
 import com.ztech.crm.opportunities.service.OpportunityService;
+import com.ztech.crm.opportunities.service.OpportunityFilter;
+import com.ztech.crm.opportunities.service.StageHistoryService;
+import com.ztech.crm.opportunities.dto.response.StageHistoryResponse;
+import com.ztech.crm.opportunities.domain.enums.OpportunityStatus;
 import com.ztech.crm.shared.dto.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import java.time.Instant;
+import java.util.Set;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -33,10 +39,13 @@ public class OpportunityController {
 
     private final OpportunityService opportunityService;
     private final ChangeStageService changeStageService;
+    private final StageHistoryService stageHistoryService;
 
-    public OpportunityController(OpportunityService opportunityService, ChangeStageService changeStageService) {
+    public OpportunityController(OpportunityService opportunityService, ChangeStageService changeStageService,
+                                 StageHistoryService stageHistoryService) {
         this.opportunityService = opportunityService;
         this.changeStageService = changeStageService;
+        this.stageHistoryService = stageHistoryService;
     }
 
     @PostMapping
@@ -71,15 +80,46 @@ public class OpportunityController {
     }
 
     @GetMapping
-    @Operation(summary = "Lista oportunidades del tenant, paginado")
-    public ResponseEntity<PageResponse<OpportunityResponse>> list(@PageableDefault(size = 20) Pageable pageable) {
-        return ResponseEntity.ok(opportunityService.list(pageable));
+    @Operation(summary = "Lista oportunidades visibles, paginado",
+            description = "SELLER ve sólo sus oportunidades; ADMIN y SALES_MANAGER ven todas las del tenant.")
+    public ResponseEntity<PageResponse<OpportunityResponse>> list(
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) OpportunityStatus status,
+            @RequestParam(required = false) Long stageId,
+            @RequestParam(required = false) Long originId,
+            @RequestParam(required = false) Long salesRepId,
+            @RequestParam(required = false) Long venueId,
+            @RequestParam(required = false) Long companyId,
+            @RequestParam(required = false) Long contactId,
+            @RequestParam(required = false) Instant eventFrom,
+            @RequestParam(required = false) Instant eventTo,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "eventStart,desc") String sort) {
+        var filter = new OpportunityFilter(q, status, stageId, originId, salesRepId, venueId,
+                companyId, contactId, eventFrom, eventTo);
+        var pageable = com.ztech.crm.shared.validation.PaginationValidator.of(page, size, sort,
+                Set.of("title", "status", "estimatedValue", "eventStart", "estimatedCloseDate", "createdAt"),
+                "eventStart");
+        return ResponseEntity.ok(opportunityService.list(filter, pageable));
     }
 
     @GetMapping("/board")
-    @Operation(summary = "Oportunidades agrupadas por etapa, una columna por etapa (BE-OPP-06)")
-    public ResponseEntity<OpportunityBoardResponse> board() {
-        return ResponseEntity.ok(opportunityService.getBoard());
+    @Operation(summary = "Oportunidades visibles agrupadas por etapa, una columna por etapa (BE-OPP-06)",
+            description = "SELLER ve sólo sus oportunidades; ADMIN y SALES_MANAGER ven todas las del tenant.")
+    public ResponseEntity<OpportunityBoardResponse> board(
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) OpportunityStatus status,
+            @RequestParam(required = false) Long stageId,
+            @RequestParam(required = false) Long originId,
+            @RequestParam(required = false) Long salesRepId,
+            @RequestParam(required = false) Long venueId,
+            @RequestParam(required = false) Long companyId,
+            @RequestParam(required = false) Long contactId,
+            @RequestParam(required = false) Instant eventFrom,
+            @RequestParam(required = false) Instant eventTo) {
+        return ResponseEntity.ok(opportunityService.getBoard(new OpportunityFilter(q, status, stageId, originId,
+                salesRepId, venueId, companyId, contactId, eventFrom, eventTo)));
     }
 
     @PostMapping("/{id}/stage")
@@ -91,5 +131,11 @@ public class OpportunityController {
     public ResponseEntity<OpportunityResponse> changeStage(@PathVariable Long id,
                                                             @Valid @RequestBody ChangeStageRequest request) {
         return ResponseEntity.ok(changeStageService.changeStage(id, request));
+    }
+
+    @GetMapping("/{id}/stage-history")
+    @Operation(summary = "Lista el historial append-only de etapas en orden cronológico")
+    public ResponseEntity<List<StageHistoryResponse>> stageHistory(@PathVariable Long id) {
+        return ResponseEntity.ok(stageHistoryService.list(id));
     }
 }

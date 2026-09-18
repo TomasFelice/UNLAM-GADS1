@@ -14,8 +14,12 @@ import jakarta.validation.constraints.NotNull;
 public record CompanyRequest(
 
         @Schema(example = "Eventos del Sur SA")
-        @NotBlank(message = "El nombre es obligatorio.")
-        String name,
+        @NotBlank(message = "La razón social es obligatoria.")
+        String legalName,
+
+        @Schema(example = "Eventos del Sur")
+        @NotBlank(message = "El nombre comercial es obligatorio.")
+        String businessName,
 
         @Schema(description = "Opcional. Formato: 11 dígitos, con o sin guiones.", example = "30-71234567-9")
         @ValidCuit
@@ -34,13 +38,16 @@ public record CompanyRequest(
         @Schema(example = "Av. Rivadavia 4500, San Justo")
         String address,
 
+        @Schema(example = "San Justo")
+        String locality,
+
         @Schema(example = "https://eventosdelsur.com")
         String website,
 
         @NotNull(message = "El estado es obligatorio.")
         PartyStatus status,
 
-        @Schema(description = "Id del usuario responsable comercial, si ya está asignado")
+        @Schema(description = "Id del responsable. Si se omite, el backend aplica la herencia de DP-02")
         Long salesRepId,
 
         @Schema(description = "Id del origen comercial")
@@ -48,4 +55,11 @@ public record CompanyRequest(
 
         String notes
 ) {
+    /** Compatibilidad de construcción interna con los tests de E1; el contrato HTTP usa los campos finales. */
+    public CompanyRequest(String name, String cuit, String industry, String email, String phone,
+                          String address, String website, PartyStatus status, Long salesRepId,
+                          Long originId, String notes) {
+        this(name, name, cuit, industry, email, phone, address, null, website, status,
+                salesRepId, originId, notes);
+    }
 }

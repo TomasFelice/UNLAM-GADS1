@@ -13,7 +13,7 @@ zTech CRM se implementa como un **monolito modular** en un monorepo. La solució
 | Seguridad | Spring Security y JWT |
 | Persistencia | PostgreSQL, Spring Data JPA, Hibernate y Flyway |
 | Pruebas | JUnit, Spring Boot Test, Testcontainers, Vitest, Testing Library y Playwright |
-| Hosting | Cloudflare Pages (frontend), Render (backend) y **Supabase** como PostgreSQL administrado |
+| Hosting | Vercel (frontend), Render (backend) y **Supabase** como PostgreSQL administrado |
 | Empaquetado backend | Docker |
 
 Versiones y proveedor concretos en [ADR-002](../decisiones/adr/ADR-002-plataforma-supabase-render.md).
@@ -26,7 +26,7 @@ React Router, TanStack Query, React Hook Form y Zod son las bibliotecas prevista
 
 ```mermaid
 flowchart LR
-    U[Usuario] --> FE[React + Vite\nCloudflare Pages]
+    U[Usuario] --> FE[React + Vite\nVercel]
     FE -->|REST / HTTPS| BE[Spring Boot\nRender]
     BE --> DB[(PostgreSQL administrado)]
 ```
@@ -66,7 +66,10 @@ Los errores deben ser consistentes y no revelar datos de otro tenant. Un conflic
 
 ## Despliegue y operación
 
-El frontend se compila como SPA y se publica en Cloudflare Pages. El backend se construye como imagen Docker y se despliega en Render. La base es **Supabase**, accedida mediante el pooler Supavisor en modo *session*: el endpoint directo de Supabase es IPv6 y la salida de Render no lo resuelve de forma confiable.
+El frontend se compila como SPA y se publica en Vercel (ADR-005). El backend se
+construye como imagen Docker y se despliega en Render. La base es **Supabase**,
+accedida mediante el pooler Supavisor en modo *session*: el endpoint directo de
+Supabase es IPv6 y la salida de Render no lo resuelve de forma confiable.
 
 Spring Boot Actuator expone al menos `/actuator/health`. Los logs incluyen `requestId`, `userId` y `tenantId`, sin credenciales ni datos sensibles. La configuración se suministra por variables de entorno; ningún secreto se versiona.
 

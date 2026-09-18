@@ -1,0 +1,40 @@
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e-2);
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-md);
+  color: var(--tinta-600);
+  transition:
+    background-color var(--transicion),
+    border-color var(--transicion),
+    color var(--transicion);
+}
+
+.boton:hover {
+  background: var(--papel-3);
+  border-color: var(--linea-fuerte);
+  color: var(--tinta-900);
+}
+
+/* El icono gira un cuarto de vuelta al cambiar de tema. */
+.icono {
+  transition: transform 260ms ease;
+}
+
+.boton:hover .icono {
+  transform: rotate(-25deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icono,
+  .boton:hover .icono {
+    transition: none;
+    transform: none;
+  }
+}

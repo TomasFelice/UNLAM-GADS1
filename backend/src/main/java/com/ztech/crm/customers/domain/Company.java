@@ -18,8 +18,11 @@ import jakarta.persistence.Table;
 @Table(name = "companies")
 public class Company extends TenantOwnedEntity {
 
-    @Column(nullable = false)
-    private String name;
+    @Column(name = "legal_name", nullable = false)
+    private String legalName;
+
+    @Column(name = "business_name", nullable = false)
+    private String businessName;
 
     private String cuit;
 
@@ -31,13 +34,15 @@ public class Company extends TenantOwnedEntity {
 
     private String address;
 
+    private String locality;
+
     private String website;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PartyStatus status;
 
-    @Column(name = "sales_rep_id")
+    @Column(name = "sales_rep_id", nullable = false)
     private Long salesRepId;
 
     @Column(name = "origin_id")
@@ -48,21 +53,26 @@ public class Company extends TenantOwnedEntity {
     protected Company() {
     }
 
-    public Company(Long tenantId, String name, PartyStatus status) {
+    public Company(Long tenantId, String legalName, String businessName, PartyStatus status, Long salesRepId) {
         super(tenantId);
-        this.name = name;
+        this.legalName = legalName;
+        this.businessName = businessName;
         this.status = status;
+        this.salesRepId = salesRepId;
     }
 
-    public void updateDetails(String name, String cuit, String industry, String email, String phone,
-                               String address, String website, PartyStatus status, Long salesRepId,
+    public void updateDetails(String legalName, String businessName, String cuit, String industry,
+                               String email, String phone, String address, String locality,
+                               String website, PartyStatus status, Long salesRepId,
                                Long originId, String notes) {
-        this.name = name;
+        this.legalName = legalName;
+        this.businessName = businessName;
         this.cuit = cuit;
         this.industry = industry;
         this.email = email;
         this.phone = phone;
         this.address = address;
+        this.locality = locality;
         this.website = website;
         this.status = status;
         this.salesRepId = salesRepId;
@@ -70,8 +80,12 @@ public class Company extends TenantOwnedEntity {
         this.notes = notes;
     }
 
-    public String getName() {
-        return name;
+    public String getLegalName() {
+        return legalName;
+    }
+
+    public String getBusinessName() {
+        return businessName;
     }
 
     public String getCuit() {
@@ -92,6 +106,10 @@ public class Company extends TenantOwnedEntity {
 
     public String getAddress() {
         return address;
+    }
+
+    public String getLocality() {
+        return locality;
     }
 
     public String getWebsite() {

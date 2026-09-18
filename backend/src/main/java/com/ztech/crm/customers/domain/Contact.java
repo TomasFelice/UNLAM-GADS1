@@ -43,7 +43,7 @@ public class Contact extends TenantOwnedEntity {
     @Column(nullable = false)
     private PartyStatus status;
 
-    @Column(name = "sales_rep_id")
+    @Column(name = "sales_rep_id", nullable = false)
     private Long salesRepId;
 
     @Column(name = "origin_id")

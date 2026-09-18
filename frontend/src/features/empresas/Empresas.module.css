@@ -1,0 +1,76 @@
+.listaFichas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listaFichas > li + li {
+  border-top: 1px solid var(--linea-suave);
+}
+
+.listaContactos {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listaContactos li {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  padding: var(--e-3) var(--e-5);
+}
+
+.listaContactos li + li {
+  border-top: 1px solid var(--linea-suave);
+}
+
+.listaContactos a {
+  display: block;
+  font-size: var(--texto-base);
+  font-weight: 500;
+  color: var(--tinta-900);
+  text-decoration: none;
+}
+
+.listaContactos a:hover {
+  color: var(--marca-violeta);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.cargo {
+  display: block;
+  font-size: var(--texto-xs);
+  color: var(--tinta-400);
+}
+
+.persona {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2);
+}
+
+.seccionesFormulario {
+  margin-top: var(--e-2);
+}
+
+.accionesFormulario {
+  display: flex;
+  gap: var(--e-2);
+}
+
+.errorGeneral {
+  margin-bottom: var(--e-6);
+  padding: var(--e-3);
+  border: 1px solid var(--peligro-borde);
+  border-radius: var(--radio-md);
+  background: var(--peligro-fondo);
+  color: var(--peligro);
+  font-size: var(--texto-sm);
+}

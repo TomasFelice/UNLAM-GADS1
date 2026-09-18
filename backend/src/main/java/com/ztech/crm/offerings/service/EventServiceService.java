@@ -4,18 +4,13 @@ import com.ztech.crm.offerings.domain.EventService;
 import com.ztech.crm.offerings.dto.response.EventServiceResponse;
 import com.ztech.crm.offerings.mapper.EventServiceMapper;
 import com.ztech.crm.offerings.repository.EventServiceRepository;
+import com.ztech.crm.shared.exception.BusinessException;
 import com.ztech.crm.shared.exception.NotFoundException;
 import com.ztech.crm.shared.security.TenantContext;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * BE-OFF-03. Sólo lectura en E1; el ABM llega en la Fase 6 (BE-OFF-04). El nombre
- * repite "Service" dos veces porque la entidad de dominio ya se llama
- * {@code EventService} (ADR-004) — se mantiene por consistencia con el resto de los
- * módulos en vez de romper la convención de nombres para este único caso.
- */
 @Service
 public class EventServiceService {
 
@@ -29,17 +24,27 @@ public class EventServiceService {
 
     @Transactional(readOnly = true)
     public List<EventServiceResponse> list() {
-        Long tenantId = TenantContext.currentTenantId();
-        return eventServiceRepository.findAllByTenantIdOrderByName(tenantId).stream()
+        return eventServiceRepository.findAllByTenantIdOrderByName(TenantContext.currentTenantId()).stream()
                 .map(eventServiceMapper::toResponse)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public EventServiceResponse getDetail(Long id) {
-        Long tenantId = TenantContext.currentTenantId();
-        EventService eventService = eventServiceRepository.findByIdAndTenantId(id, tenantId)
-                .orElseThrow(() -> new NotFoundException("No se encontró el servicio solicitado."));
+        return eventServiceMapper.toResponse(getOwnedOrThrow(id));
+    }
+
+    @Transactional(readOnly = true)
+    public EventServiceResponse getActiveOrThrow(Long id) {
+        EventService eventService = getOwnedOrThrow(id);
+        if (!eventService.isActive()) {
+            throw new BusinessException("EVENT_SERVICE_INACTIVE", "El servicio seleccionado no está activo.");
+        }
         return eventServiceMapper.toResponse(eventService);
+    }
+
+    private EventService getOwnedOrThrow(Long id) {
+        return eventServiceRepository.findByIdAndTenantId(id, TenantContext.currentTenantId())
+                .orElseThrow(() -> new NotFoundException("No se encontró el servicio solicitado."));
     }
 }

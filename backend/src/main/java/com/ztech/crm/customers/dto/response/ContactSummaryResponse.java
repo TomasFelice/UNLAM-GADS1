@@ -8,6 +8,8 @@ public record ContactSummaryResponse(
         String firstName,
         String lastName,
         String email,
-        PartyStatus status
+        PartyStatus status,
+        Long companyId,
+        Long salesRepId
 ) {
 }

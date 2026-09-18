@@ -47,12 +47,13 @@ class ChangeStageServiceTest {
     private static final Long TO_STAGE_ID = 300L;
 
     private final OpportunityRepository opportunityRepository = mock(OpportunityRepository.class);
+    private final OpportunityAccessService opportunityAccessService = mock(OpportunityAccessService.class);
     private final StageHistoryRepository stageHistoryRepository = mock(StageHistoryRepository.class);
     private final StageService stageService = mock(StageService.class);
     private final OpportunityMapper opportunityMapper = new OpportunityMapper();
 
     private final ChangeStageService changeStageService = new ChangeStageService(
-            opportunityRepository, stageHistoryRepository, stageService, opportunityMapper);
+            opportunityRepository, opportunityAccessService, stageHistoryRepository, stageService, opportunityMapper);
 
     private Opportunity opportunity;
 
@@ -66,6 +67,7 @@ class ChangeStageServiceTest {
         ReflectionTestUtils.setField(opportunity, "id", OPPORTUNITY_ID);
 
         when(opportunityRepository.findByIdAndTenantId(OPPORTUNITY_ID, TENANT_ID)).thenReturn(Optional.of(opportunity));
+        when(opportunityAccessService.getReadableOrThrow(OPPORTUNITY_ID)).thenReturn(opportunity);
     }
 
     @AfterEach

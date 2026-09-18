@@ -13,9 +13,21 @@ Toda lectura o escritura se restringe por identificador y tenant, por ejemplo `f
 Spring Security protege la API mediante JWT. La autorización combina dos controles:
 
 1. **Rol:** `ADMIN`, `SELLER` o `SALES_MANAGER`.
-2. **Alcance:** un vendedor solo accede a empresas, contactos y oportunidades permitidos por su asignación.
+2. **Alcance:** un vendedor sólo accede a sus oportunidades y a clientes asignados
+   directamente o relacionados con una oportunidad propia. La relación amplía lectura,
+   no escritura: sólo puede editar clientes asignados directamente.
+
+El alcance derivado cruza módulos mediante `CustomerVisibilityPort`, definido por
+`customers` e implementado por `OpportunityAccessService`. Esto mantiene
+`opportunities → customers`: el módulo de clientes no conoce repositorios, entidades ni
+tablas de oportunidades. Los listados se filtran en base de datos; el detalle y toda
+escritura fuera de alcance responden `404` para no revelar la existencia del recurso.
 
 Ocultar acciones en React no constituye seguridad. Cada endpoint y consulta protegida valida rol, tenant y alcance. Las contraseñas se guardan con un `PasswordEncoder` seguro con salt; nunca en texto plano ni mediante cifrado reversible.
+
+Los usuarios creados o reseteados por un `ADMIN` quedan con cambio de contraseña
+obligatorio. `auth_version` se incluye en el JWT y se compara contra la base en cada
+request; cambiar clave, rol o estado revoca inmediatamente los tokens anteriores.
 
 ## Persistencia y evolución
 
@@ -43,7 +55,10 @@ Solo una oportunidad ganada bloquea el salón. La protección tiene dos niveles:
 - El backend consulta disponibilidad para ofrecer un error comprensible.
 - PostgreSQL impide físicamente dos rangos superpuestos para el mismo `tenant_id` y salón, incluso si llegan solicitudes simultáneas.
 
-La implementación prevista es una restricción de exclusión GiST sobre tenant, salón y rango temporal, filtrada por estado ganado. Su forma exacta depende de resolver extremos contiguos, zona horaria, eventos que cruzan medianoche y reaperturas (DP-07). El backend traduce la violación a `409 Conflict`.
+La V1 consolidada implementa una restricción de exclusión GiST sobre tenant, salón y el rango
+`[event_start,event_end)`, filtrada por estado ganado. Los extremos contiguos no se
+superponen y los instantes se persisten en UTC. El backend traduce la violación a
+`409 Conflict`.
 
 `Opportunity` ya tiene `@Version` mapeado (optimistic locking) desde que la entidad se
 creó, aunque todavía no hay ningún flujo que lo ejerza — el primero será la confirmación
@@ -53,7 +68,8 @@ confirmaciones simultáneas: exactamente una puede finalizar con éxito.
 ## Controles mínimos verificables
 
 - Un JWT válido no habilita datos de otro tenant.
-- Un `SELLER` no accede a registros fuera de su asignación.
+- Un `SELLER` no accede a oportunidades ajenas ni a clientes fuera de su asignación o
+  de sus oportunidades; las relaciones de sólo lectura no habilitan edición.
 - Ningún cambio de etapa queda sin historial ni historial sin cambio.
 - Las bajas conservan relaciones históricas.
 - Una confirmación rechaza exceso de capacidad y superposición.

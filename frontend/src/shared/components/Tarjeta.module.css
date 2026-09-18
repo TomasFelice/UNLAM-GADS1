@@ -1,0 +1,56 @@
+.tarjeta {
+  background: var(--papel);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-sm);
+  overflow: hidden;
+}
+
+.cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--e-4);
+  flex-wrap: wrap;
+  padding: var(--e-5) var(--e-5) var(--e-4);
+  border-bottom: 1px solid var(--linea-suave);
+}
+
+.titulo {
+  font-size: var(--texto-md);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.descripcion {
+  margin-top: var(--e-1);
+  font-size: var(--texto-sm);
+  color: var(--tinta-500);
+}
+
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+}
+
+.cuerpo {
+  padding: var(--e-5);
+}
+
+.aSangre .cuerpo {
+  padding: 0;
+}
+
+.pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  flex-wrap: wrap;
+  padding: var(--e-3) var(--e-5);
+  border-top: 1px solid var(--linea-suave);
+  background: var(--papel-2);
+  font-size: var(--texto-sm);
+  color: var(--tinta-500);
+}

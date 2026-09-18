@@ -46,6 +46,7 @@ public class AuthService {
         LoginResponse.UserSummary summary = new LoginResponse.UserSummary(
                 user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole().name());
 
-        return new LoginResponse(token, "Bearer", jwtService.getExpirationSeconds(), summary);
+        return new LoginResponse(token, "Bearer", jwtService.getExpirationSeconds(),
+                user.mustChangePassword(), summary);
     }
 }

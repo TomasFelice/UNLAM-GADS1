@@ -11,7 +11,6 @@ import com.ztech.crm.opportunities.repository.OpportunityRepository;
 import com.ztech.crm.opportunities.repository.StageHistoryRepository;
 import com.ztech.crm.shared.exception.BusinessException;
 import com.ztech.crm.shared.exception.ConflictException;
-import com.ztech.crm.shared.exception.NotFoundException;
 import com.ztech.crm.shared.security.TenantContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,14 +30,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChangeStageService {
 
     private final OpportunityRepository opportunityRepository;
+    private final OpportunityAccessService opportunityAccessService;
     private final StageHistoryRepository stageHistoryRepository;
     private final StageService stageService;
     private final OpportunityMapper opportunityMapper;
 
     public ChangeStageService(OpportunityRepository opportunityRepository,
+                               OpportunityAccessService opportunityAccessService,
                                StageHistoryRepository stageHistoryRepository, StageService stageService,
                                OpportunityMapper opportunityMapper) {
         this.opportunityRepository = opportunityRepository;
+        this.opportunityAccessService = opportunityAccessService;
         this.stageHistoryRepository = stageHistoryRepository;
         this.stageService = stageService;
         this.opportunityMapper = opportunityMapper;
@@ -47,7 +49,7 @@ public class ChangeStageService {
     @Transactional
     public OpportunityResponse changeStage(Long opportunityId, ChangeStageRequest request) {
         Long tenantId = TenantContext.currentTenantId();
-        Opportunity opportunity = getOwnedOrThrow(opportunityId, tenantId);
+        Opportunity opportunity = opportunityAccessService.getReadableOrThrow(opportunityId);
 
         if (opportunity.getStatus() != OpportunityStatus.ABIERTA) {
             throw new ConflictException("OPPORTUNITY_CLOSED", "No se puede cambiar de etapa una oportunidad cerrada.");
@@ -72,8 +74,4 @@ public class ChangeStageService {
         return opportunityMapper.toResponse(opportunity);
     }
 
-    private Opportunity getOwnedOrThrow(Long id, Long tenantId) {
-        return opportunityRepository.findByIdAndTenantId(id, tenantId)
-                .orElseThrow(() -> new NotFoundException("No se encontró la oportunidad solicitada."));
-    }
 }

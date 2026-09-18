@@ -8,6 +8,7 @@ import com.ztech.crm.opportunities.domain.enums.OpportunityStatus;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * BE-OPP-03: cliente, salón y etapa resueltos. {@code salesRepId} queda como id plano
@@ -22,16 +23,19 @@ public record OpportunityDetailResponse(
         Long salesRepId,
         VenueResponse venue,
         StageResponse stage,
+        Long eventTypeId,
         OpportunityStatus status,
         BigDecimal estimatedValue,
         BigDecimal finalValue,
         Integer probability,
-        Instant eventDate,
+        Instant eventStart,
+        Instant eventEnd,
         Integer attendeeCount,
         LocalDate estimatedCloseDate,
         Instant closedAt,
         Long originId,
         Long lossReasonId,
+        Set<Long> serviceIds,
         String notes
 ) {
 }

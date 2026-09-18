@@ -34,6 +34,12 @@ public class User extends TenantOwnedEntity {
     @Column(nullable = false)
     private boolean active = true;
 
+    @Column(name = "must_change_password", nullable = false)
+    private boolean mustChangePassword;
+
+    @Column(name = "auth_version", nullable = false)
+    private long authVersion;
+
     protected User() {
     }
 
@@ -70,7 +76,39 @@ public class User extends TenantOwnedEntity {
         return active;
     }
 
-    public void deactivate() {
-        this.active = false;
+    public boolean mustChangePassword() {
+        return mustChangePassword;
+    }
+
+    public long getAuthVersion() {
+        return authVersion;
+    }
+
+    public void updateProfile(String email, String firstName, String lastName, Role role, boolean active) {
+        boolean invalidatesAuthentication = this.role != role || this.active != active;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.active = active;
+        if (invalidatesAuthentication) {
+            authVersion++;
+        }
+    }
+
+    public void setTemporaryPassword(String passwordHash) {
+        this.passwordHash = passwordHash;
+        this.mustChangePassword = true;
+        authVersion++;
+    }
+
+    public void changePassword(String passwordHash) {
+        this.passwordHash = passwordHash;
+        this.mustChangePassword = false;
+        authVersion++;
+    }
+
+    public void requirePasswordChange() {
+        this.mustChangePassword = true;
     }
 }

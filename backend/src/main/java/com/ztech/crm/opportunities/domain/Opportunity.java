@@ -3,14 +3,20 @@ package com.ztech.crm.opportunities.domain;
 import com.ztech.crm.opportunities.domain.enums.OpportunityStatus;
 import com.ztech.crm.shared.audit.TenantOwnedEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * BE-OPP-01..03. Todo FK a otro módulo (empresa, contacto, responsable, salón, etapa,
@@ -44,6 +50,9 @@ public class Opportunity extends TenantOwnedEntity {
     @Column(name = "stage_id", nullable = false)
     private Long stageId;
 
+    @Column(name = "event_type_id", nullable = false)
+    private Long eventTypeId;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OpportunityStatus status;
@@ -56,8 +65,17 @@ public class Opportunity extends TenantOwnedEntity {
 
     private Integer probability;
 
-    @Column(name = "event_date", nullable = false)
-    private Instant eventDate;
+    @Column(name = "event_start", nullable = false)
+    private Instant eventStart;
+
+    @Column(name = "event_end", nullable = false)
+    private Instant eventEnd;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "opportunity_event_services",
+            joinColumns = @JoinColumn(name = "opportunity_id"))
+    @Column(name = "event_service_id", nullable = false)
+    private Set<Long> eventServiceIds = new LinkedHashSet<>();
 
     @Column(name = "attendee_count", nullable = false)
     private Integer attendeeCount;
@@ -83,7 +101,8 @@ public class Opportunity extends TenantOwnedEntity {
     }
 
     public Opportunity(Long tenantId, String title, Long companyId, Long contactId, Long salesRepId,
-                        Long venueId, Long stageId, Instant eventDate, Integer attendeeCount) {
+                        Long venueId, Long stageId, Long eventTypeId, Instant eventStart,
+                        Instant eventEnd, Integer attendeeCount) {
         super(tenantId);
         this.title = title;
         this.companyId = companyId;
@@ -91,9 +110,17 @@ public class Opportunity extends TenantOwnedEntity {
         this.salesRepId = salesRepId;
         this.venueId = venueId;
         this.stageId = stageId;
-        this.eventDate = eventDate;
+        this.eventTypeId = eventTypeId;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
         this.attendeeCount = attendeeCount;
         this.status = OpportunityStatus.ABIERTA;
+    }
+
+    public Opportunity(Long tenantId, String title, Long companyId, Long contactId, Long salesRepId,
+                       Long venueId, Long stageId, Instant eventDate, Integer attendeeCount) {
+        this(tenantId, title, companyId, contactId, salesRepId, venueId, stageId, 1L,
+                eventDate, eventDate.plusSeconds(86_400), attendeeCount);
     }
 
     /**
@@ -106,20 +133,27 @@ public class Opportunity extends TenantOwnedEntity {
         this.stageId = newStageId;
     }
 
-    public void updateDetails(String title, Long companyId, Long contactId, Long venueId,
-                               BigDecimal estimatedValue, Integer probability, Instant eventDate,
-                               Integer attendeeCount, LocalDate estimatedCloseDate, Long originId, String notes) {
+    public void updateDetails(String title, Long companyId, Long contactId, Long venueId, Long eventTypeId,
+                               BigDecimal estimatedValue, Integer probability, Instant eventStart,
+                               Instant eventEnd, Integer attendeeCount, LocalDate estimatedCloseDate,
+                               Long originId, String notes, Set<Long> eventServiceIds) {
         this.title = title;
         this.companyId = companyId;
         this.contactId = contactId;
         this.venueId = venueId;
+        this.eventTypeId = eventTypeId;
         this.estimatedValue = estimatedValue;
         this.probability = probability;
-        this.eventDate = eventDate;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
         this.attendeeCount = attendeeCount;
         this.estimatedCloseDate = estimatedCloseDate;
         this.originId = originId;
         this.notes = notes;
+        this.eventServiceIds.clear();
+        if (eventServiceIds != null) {
+            this.eventServiceIds.addAll(eventServiceIds);
+        }
     }
 
     public String getTitle() {
@@ -146,6 +180,10 @@ public class Opportunity extends TenantOwnedEntity {
         return stageId;
     }
 
+    public Long getEventTypeId() {
+        return eventTypeId;
+    }
+
     public OpportunityStatus getStatus() {
         return status;
     }
@@ -162,8 +200,16 @@ public class Opportunity extends TenantOwnedEntity {
         return probability;
     }
 
-    public Instant getEventDate() {
-        return eventDate;
+    public Instant getEventStart() {
+        return eventStart;
+    }
+
+    public Instant getEventEnd() {
+        return eventEnd;
+    }
+
+    public Set<Long> getEventServiceIds() {
+        return Set.copyOf(eventServiceIds);
     }
 
     public Integer getAttendeeCount() {

@@ -1,0 +1,101 @@
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: var(--e-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.salon {
+  display: flex;
+  flex-direction: column;
+  padding: var(--e-5);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-lg);
+  background: var(--papel);
+  transition:
+    border-color var(--transicion),
+    box-shadow var(--transicion);
+}
+
+.salon:hover {
+  border-color: var(--linea-fuerte);
+  box-shadow: var(--sombra-md);
+}
+
+.encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--e-3);
+}
+
+.encabezado h3 {
+  font-size: var(--texto-md);
+  font-weight: 600;
+}
+
+.descripcion {
+  margin-top: var(--e-2);
+  font-size: var(--texto-sm);
+  color: var(--tinta-500);
+}
+
+.numeros {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--e-3);
+  margin: var(--e-5) 0 0;
+  padding: var(--e-4) 0;
+  border-top: 1px solid var(--linea-suave);
+  border-bottom: 1px solid var(--linea-suave);
+}
+
+.numeros dt {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tinta-400);
+}
+
+.numeros dd {
+  margin: var(--e-1) 0 0;
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--marca-indigo);
+}
+
+.ubicacion {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  margin-top: var(--e-4);
+  font-size: var(--texto-sm);
+  color: var(--tinta-500);
+}
+
+.ubicacion svg {
+  flex-shrink: 0;
+  color: var(--tinta-400);
+}
+
+.equipamiento {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: var(--e-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.equipamiento li {
+  padding: 3px var(--e-2);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  background: var(--papel-2);
+  font-size: var(--texto-xs);
+  color: var(--tinta-500);
+}

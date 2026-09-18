@@ -1,0 +1,171 @@
+/* Patrones compartidos por las pantallas de la aplicación. */
+
+.pila {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-5);
+}
+
+.grillaDetalle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--e-5);
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .grillaDetalle {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Línea de tiempo (actividades e historial de etapas) -------------------- */
+.linea {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lineaItem {
+  position: relative;
+  display: flex;
+  gap: var(--e-4);
+  padding-bottom: var(--e-6);
+}
+
+.lineaItem:last-child {
+  padding-bottom: 0;
+}
+
+.lineaItem:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 34px;
+  bottom: 4px;
+  width: 1px;
+  background: var(--linea);
+}
+
+.lineaMarca {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 33px;
+  height: 33px;
+  border: 1px solid var(--linea);
+  border-radius: 50%;
+  background: var(--papel);
+  color: var(--tinta-500);
+  z-index: 1;
+}
+
+.lineaCuerpo {
+  min-width: 0;
+  padding-top: 3px;
+}
+
+.lineaTitulo {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e-3);
+  flex-wrap: wrap;
+  font-size: var(--texto-base);
+  font-weight: 500;
+  color: var(--tinta-900);
+}
+
+.lineaFecha {
+  font-size: var(--texto-xs);
+  font-weight: 400;
+  color: var(--tinta-400);
+  white-space: nowrap;
+}
+
+.lineaDetalle {
+  margin-top: var(--e-2);
+  font-size: var(--texto-sm);
+  line-height: 1.6;
+  color: var(--tinta-500);
+}
+
+.lineaAutor {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  margin-top: var(--e-2);
+  font-size: var(--texto-xs);
+  color: var(--tinta-400);
+}
+
+/* --- Aviso de maqueta ------------------------------------------------------- */
+.avisoMaqueta {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-3);
+  padding: var(--e-3) var(--e-4);
+  border: 1px solid var(--info-borde);
+  border-radius: var(--radio-md);
+  background: var(--info-fondo);
+  font-size: var(--texto-sm);
+  line-height: 1.5;
+  color: var(--info);
+}
+
+.avisoMaqueta svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* --- Métricas del panel ----------------------------------------------------- */
+.metricas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--e-4);
+}
+
+@media (max-width: 1080px) {
+  .metricas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .metricas {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metrica {
+  padding: var(--e-5);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-lg);
+  background: var(--papel);
+  box-shadow: var(--sombra-sm);
+}
+
+.metricaEncabezado {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  font-size: var(--texto-sm);
+  color: var(--tinta-500);
+}
+
+.metricaValor {
+  margin-top: var(--e-3);
+  font-family: var(--fuente-titulos);
+  font-size: var(--texto-2xl);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--marca-indigo);
+}
+
+.metricaNota {
+  margin-top: var(--e-1);
+  font-size: var(--texto-xs);
+  color: var(--tinta-400);
+}

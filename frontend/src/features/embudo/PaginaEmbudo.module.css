@@ -1,0 +1,107 @@
+.tablero {
+  min-width: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min(100%, 288px), 1fr);
+  gap: var(--e-4);
+  overflow-x: auto;
+  padding: var(--e-4);
+}
+
+.columna {
+  --color-etapa: var(--etapa-teal);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-lg);
+  background: var(--papel-2);
+}
+
+.columna:nth-child(5n + 2) { --color-etapa: var(--etapa-blue); }
+.columna:nth-child(5n + 3) { --color-etapa: var(--etapa-violet); }
+.columna:nth-child(5n + 4) { --color-etapa: var(--etapa-indigo); }
+.columna:nth-child(5n + 5) { --color-etapa: var(--etapa-amber); }
+
+.columnaCabecera {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  padding: var(--e-4);
+  border-bottom: 1px solid var(--linea);
+  border-top: 2px solid var(--color-etapa);
+  border-radius: var(--radio-lg) var(--radio-lg) 0 0;
+  background: var(--papel);
+}
+
+.columnaCabecera h2 {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  color: var(--tinta-900);
+  overflow-wrap: anywhere;
+}
+
+.cuenta {
+  flex-shrink: 0;
+  padding-inline: var(--e-2);
+  border-radius: var(--radio-pill);
+  background: var(--papel-3);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-500);
+}
+
+.fichas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+  padding: var(--e-3);
+  list-style: none;
+}
+
+.columnaVacia {
+  padding: var(--e-6) var(--e-3);
+  text-align: center;
+  font-size: var(--texto-xs);
+  color: var(--tinta-500);
+}
+
+.cambioEtapa {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-1);
+  font-size: var(--texto-xs);
+  color: var(--tinta-500);
+}
+
+.cambioEtapa select {
+  width: 100%;
+  min-width: 0;
+  min-height: calc(var(--e-10) + var(--e-1));
+  padding: var(--e-2);
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--radio);
+  background: var(--papel);
+  font-size: var(--texto-sm);
+  color: var(--tinta-700);
+  cursor: pointer;
+}
+
+.cambioEtapa select:disabled {
+  cursor: wait;
+  background: var(--papel-3);
+}
+
+.error {
+  margin: var(--e-4);
+  padding: var(--e-3) var(--e-4);
+  border: 1px solid var(--peligro-borde);
+  border-radius: var(--radio-md);
+  background: var(--peligro-fondo);
+  font-size: var(--texto-sm);
+  color: var(--peligro);
+}

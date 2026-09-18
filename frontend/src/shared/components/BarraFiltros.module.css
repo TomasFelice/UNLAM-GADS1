@@ -1,0 +1,154 @@
+.barra {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  flex-wrap: wrap;
+  padding: var(--e-4) var(--e-5);
+  border-bottom: 1px solid var(--linea-suave);
+  background: var(--papel-2);
+}
+
+.busqueda {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  flex: 1;
+  min-width: 220px;
+  height: 36px;
+  padding-inline: var(--e-3);
+  background: var(--papel);
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--radio-md);
+  color: var(--tinta-400);
+  transition:
+    border-color var(--transicion),
+    box-shadow var(--transicion);
+}
+
+.busqueda:focus-within {
+  border-color: var(--marca-violeta);
+  box-shadow: var(--anillo-foco);
+}
+
+.busqueda input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-size: var(--texto-sm);
+  color: var(--tinta-900);
+}
+
+.busqueda input:focus {
+  outline: none;
+}
+
+.busqueda input::placeholder {
+  color: var(--tinta-400);
+}
+
+.filtros {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  flex-wrap: wrap;
+}
+
+.filtro {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.filtro select {
+  appearance: none;
+  height: 36px;
+  padding: 0 var(--e-8) 0 var(--e-3);
+  background: var(--papel);
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--radio-md);
+  font-size: var(--texto-sm);
+  color: var(--tinta-700);
+  cursor: pointer;
+}
+
+.filtro select:hover {
+  border-color: var(--tinta-300);
+}
+
+.filtro select:focus {
+  outline: none;
+  border-color: var(--marca-violeta);
+  box-shadow: var(--anillo-foco);
+}
+
+.filtro svg {
+  position: absolute;
+  right: var(--e-3);
+  color: var(--tinta-400);
+  pointer-events: none;
+}
+
+.filtroFecha {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  font-size: var(--texto-xs);
+  color: var(--tinta-500);
+}
+
+.filtroFecha input {
+  height: 36px;
+  padding-inline: var(--e-3);
+  background: var(--papel);
+  border: 1px solid var(--linea-fuerte);
+  border-radius: var(--radio-md);
+  font: inherit;
+  color: var(--tinta-700);
+}
+
+.filtroFecha input:focus {
+  outline: none;
+  border-color: var(--marca-violeta);
+  box-shadow: var(--anillo-foco);
+}
+
+.conteo {
+  font-size: var(--texto-sm);
+  color: var(--tinta-500);
+}
+
+.paginacion {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+}
+
+.paginacion button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta-600);
+}
+
+.paginacion button:disabled {
+  color: var(--tinta-300);
+  cursor: not-allowed;
+}
+
+.paginacion span {
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding-inline: var(--e-2);
+  border-radius: var(--radio);
+  background: var(--marca-solida);
+  color: #fff;
+  font-size: var(--texto-sm);
+  font-weight: 500;
+}

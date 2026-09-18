@@ -1,0 +1,72 @@
+.cabecera {
+  margin-bottom: var(--e-6);
+}
+
+.migas {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--e-1);
+  margin: 0 0 var(--e-3);
+  padding: 0;
+  list-style: none;
+  font-size: var(--texto-sm);
+  color: var(--tinta-400);
+}
+
+.migas li {
+  display: flex;
+  align-items: center;
+  gap: var(--e-1);
+}
+
+.migas a {
+  color: var(--tinta-500);
+  text-decoration: none;
+}
+
+.migas a:hover {
+  color: var(--marca-violeta);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.fila {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--e-5);
+  flex-wrap: wrap;
+}
+
+.identidad {
+  min-width: 0;
+}
+
+.titulo {
+  font-size: var(--texto-2xl);
+  letter-spacing: -0.02em;
+}
+
+.descripcion {
+  margin-top: var(--e-2);
+  max-width: 62ch;
+  color: var(--tinta-500);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--e-2) var(--e-4);
+  margin-top: var(--e-3);
+  font-size: var(--texto-sm);
+  color: var(--tinta-500);
+}
+
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  flex-shrink: 0;
+}

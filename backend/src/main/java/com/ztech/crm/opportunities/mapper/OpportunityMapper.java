@@ -19,6 +19,11 @@ import org.springframework.stereotype.Component;
 public class OpportunityMapper {
 
     public OpportunityResponse toResponse(Opportunity opportunity) {
+        return toResponse(opportunity, null, null, null, null, null);
+    }
+
+    public OpportunityResponse toResponse(Opportunity opportunity, String companyName, String contactName,
+                                           String salesRepName, String venueName, String stageName) {
         return new OpportunityResponse(
                 opportunity.getId(),
                 opportunity.getTitle(),
@@ -27,10 +32,14 @@ public class OpportunityMapper {
                 opportunity.getSalesRepId(),
                 opportunity.getVenueId(),
                 opportunity.getStageId(),
+                opportunity.getEventTypeId(),
                 opportunity.getStatus(),
                 opportunity.getEstimatedValue(),
-                opportunity.getEventDate(),
-                opportunity.getAttendeeCount()
+                opportunity.getEventStart(),
+                opportunity.getEventEnd(),
+                opportunity.getAttendeeCount(),
+                opportunity.getEventServiceIds(),
+                companyName, contactName, salesRepName, venueName, stageName
         );
     }
 
@@ -45,16 +54,19 @@ public class OpportunityMapper {
                 opportunity.getSalesRepId(),
                 venue,
                 stage,
+                opportunity.getEventTypeId(),
                 opportunity.getStatus(),
                 opportunity.getEstimatedValue(),
                 opportunity.getFinalValue(),
                 opportunity.getProbability(),
-                opportunity.getEventDate(),
+                opportunity.getEventStart(),
+                opportunity.getEventEnd(),
                 opportunity.getAttendeeCount(),
                 opportunity.getEstimatedCloseDate(),
                 opportunity.getClosedAt(),
                 opportunity.getOriginId(),
                 opportunity.getLossReasonId(),
+                opportunity.getEventServiceIds(),
                 opportunity.getNotes()
         );
     }

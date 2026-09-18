@@ -1,0 +1,68 @@
+.responsable {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+}
+
+.responsableNombre {
+  font-size: var(--texto-base);
+  font-weight: 500;
+  color: var(--tinta-900);
+}
+
+.responsableEmail {
+  font-size: var(--texto-xs);
+  color: var(--tinta-400);
+  overflow-wrap: anywhere;
+}
+
+.salonNombre {
+  font-size: var(--texto-base);
+  font-weight: 600;
+  color: var(--tinta-900);
+}
+
+.salonUbicacion {
+  margin: var(--e-1) 0 var(--e-5);
+  font-size: var(--texto-sm);
+  color: var(--tinta-500);
+}
+
+.ocupacion {
+  margin-top: var(--e-5);
+  padding-top: var(--e-4);
+  border-top: 1px solid var(--linea-suave);
+}
+
+.ocupacionBarra {
+  height: 7px;
+  border-radius: var(--radio-pill);
+  background: var(--papel-4);
+  overflow: hidden;
+}
+
+.ocupacionBarra span {
+  display: block;
+  height: 100%;
+  border-radius: var(--radio-pill);
+  background: var(--degradado-marca);
+}
+
+.ocupacion p {
+  margin-top: var(--e-2);
+  font-size: var(--texto-xs);
+  color: var(--tinta-500);
+}
+
+.accionesCierre {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.notaCierre {
+  margin-top: var(--e-4);
+  font-size: var(--texto-xs);
+  line-height: 1.5;
+  color: var(--tinta-400);
+}

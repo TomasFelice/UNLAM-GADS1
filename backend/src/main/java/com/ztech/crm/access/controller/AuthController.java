@@ -1,8 +1,10 @@
 package com.ztech.crm.access.controller;
 
 import com.ztech.crm.access.dto.request.LoginRequest;
+import com.ztech.crm.access.dto.request.ChangePasswordRequest;
 import com.ztech.crm.access.dto.response.LoginResponse;
 import com.ztech.crm.access.service.AuthService;
+import com.ztech.crm.access.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -20,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -33,5 +37,14 @@ public class AuthController {
     @ApiResponse(responseCode = "401", description = "Credenciales inválidas")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/change-password")
+    @Operation(summary = "Cambia la contraseña del usuario autenticado e invalida sus sesiones")
+    @ApiResponse(responseCode = "204", description = "Contraseña actualizada")
+    @ApiResponse(responseCode = "422", description = "La contraseña actual es incorrecta o no cambió")
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        userService.changeOwnPassword(request);
+        return ResponseEntity.noContent().build();
     }
 }

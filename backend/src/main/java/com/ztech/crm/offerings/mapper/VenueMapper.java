@@ -9,6 +9,7 @@ public class VenueMapper {
 
     public VenueResponse toResponse(Venue venue) {
         return new VenueResponse(venue.getId(), venue.getName(), venue.getCapacity(), venue.getRate(),
-                venue.getAddress(), venue.isActive());
+                venue.getAddress(), venue.getLocality(), venue.getDescription(), venue.getEquipment(),
+                venue.getStatus());
     }
 }

@@ -1,0 +1,81 @@
+.marco {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tabla {
+  min-width: 720px;
+  font-size: var(--texto-sm);
+}
+
+.tabla :global(th) {
+  padding: var(--e-3) var(--e-4);
+  background: var(--papel-2);
+  border-bottom: 1px solid var(--linea);
+  text-align: left;
+  font-weight: 500;
+  font-size: var(--texto-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tinta-500);
+  white-space: nowrap;
+}
+
+.tabla :global(td) {
+  padding: var(--e-3) var(--e-4);
+  border-bottom: 1px solid var(--linea-suave);
+  color: var(--tinta-700);
+  vertical-align: middle;
+}
+
+.tabla :global(tbody tr:last-child td) {
+  border-bottom: 0;
+}
+
+.tabla :global(tbody tr) {
+  transition: background-color var(--transicion);
+}
+
+.tabla :global(tbody tr:hover) {
+  background: var(--papel-2);
+}
+
+/* Celda principal: el nombre del registro y su enlace al detalle. */
+.tabla :global(td a) {
+  font-weight: 500;
+  color: var(--tinta-900);
+  text-decoration: none;
+}
+
+.tabla :global(td a:hover) {
+  color: var(--marca-violeta);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+/* Montos, fechas y cantidades alineados y con cifras de ancho fijo. */
+.tabla :global(td.numero),
+.tabla :global(th.numero) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tabla :global(td.compacta),
+.tabla :global(th.compacta) {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.tabla :global(.secundario) {
+  display: block;
+  font-size: var(--texto-xs);
+  color: var(--tinta-400);
+}
+
+.tabla :global(.persona) {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  white-space: nowrap;
+}

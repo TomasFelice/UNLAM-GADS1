@@ -14,11 +14,13 @@ public class CompanyMapper {
     public CompanyResponse toResponse(Company company) {
         return new CompanyResponse(
                 company.getId(),
-                company.getName(),
+                company.getLegalName(),
+                company.getBusinessName(),
                 company.getCuit(),
                 company.getIndustry(),
                 company.getEmail(),
                 company.getPhone(),
+                company.getLocality(),
                 company.getStatus(),
                 company.getSalesRepId()
         );
@@ -27,12 +29,14 @@ public class CompanyMapper {
     public CompanyDetailResponse toDetailResponse(Company company, List<Contact> contacts) {
         return new CompanyDetailResponse(
                 company.getId(),
-                company.getName(),
+                company.getLegalName(),
+                company.getBusinessName(),
                 company.getCuit(),
                 company.getIndustry(),
                 company.getEmail(),
                 company.getPhone(),
                 company.getAddress(),
+                company.getLocality(),
                 company.getWebsite(),
                 company.getStatus(),
                 company.getSalesRepId(),
@@ -48,7 +52,9 @@ public class CompanyMapper {
                 contact.getFirstName(),
                 contact.getLastName(),
                 contact.getEmail(),
-                contact.getStatus()
+                contact.getStatus(),
+                contact.getCompany() == null ? null : contact.getCompany().getId(),
+                contact.getSalesRepId()
         );
     }
 }

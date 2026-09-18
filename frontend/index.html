@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Ztech CRM | CRM para salones de eventos corporativos</title>
+    <meta
+      name="description"
+      content="Ztech CRM centraliza empresas, contactos y oportunidades de tu salón de eventos corporativos, y ordena la negociación en un embudo comercial por etapas."
+    />
+    <meta name="theme-color" content="#301854" />
+    <meta name="author" content="Ztech CRM" />
+
+    <script>
+      /*
+       * Fija el tema antes del primer pintado: si se resolviera desde React
+       * habría un fogonazo claro al recargar en oscuro.
+       * La clave y los colores deben coincidir con src/shared/tema/tema.ts.
+       */
+      (function () {
+        var guardado = null;
+        try {
+          guardado = localStorage.getItem("ztech-tema");
+        } catch (e) {
+          /* almacenamiento bloqueado: se usa la preferencia del sistema */
+        }
+
+        var tema =
+          guardado === "claro" || guardado === "oscuro"
+            ? guardado
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "oscuro"
+              : "claro";
+
+        document.documentElement.dataset.tema = tema;
+
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.content = tema === "oscuro" ? "#121019" : "#301854";
+      })();
+    </script>
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      Ztech CRM necesita JavaScript para funcionar. Activalo en tu navegador para
+      continuar.
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,8 +1,8 @@
 # Diagrama de componentes
 
-Snapshot de **Entrega 1** (24/09). Refleja los módulos y capas realmente implementados
-hasta esta fase — no incluye `activities` (Fase 7) ni el ABM de catálogos/usuarios
-(Fase 6), que todavía no existen en el código.
+Snapshot del corte de **estabilización post-E1** (13/09). Refleja los módulos y capas
+implementados; todavía no incluye `activities` ni el ABM administrativo de offerings y
+catálogos.
 
 ```mermaid
 flowchart TB
@@ -11,7 +11,7 @@ flowchart TB
         security["security\nJwtService, JwtAuthenticationFilter,\nAuthenticatedUser, TenantContext"]
         exception["exception\nApiException, GlobalExceptionHandler"]
         audit["audit\nAuditableEntity, TenantOwnedEntity,\nAuditorAwareImpl"]
-        validation["validation\n@ValidCuit"]
+        validation["validation\n@ValidCuit, @ValidPassword"]
         dto["dto\nPageResponse&lt;T&gt;"]
     end
 
@@ -22,7 +22,9 @@ flowchart TB
     subgraph access["access"]
         User["User, Role"]
         AuthController["AuthController"]
+        UserController["UserController"]
         AuthService["AuthService"]
+        UserService["UserService"]
         CustomUserDetailsService["CustomUserDetailsService"]
     end
 
@@ -33,6 +35,7 @@ flowchart TB
         ContactController["ContactController"]
         CompanyService["CompanyService"]
         ContactService["ContactService"]
+        CustomerVisibilityPort["CustomerVisibilityPort<br/>(puerto)"]
     end
 
     subgraph offerings["offerings"]
@@ -44,14 +47,17 @@ flowchart TB
 
     subgraph catalogs["catalogs"]
         Stage["Stage"]
+        EventType["EventType"]
         StageController["StageController"]
+        EventTypeController["EventTypeController"]
     end
 
     subgraph opportunities["opportunities"]
-        Opportunity["Opportunity"]
+        Opportunity["Opportunity + servicios N:N"]
         StageHistory["StageHistory (append-only)"]
         OpportunityController["OpportunityController"]
         OpportunityService["OpportunityService"]
+        OpportunityAccessService["OpportunityAccessService<br/>(alcance SELLER)"]
         ChangeStageService["ChangeStageService"]
     end
 
@@ -63,6 +69,7 @@ flowchart TB
     opportunities --> customers
     opportunities --> offerings
     opportunities --> catalogs
+    OpportunityAccessService -. implementa .-> CustomerVisibilityPort
 
     access -.-> shared
     customers -.-> shared
@@ -84,3 +91,6 @@ flowchart TB
   `@ManyToOne` real porque `Contact` y `Company` viven los dos en `customers`.
 - Las flechas punteadas hacia `shared` son de uso transversal (seguridad, auditoría,
   errores), no relaciones de negocio.
+- La flecha punteada `OpportunityAccessService → CustomerVisibilityPort` representa
+  inversión de dependencias: el puerto pertenece a `customers`, mientras
+  `opportunities` resuelve las relaciones usando exclusivamente su propio repositorio.

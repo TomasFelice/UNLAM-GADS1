@@ -24,6 +24,8 @@ public class JwtService {
     private static final String CLAIM_ROLE = "role";
     private static final String CLAIM_EMAIL = "email";
     private static final String CLAIM_ACTIVE = "active";
+    private static final String CLAIM_MUST_CHANGE_PASSWORD = "mustChangePassword";
+    private static final String CLAIM_AUTH_VERSION = "authVersion";
 
     private final SecretKey signingKey;
     private final long expirationMinutes;
@@ -42,6 +44,8 @@ public class JwtService {
                 .claim(CLAIM_ROLE, user.role().name())
                 .claim(CLAIM_EMAIL, user.email())
                 .claim(CLAIM_ACTIVE, user.active())
+                .claim(CLAIM_MUST_CHANGE_PASSWORD, user.mustChangePassword())
+                .claim(CLAIM_AUTH_VERSION, user.authVersion())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(expirationMinutes, ChronoUnit.MINUTES)))
                 .signWith(signingKey)
@@ -69,7 +73,11 @@ public class JwtService {
         Role role = Role.valueOf(claims.get(CLAIM_ROLE, String.class));
         String email = claims.get(CLAIM_EMAIL, String.class);
         boolean active = Boolean.TRUE.equals(claims.get(CLAIM_ACTIVE, Boolean.class));
+        boolean mustChangePassword = Boolean.TRUE.equals(claims.get(CLAIM_MUST_CHANGE_PASSWORD, Boolean.class));
+        Number authVersionClaim = claims.get(CLAIM_AUTH_VERSION, Number.class);
+        long authVersion = authVersionClaim == null ? -1 : authVersionClaim.longValue();
 
-        return new AuthenticatedUser(userId, tenantId, email, null, role, active);
+        return new AuthenticatedUser(userId, tenantId, email, null, role, active,
+                mustChangePassword, authVersion);
     }
 }

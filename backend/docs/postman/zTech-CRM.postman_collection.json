@@ -281,7 +281,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Evento de fin de año - Eventos del Sur\",\n  \"companyId\": {{companyId}},\n  \"contactId\": null,\n  \"salesRepId\": 1,\n  \"venueId\": {{venueId}},\n  \"stageId\": {{stageId}},\n  \"estimatedValue\": 500000.00,\n  \"probability\": 60,\n  \"eventDate\": \"2026-12-20T20:00:00Z\",\n  \"attendeeCount\": 40,\n  \"estimatedCloseDate\": \"2026-11-15\",\n  \"originId\": null,\n  \"notes\": \"Primer contacto muy interesado\"\n}"
+              "raw": "{\n  \"title\": \"Evento de fin de año - Eventos del Sur\",\n  \"companyId\": {{companyId}},\n  \"contactId\": null,\n  \"salesRepId\": 1,\n  \"venueId\": {{venueId}},\n  \"stageId\": {{stageId}},\n  \"eventTypeId\": 1,\n  \"estimatedValue\": 500000.00,\n  \"probability\": 60,\n  \"eventStart\": \"2026-12-20T20:00:00Z\",\n  \"eventEnd\": \"2026-12-21T02:00:00Z\",\n  \"attendeeCount\": 40,\n  \"estimatedCloseDate\": \"2026-11-15\",\n  \"originId\": null,\n  \"serviceIds\": [1],\n  \"notes\": \"Primer contacto muy interesado\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/opportunities", "host": ["{{baseUrl}}"], "path": ["opportunities"] }
           },
@@ -306,7 +306,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Evento de fin de año - Eventos del Sur (actualizado)\",\n  \"companyId\": {{companyId}},\n  \"contactId\": null,\n  \"venueId\": {{venueId}},\n  \"estimatedValue\": 650000.00,\n  \"probability\": 75,\n  \"eventDate\": \"2026-12-20T20:00:00Z\",\n  \"attendeeCount\": 45,\n  \"estimatedCloseDate\": \"2026-11-15\",\n  \"originId\": null,\n  \"notes\": \"Ajustado tras la visita al salón\"\n}"
+              "raw": "{\n  \"title\": \"Evento de fin de año - Eventos del Sur (actualizado)\",\n  \"companyId\": {{companyId}},\n  \"contactId\": null,\n  \"venueId\": {{venueId}},\n  \"eventTypeId\": 1,\n  \"estimatedValue\": 650000.00,\n  \"probability\": 75,\n  \"eventStart\": \"2026-12-20T20:00:00Z\",\n  \"eventEnd\": \"2026-12-21T02:00:00Z\",\n  \"attendeeCount\": 45,\n  \"estimatedCloseDate\": \"2026-11-15\",\n  \"originId\": null,\n  \"serviceIds\": [1],\n  \"notes\": \"Ajustado tras la visita al salón\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/opportunities/{{opportunityId}}",
@@ -368,6 +368,35 @@
             },
             "description": "OJO: {{stageId}} se completa con la PRIMERA etapa abierta al correr 'Listar etapas del embudo'. Para probar un cambio real, correr ese request de nuevo y pegar manualmente el id de una etapa distinta a la actual de la oportunidad."
           }
+        }
+      ]
+    },
+    {
+      "name": "Catalogs and commercial history",
+      "item": [
+        {
+          "name": "Listar orígenes",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/origins", "host": ["{{baseUrl}}"], "path": ["origins"] } }
+        },
+        {
+          "name": "Listar tipos de actividad",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/activity-types", "host": ["{{baseUrl}}"], "path": ["activity-types"] } }
+        },
+        {
+          "name": "Listar motivos de pérdida",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/loss-reasons", "host": ["{{baseUrl}}"], "path": ["loss-reasons"] } }
+        },
+        {
+          "name": "Listar actividades recientes",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/activities?page=0&size=20&sort=occurredAt,desc", "host": ["{{baseUrl}}"], "path": ["activities"], "query": [{"key":"page","value":"0"},{"key":"size","value":"20"},{"key":"sort","value":"occurredAt,desc"}] } }
+        },
+        {
+          "name": "Actividades de oportunidad",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/opportunities/{{opportunityId}}/activities", "host": ["{{baseUrl}}"], "path": ["opportunities", "{{opportunityId}}", "activities"] } }
+        },
+        {
+          "name": "Historial de etapas",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/opportunities/{{opportunityId}}/stage-history", "host": ["{{baseUrl}}"], "path": ["opportunities", "{{opportunityId}}", "stage-history"] } }
         }
       ]
     }

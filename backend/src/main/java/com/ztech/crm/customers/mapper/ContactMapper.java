@@ -15,7 +15,7 @@ public class ContactMapper {
         return new ContactResponse(
                 contact.getId(),
                 company == null ? null : company.getId(),
-                company == null ? null : company.getName(),
+                company == null ? null : company.getBusinessName(),
                 contact.getFirstName(),
                 contact.getLastName(),
                 contact.getEmail(),
@@ -28,7 +28,8 @@ public class ContactMapper {
         Company company = contact.getCompany();
         return new ContactDetailResponse(
                 contact.getId(),
-                company == null ? null : new CompanySummaryResponse(company.getId(), company.getName()),
+                company == null ? null : new CompanySummaryResponse(company.getId(), company.getLegalName(),
+                        company.getBusinessName(), company.getSalesRepId()),
                 contact.getFirstName(),
                 contact.getLastName(),
                 contact.getDocument(),

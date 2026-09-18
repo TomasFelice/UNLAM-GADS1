@@ -1,0 +1,245 @@
+/* ---------------------------------------------------------------------------
+   zTech CRM — tokens de diseño
+   Derivados del logo: isotipo "Z" con degradado turquesa → violeta
+   y wordmark en índigo profundo.
+
+   El tema se resuelve acá y sólo acá: el bloque `:root` define el tema claro
+   y `:root[data-tema="oscuro"]` redefine los mismos nombres. Ningún componente
+   consulta el tema, así que agregar una pantalla no obliga a tocar este archivo.
+   --------------------------------------------------------------------------- */
+
+:root {
+  /* --- Marca ------------------------------------------------------------- */
+  --marca-turquesa: #2e95a3;
+  --marca-turquesa-claro: #4fb3bf;
+  --marca-azul: #4878a0;
+  --marca-violeta: #6c489c;
+  --marca-violeta-claro: #8a68b8;
+  --marca-indigo: #301854;
+  --marca-indigo-profundo: #211038;
+
+  /* Relleno sólido de marca (botón primario, chips activos): siempre lleva
+     texto blanco encima, así que en oscuro se aclara pero nunca se invierte. */
+  --marca-solida: #301854;
+  --marca-solida-fuerte: #211038;
+  /* Banda de sección a sangre sobre fondo oscuro. */
+  --banda-oscura: #301854;
+
+  --degradado-marca: linear-gradient(100deg, var(--marca-turquesa) 0%, var(--marca-azul) 48%, var(--marca-violeta) 100%);
+  --degradado-sutil: linear-gradient(160deg, #f7f5fc 0%, #f1f7f8 100%);
+
+  /* --- Neutros (matiz violeta) ------------------------------------------- */
+  --tinta-900: #1a1130;
+  --tinta-800: #2a2044;
+  --tinta-700: #3d3458;
+  --tinta-600: #544b6d;
+  --tinta-500: #6e6685;
+  --tinta-400: #8f889f;
+  --tinta-300: #b0aabe;
+  --tinta-200: #d5d1de;
+
+  /* Fondo de la página. En claro coincide con el papel; en oscuro queda un
+     escalón por debajo para que las tarjetas se despeguen. */
+  --fondo: #ffffff;
+  --papel: #ffffff;
+  --papel-2: #faf9fc;
+  --papel-3: #f4f2f8;
+  --papel-4: #edeaf3;
+
+  /* Barras fijas translúcidas y velo del menú lateral. */
+  --papel-velo: rgba(255, 255, 255, 0.92);
+  --velo: rgba(26, 17, 48, 0.4);
+
+  --linea: #e3dfec;
+  --linea-suave: #eeebf4;
+  --linea-fuerte: #cec8dc;
+
+  /* --- Semánticos --------------------------------------------------------- */
+  --exito: #1a7a52;
+  --exito-fondo: #e6f4ed;
+  --exito-borde: #b8ded0;
+
+  --alerta: #8a5a0b;
+  --alerta-fondo: #fdf3e0;
+  --alerta-borde: #ecd6a9;
+
+  --peligro: #b02a21;
+  --peligro-fondo: #fceceb;
+  --peligro-borde: #f0c4c1;
+
+  --info: #1c5f86;
+  --info-fondo: #e7f1f8;
+  --info-borde: #bcd7e8;
+
+  /* --- Colores de etapa del embudo ---------------------------------------- */
+  --etapa-teal: #2e95a3;
+  --etapa-teal-fondo: #e4f3f5;
+  --etapa-blue: #3d6f9e;
+  --etapa-blue-fondo: #e6eef6;
+  --etapa-violet: #6c489c;
+  --etapa-violet-fondo: #efe9f7;
+  --etapa-indigo: #43307a;
+  --etapa-indigo-fondo: #eceaf6;
+  --etapa-amber: #8a5a0b;
+  --etapa-amber-fondo: #fbf1dd;
+  --etapa-green: #1a7a52;
+  --etapa-green-fondo: #e5f3ec;
+  --etapa-red: #b02a21;
+  --etapa-red-fondo: #fbeae9;
+
+  /* Texto sobre un color de etapa pleno. */
+  --sobre-etapa: #ffffff;
+
+  /* --- Tipografía ---------------------------------------------------------- */
+  --fuente-titulos: "Sora", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --fuente-texto: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --fuente-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, monospace;
+
+  --texto-xs: 0.75rem;    /* 12 */
+  --texto-sm: 0.8125rem;  /* 13 */
+  --texto-base: 0.9375rem;/* 15 */
+  --texto-md: 1rem;       /* 16 */
+  --texto-lg: 1.125rem;   /* 18 */
+  --texto-xl: 1.375rem;   /* 22 */
+  --texto-2xl: 1.75rem;   /* 28 */
+  --texto-3xl: 2.25rem;   /* 36 */
+  --texto-4xl: 3rem;      /* 48 */
+
+  /* --- Espaciado (escala de 4) --------------------------------------------- */
+  --e-1: 0.25rem;
+  --e-2: 0.5rem;
+  --e-3: 0.75rem;
+  --e-4: 1rem;
+  --e-5: 1.25rem;
+  --e-6: 1.5rem;
+  --e-8: 2rem;
+  --e-10: 2.5rem;
+  --e-12: 3rem;
+  --e-16: 4rem;
+  --e-20: 5rem;
+  --e-24: 6rem;
+
+  /* --- Forma ---------------------------------------------------------------- */
+  --radio-sm: 4px;
+  --radio: 6px;
+  --radio-md: 8px;
+  --radio-lg: 12px;
+  --radio-xl: 16px;
+  --radio-pill: 999px;
+
+  /* Sombras discretas: la jerarquía la dan los bordes, no el blur. */
+  --sombra-sm: 0 1px 2px rgba(26, 17, 48, 0.05);
+  --sombra: 0 1px 3px rgba(26, 17, 48, 0.07), 0 1px 2px rgba(26, 17, 48, 0.04);
+  --sombra-md: 0 4px 12px rgba(26, 17, 48, 0.08);
+  --sombra-lg: 0 12px 32px rgba(26, 17, 48, 0.12);
+
+  --anillo-foco: 0 0 0 3px rgba(108, 72, 156, 0.28);
+
+  /* --- Medidas ------------------------------------------------------------- */
+  --ancho-contenido: 1140px;
+  --ancho-lectura: 68ch;
+  --barra-lateral: 244px;
+  --barra-superior: 60px;
+
+  --transicion: 150ms ease;
+
+  color-scheme: light;
+}
+
+
+/* ---------------------------------------------------------------------------
+   Tema oscuro
+
+   La escala se refleja en lugar de invertirse: `--papel-2/3/4` siguen siendo
+   más hundidos que `--papel` y `--tinta-900` sigue siendo el texto de más
+   contraste. Así ninguna regla escrita para el tema claro cambia de sentido.
+   --------------------------------------------------------------------------- */
+
+:root[data-tema="oscuro"] {
+  color-scheme: dark;
+
+  /* --- Marca --------------------------------------------------------------- */
+  /* Los tonos de marca se usan como texto y borde sobre papel, por eso suben
+     de luminosidad. Los rellenos sólidos viven en `--marca-solida`. */
+  --marca-turquesa: #56b8c6;
+  --marca-turquesa-claro: #7fd3de;
+  --marca-azul: #6f9fc9;
+  --marca-violeta: #b18fe2;
+  --marca-violeta-claro: #c8afee;
+  --marca-indigo: #c6b5ea;
+  /* Queda oscuro: nombra una superficie, no un acento. */
+  --marca-indigo-profundo: #211038;
+
+  --marca-solida: #5b3f96;
+  --marca-solida-fuerte: #6d4eae;
+  --banda-oscura: #241a3d;
+
+  --degradado-sutil: linear-gradient(160deg, #1c1729 0%, #17202a 100%);
+
+  /* --- Neutros -------------------------------------------------------------- */
+  --tinta-900: #f3f0fa;
+  --tinta-800: #e2dcf0;
+  --tinta-700: #cdc6e0;
+  --tinta-600: #b2aacb;
+  --tinta-500: #9a92b3;
+  --tinta-400: #8d84a4;
+  --tinta-300: #746c8c;
+  --tinta-200: #4a4360;
+
+  --fondo: #121019;
+  --papel: #1c1729;
+  --papel-2: #171322;
+  --papel-3: #13101c;
+  --papel-4: #0f0c16;
+
+  --linea: #2f2842;
+  --linea-suave: #272136;
+  --linea-fuerte: #473e61;
+
+  --papel-velo: rgba(28, 23, 41, 0.92);
+  --velo: rgba(6, 4, 12, 0.62);
+
+  /* --- Semánticos ----------------------------------------------------------- */
+  --exito: #5fd3a0;
+  --exito-fondo: #112c22;
+  --exito-borde: #24523d;
+
+  --alerta: #e5b366;
+  --alerta-fondo: #2d2414;
+  --alerta-borde: #54411e;
+
+  --peligro: #f2908a;
+  --peligro-fondo: #2f1719;
+  --peligro-borde: #5a2b2d;
+
+  --info: #79bee7;
+  --info-fondo: #12262f;
+  --info-borde: #254a5e;
+
+  /* --- Colores de etapa del embudo ------------------------------------------ */
+  --etapa-teal: #5cc3d0;
+  --etapa-teal-fondo: #122e35;
+  --etapa-blue: #7cadde;
+  --etapa-blue-fondo: #152634;
+  --etapa-violet: #b294e0;
+  --etapa-violet-fondo: #241a38;
+  --etapa-indigo: #9f8de2;
+  --etapa-indigo-fondo: #1f1a39;
+  --etapa-amber: #e0b268;
+  --etapa-amber-fondo: #2d2414;
+  --etapa-green: #5fd3a0;
+  --etapa-green-fondo: #112c22;
+  --etapa-red: #f2908a;
+  --etapa-red-fondo: #2f1719;
+
+  --sobre-etapa: #14111e;
+
+  /* --- Forma ---------------------------------------------------------------- */
+  /* Sobre fondo oscuro el blur no se ve: la sombra se apoya en el negro. */
+  --sombra-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --sombra: 0 1px 3px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --sombra-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --sombra-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+
+  --anillo-foco: 0 0 0 3px rgba(177, 143, 226, 0.32);
+}

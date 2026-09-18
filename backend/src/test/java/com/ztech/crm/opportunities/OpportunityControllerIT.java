@@ -41,7 +41,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 /**
  * BE-OPP-01..03. De paso ejercita {@code GET /venues} y {@code GET /stages}
  * (BE-OFF-01, BE-CAT-01): los usa para armar los datos del test contra el seed real de
- * V2 (7 etapas, 3 salones).
+ * V1 (7 etapas, 3 salones).
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestRestTemplate
@@ -96,7 +96,7 @@ class OpportunityControllerIT {
         Long companyId = createCompany("Cliente con oportunidad");
         CreateOpportunityRequest request = new CreateOpportunityRequest("Evento fin de año", companyId, null,
                 adminUserId, venueId, openStageId, new BigDecimal("500000.00"), 60,
-                Instant.now().plus(30, ChronoUnit.DAYS), 40, null, null, "Primer contacto muy interesado");
+                Instant.now().plus(30, ChronoUnit.DAYS), 20, null, null, "Primer contacto muy interesado");
 
         ResponseEntity<OpportunityResponse> createResponse = restTemplate.exchange("/api/v1/opportunities",
                 HttpMethod.POST, new HttpEntity<>(request, authHeaders), OpportunityResponse.class);
@@ -162,7 +162,7 @@ class OpportunityControllerIT {
                 new HttpEntity<>(createRequest, authHeaders), OpportunityResponse.class).getBody().id();
 
         UpdateOpportunityRequest updateRequest = new UpdateOpportunityRequest("Título actualizado", companyId, null,
-                venueId, new BigDecimal("800000.00"), 75, Instant.now().plus(45, ChronoUnit.DAYS), 35, null, null,
+                venueId, new BigDecimal("800000.00"), 75, Instant.now().plus(45, ChronoUnit.DAYS), 25, null, null,
                 "Ajustado tras la visita");
 
         ResponseEntity<OpportunityResponse> updateResponse = restTemplate.exchange("/api/v1/opportunities/" + id,
@@ -170,7 +170,7 @@ class OpportunityControllerIT {
 
         assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(updateResponse.getBody().title()).isEqualTo("Título actualizado");
-        assertThat(updateResponse.getBody().attendeeCount()).isEqualTo(35);
+        assertThat(updateResponse.getBody().attendeeCount()).isEqualTo(25);
     }
 
     @Test

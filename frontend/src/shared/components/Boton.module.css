@@ -1,0 +1,120 @@
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e-2);
+  border: 1px solid transparent;
+  border-radius: var(--radio-md);
+  font-family: var(--fuente-texto);
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--transicion),
+    border-color var(--transicion),
+    color var(--transicion),
+    box-shadow var(--transicion),
+    transform var(--transicion);
+}
+
+.boton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.boton:not(:disabled):active {
+  transform: translateY(0.5px);
+}
+
+/* --- Tamaños -------------------------------------------------------------- */
+.sm {
+  height: 32px;
+  padding: 0 var(--e-3);
+  font-size: var(--texto-sm);
+}
+
+.md {
+  height: 38px;
+  padding: 0 var(--e-4);
+  font-size: var(--texto-base);
+}
+
+.lg {
+  height: 46px;
+  padding: 0 var(--e-6);
+  font-size: var(--texto-md);
+}
+
+.soloIcono.sm {
+  width: 32px;
+  padding: 0;
+}
+
+.soloIcono.md {
+  width: 38px;
+  padding: 0;
+}
+
+.soloIcono.lg {
+  width: 46px;
+  padding: 0;
+}
+
+.completo {
+  width: 100%;
+}
+
+/* --- Variantes ------------------------------------------------------------ */
+.primario {
+  background: var(--marca-solida);
+  color: #fff;
+  box-shadow: var(--sombra-sm);
+}
+
+.primario:hover:not(:disabled) {
+  background: var(--marca-solida-fuerte);
+}
+
+.secundario {
+  background: var(--papel);
+  border-color: var(--linea-fuerte);
+  color: var(--tinta-800);
+  box-shadow: var(--sombra-sm);
+}
+
+.secundario:hover:not(:disabled) {
+  background: var(--papel-2);
+  border-color: var(--tinta-300);
+  color: var(--tinta-900);
+}
+
+.sutil {
+  background: var(--papel-3);
+  color: var(--tinta-700);
+}
+
+.sutil:hover:not(:disabled) {
+  background: var(--papel-4);
+  color: var(--tinta-900);
+}
+
+.fantasma {
+  background: transparent;
+  color: var(--tinta-600);
+}
+
+.fantasma:hover:not(:disabled) {
+  background: var(--papel-3);
+  color: var(--tinta-900);
+}
+
+.peligro {
+  background: var(--papel);
+  border-color: var(--peligro-borde);
+  color: var(--peligro);
+}
+
+.peligro:hover:not(:disabled) {
+  background: var(--peligro-fondo);
+}

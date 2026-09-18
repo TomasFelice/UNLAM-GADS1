@@ -1,0 +1,93 @@
+.pasos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.paso {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.boton {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  width: 100%;
+  padding: var(--e-2) var(--e-3);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-md);
+  background: var(--papel);
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  color: var(--tinta-500);
+  text-align: left;
+  transition:
+    border-color var(--transicion),
+    background-color var(--transicion),
+    color var(--transicion);
+}
+
+.boton:hover:not(:disabled) {
+  border-color: var(--color-etapa);
+  color: var(--tinta-900);
+}
+
+.boton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.marca {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--linea-fuerte);
+  border-radius: 50%;
+  font-size: 0.625rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.nombre {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recorrida {
+  color: var(--tinta-600);
+}
+
+.recorrida .marca {
+  border-color: var(--exito-borde);
+  background: var(--exito-fondo);
+  color: var(--exito);
+}
+
+.actual {
+  border-color: var(--color-etapa);
+  background: color-mix(in srgb, var(--color-etapa) 8%, var(--papel));
+  color: var(--color-etapa);
+}
+
+.actual .marca {
+  border-color: var(--color-etapa);
+  background: var(--color-etapa);
+  color: var(--sobre-etapa);
+}
+
+.leyenda {
+  margin-top: var(--e-4);
+  font-size: var(--texto-sm);
+  color: var(--tinta-500);
+}
+
+.leyenda strong {
+  color: var(--tinta-900);
+}

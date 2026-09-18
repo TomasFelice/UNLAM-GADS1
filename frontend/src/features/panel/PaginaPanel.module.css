@@ -1,0 +1,139 @@
+.dosColumnas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: var(--e-5);
+  align-items: start;
+}
+
+@media (max-width: 1120px) {
+  .dosColumnas {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Distribución del embudo ------------------------------------------------ */
+.barras {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.barras li {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: var(--e-3);
+}
+
+@media (max-width: 520px) {
+  .barras li {
+    grid-template-columns: 110px minmax(0, 1fr) 26px;
+  }
+}
+
+.barraEtiqueta {
+  font-size: var(--texto-sm);
+  color: var(--tinta-600);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barraPista {
+  height: 8px;
+  border-radius: var(--radio-pill);
+  background: var(--papel-3);
+  overflow: hidden;
+}
+
+.barra {
+  display: block;
+  height: 100%;
+  min-width: 4px;
+  border-radius: var(--radio-pill);
+}
+
+.barraValor {
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--tinta-900);
+}
+
+/* --- Listas ------------------------------------------------------------------ */
+.listaFichas {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listaFichas > li + li {
+  border-top: 1px solid var(--linea-suave);
+}
+
+.agenda {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.agenda li {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  padding: var(--e-3) var(--e-5);
+}
+
+.agenda li + li {
+  border-top: 1px solid var(--linea-suave);
+}
+
+.agendaFecha {
+  flex-shrink: 0;
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--marca-violeta);
+}
+
+.agendaCuerpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.agendaCuerpo a {
+  display: block;
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  color: var(--tinta-900);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.agendaCuerpo a:hover {
+  color: var(--marca-violeta);
+}
+
+.agendaMeta {
+  font-size: var(--texto-xs);
+  color: var(--tinta-400);
+}
+
+/* La actividad reciente es la lista más larga: se acota para que las dos
+   columnas del panel terminen a alturas parecidas. */
+.listaAcotada {
+  max-height: 430px;
+  overflow-y: auto;
+  margin: calc(var(--e-5) * -1);
+  padding: var(--e-5);
+}

@@ -1,0 +1,48 @@
+.pantalla {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--e-6);
+  background: var(--degradado-sutil);
+}
+
+.caja {
+  width: min(100%, 440px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-6);
+  padding: var(--e-8);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-xl);
+  background: var(--papel);
+  box-shadow: var(--sombra-md);
+}
+
+.sobreTitulo {
+  margin-bottom: var(--e-1);
+  color: var(--marca-violeta);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bajada {
+  margin-top: var(--e-2);
+  color: var(--tinta-500);
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+}
+
+.errorGeneral {
+  padding: var(--e-3);
+  border: 1px solid var(--peligro-borde);
+  border-radius: var(--radio-md);
+  background: var(--peligro-fondo);
+  color: var(--peligro);
+  font-size: var(--texto-sm);
+}

@@ -38,7 +38,7 @@ sequenceDiagram
             AS->>UR: findById(userId)
             UR-->>AS: User (para firstName/lastName de la respuesta)
             AS-->>AC: LoginResponse
-            AC-->>Cliente: 200 OK + accessToken
+            AC-->>Cliente: 200 OK + accessToken + mustChangePassword + user
         end
     end
 
@@ -52,6 +52,7 @@ sequenceDiagram
     actor Cliente
     participant Filter as JwtAuthenticationFilter
     participant JS as JwtService
+    participant UR as UserRepository
     participant SCH as SecurityContextHolder
     participant Ctrl as Controller protegido
 
@@ -61,9 +62,17 @@ sequenceDiagram
         JS-->>Filter: InvalidTokenException
         Note over Filter: La captura ExceptionTranslationFilter\n(no llega a GlobalExceptionHandler)\ny RestAuthenticationEntryPoint\ndevuelve 401.
     else token válido
-        JS-->>Filter: AuthenticatedUser (reconstruido desde los claims,\nsin volver a consultar la base)
-        Filter->>SCH: setAuthentication(...)
-        Filter->>Ctrl: continúa la cadena
-        Ctrl-->>Cliente: 200 OK
+        JS-->>Filter: AuthenticatedUser reconstruido desde claims
+        Filter->>UR: findByIdAndTenantId(userId, tenantId)
+        UR-->>Filter: usuario actual
+        alt inactivo, rol cambiado o authVersion distinta
+            Filter-->>Cliente: 401 TOKEN_REVOKED
+        else debe cambiar contraseña y no es /auth/change-password
+            Filter-->>Cliente: 403 PASSWORD_CHANGE_REQUIRED
+        else sesión vigente
+            Filter->>SCH: setAuthentication(...)
+            Filter->>Ctrl: continúa la cadena
+            Ctrl-->>Cliente: respuesta del caso de uso
+        end
     end
 ```

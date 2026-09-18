@@ -1,10 +1,17 @@
 package com.ztech.crm.offerings.domain;
 
+import com.ztech.crm.offerings.domain.enums.VenueStatus;
 import com.ztech.crm.shared.audit.TenantOwnedEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.JdbcTypeCode;
 
 /**
  * Salón (ADR-004) — el "producto o servicio" de la consigna que se reserva. Sólo
@@ -24,8 +31,17 @@ public class Venue extends TenantOwnedEntity {
 
     private String address;
 
+    private String locality;
+
+    private String description;
+
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "equipment", columnDefinition = "text[]", nullable = false)
+    private List<String> equipment = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private boolean active = true;
+    private VenueStatus status = VenueStatus.DISPONIBLE;
 
     protected Venue() {
     }
@@ -36,12 +52,16 @@ public class Venue extends TenantOwnedEntity {
         this.capacity = capacity;
     }
 
-    public void updateDetails(String name, Integer capacity, BigDecimal rate, String address, boolean active) {
+    public void updateDetails(String name, Integer capacity, BigDecimal rate, String address,
+                              String locality, String description, List<String> equipment, VenueStatus status) {
         this.name = name;
         this.capacity = capacity;
         this.rate = rate;
         this.address = address;
-        this.active = active;
+        this.locality = locality;
+        this.description = description;
+        this.equipment = equipment == null ? new ArrayList<>() : new ArrayList<>(equipment);
+        this.status = status;
     }
 
     public String getName() {
@@ -60,7 +80,23 @@ public class Venue extends TenantOwnedEntity {
         return address;
     }
 
-    public boolean isActive() {
-        return active;
+    public String getLocality() {
+        return locality;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public List<String> getEquipment() {
+        return List.copyOf(equipment);
+    }
+
+    public VenueStatus getStatus() {
+        return status;
+    }
+
+    public boolean isAvailable() {
+        return status == VenueStatus.DISPONIBLE;
     }
 }

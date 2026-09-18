@@ -24,8 +24,15 @@ public record AuthenticatedUser(
         String email,
         String passwordHash,
         Role role,
-        boolean active
+        boolean active,
+        boolean mustChangePassword,
+        long authVersion
 ) implements UserDetails, HasUserId {
+
+    public AuthenticatedUser(Long userId, Long tenantId, String email, String passwordHash,
+                             Role role, boolean active) {
+        this(userId, tenantId, email, passwordHash, role, active, false, 0);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

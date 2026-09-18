@@ -33,6 +33,12 @@ flowchart LR
 
 Las flechas van del consumidor a la API pública del módulo consumido; no representan acceso directo a implementación. Se deben evitar dependencias circulares.
 
+La visibilidad de clientes derivada de oportunidades aplica inversión de dependencias:
+`customers` define `CustomerVisibilityPort` y `opportunities` lo implementa mediante
+`OpportunityAccessService`. Así, empresas y contactos pueden consultar si un vendedor
+tiene una oportunidad propia relacionada sin acceder a tablas del otro módulo ni crear
+una dependencia `customers → opportunities`.
+
 ## Capas internas
 
 ```text
@@ -52,6 +58,8 @@ Reglas de dependencia:
 3. `domain` no depende de Spring MVC, DTOs HTTP ni detalles de persistencia.
 4. `repository` sólo persiste; no contiene reglas de negocio.
 5. **Sólo `service` es estable para consumidores externos al módulo**; el resto es interno.
+   Cuando el módulo de menor nivel necesita una respuesta del superior, define un puerto
+   en su propio `service` y el módulo superior aporta la implementación.
 6. `shared` se limita a configuración, errores, seguridad, validación y auditoría realmente transversales.
 
 La nomenclatura de capas fue cambiada respecto de la versión original de este documento
@@ -74,19 +82,18 @@ criterio que `ChangeStage` — coordinan más de una escritura con reglas de est
 backend/src/main/java/com/ztech/crm/
 ├── shared/{config,security,exception,validation,audit,dto}/
 ├── tenancy/        # implementado (Fase 0-1)
-├── access/         # implementado (Fase 1) — sólo login; ABM de usuarios es Fase 6
+├── access/         # implementado (login, cambio de clave y ABM de usuarios)
 ├── customers/      # implementado (Fase 2)
 ├── offerings/      # implementado, sólo lectura (Fase 3) — ABM es Fase 6
-├── catalogs/       # implementado, sólo lectura (Fase 3) — sólo `Stage`;
-│                   # ActivityType/Origin/LossReason y su ABM llegan en la Fase 6
-├── opportunities/  # implementado (Fase 3-4)
+├── catalogs/       # lectura de Stage y EventType; ABM configurable pendiente
+├── opportunities/  # implementado (Fase 3-5, incluido alcance comercial)
 └── activities/     # no existe todavía — Fase 7
 ```
 
 Estado real al cierre de Entrega 1 (24/09), detalle fase por fase en
-`.claude/specs-backend/tasks.md`.
+`docs/specs-backend/tasks.md`.
 
-Las migraciones viven en `backend/src/main/resources/db/migration/` y siguen el patrón `V1__initial_schema.sql`, `V2__seed_catalogs.sql`.
+Las migraciones viven en `backend/src/main/resources/db/migration/` con `V1__initial_schema.sql` como instalación consolidada de esquema y datos semilla. Los cambios posteriores se versionan desde V2.
 
 ## Organización del frontend
 
@@ -120,8 +127,8 @@ dos estrategias — ambas contra infraestructura real, ninguna con mocks de repo
 - No hay tests de "dominio" puro (una entidad sin repositorio ni service alrededor):
   las reglas de las entidades son chicas y quedan cubiertas indirectamente por los `*IT`.
 
-34 tests en total al cierre de Entrega 1 (5 unitarios + 29 de integración). Detalle caso
-por caso en `.claude/specs-backend/tasks.md`.
+El conteo vigente y el detalle de cada corte se mantienen en
+`docs/specs-backend/tasks.md`.
 
 - Frontend: comportamiento de features con Vitest y Testing Library.
 - E2E: recorridos de entrega con Playwright.

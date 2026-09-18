@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * BE-OPP-02. A propósito NO incluye {@code stageId} (cambia por
@@ -29,14 +30,20 @@ public record UpdateOpportunityRequest(
         @NotNull(message = "El salón es obligatorio.")
         Long venueId,
 
+        @NotNull(message = "El tipo de evento es obligatorio.")
+        Long eventTypeId,
+
         BigDecimal estimatedValue,
 
         @Min(value = 0, message = "La probabilidad no puede ser negativa.")
         @Max(value = 100, message = "La probabilidad no puede superar 100.")
         Integer probability,
 
-        @NotNull(message = "La fecha del evento es obligatoria.")
-        Instant eventDate,
+        @NotNull(message = "El inicio del evento es obligatorio.")
+        Instant eventStart,
+
+        @NotNull(message = "El fin del evento es obligatorio.")
+        Instant eventEnd,
 
         @NotNull(message = "La cantidad de asistentes es obligatoria.")
         @Positive(message = "La cantidad de asistentes debe ser mayor a cero.")
@@ -46,6 +53,15 @@ public record UpdateOpportunityRequest(
 
         Long originId,
 
+        Set<Long> serviceIds,
+
         String notes
 ) {
+    public UpdateOpportunityRequest(String title, Long companyId, Long contactId, Long venueId,
+                                    BigDecimal estimatedValue, Integer probability, Instant eventDate,
+                                    Integer attendeeCount, LocalDate estimatedCloseDate, Long originId,
+                                    String notes) {
+        this(title, companyId, contactId, venueId, 1L, estimatedValue, probability, eventDate,
+                eventDate.plusSeconds(86_400), attendeeCount, estimatedCloseDate, originId, Set.of(), notes);
+    }
 }
