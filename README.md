@@ -1,6 +1,6 @@
 # UNLAM-GADS1
 
-CRM especializado en la gestión comercial de **salones de eventos corporativos**, desarrollado como trabajo práctico de Gestión Aplicada al Desarrollo de Software II, Ingeniería en Informática, Universidad Nacional de La Matanza.
+CRM especializado en la gestión comercial de **salones de eventos corporativos**, desarrollado como trabajo práctico de Gestión Aplicada al Desarrollo de Software I, Ingeniería en Informática, Universidad Nacional de La Matanza.
 
 ## Estado
 

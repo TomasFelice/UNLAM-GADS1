@@ -19,7 +19,7 @@ La plataforma organiza el trabajo comercial mediante un embudo de ventas con eta
 
 ## 3. Estado académico y de desarrollo del proyecto
 
-Ztech CRM es un trabajo práctico de la materia Gestión Aplicada al Desarrollo de Software II, de la carrera Ingeniería en Informática de la Universidad Nacional de La Matanza (UNLaM). El sitio que estás viendo es una maqueta académica: no tiene un backend en producción, no procesa pagos reales y no persiste los datos que cargues como visitante.
+Ztech CRM es un trabajo práctico de la materia Gestión Aplicada al Desarrollo de Software I, de la carrera Ingeniería en Informática de la Universidad Nacional de La Matanza (UNLaM). El sitio que estás viendo es una maqueta académica: no tiene un backend en producción, no procesa pagos reales y no persiste los datos que cargues como visitante.
 
 Las cláusulas de estos términos que describen funcionalidades operativas (registro de cuentas, almacenamiento de datos, disponibilidad del servicio, entre otras) corresponden al diseño previsto del producto y se van a aplicar en forma efectiva cuando el servicio esté disponible públicamente. Mientras tanto, cualquier interacción con el sitio tiene fines demostrativos y educativos.
 

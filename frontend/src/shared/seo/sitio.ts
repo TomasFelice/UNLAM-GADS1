@@ -14,7 +14,7 @@ export const SITIO = {
   email: "contacto@ztechcrm.com.ar",
   idioma: "es-AR",
   institucion: "Universidad Nacional de La Matanza",
-  materia: "Gestión Aplicada al Desarrollo de Software II",
+  materia: "Gestión Aplicada al Desarrollo de Software I",
   localidad: "San Justo, Provincia de Buenos Aires, Argentina",
 } as const;
 

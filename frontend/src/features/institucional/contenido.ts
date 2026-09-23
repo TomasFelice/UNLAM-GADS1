@@ -11,13 +11,13 @@ export const SEO_NOSOTROS = {
 export const NOSOTROS_HERO = {
   titular: "Un equipo de estudiantes, un producto real",
   bajada:
-    "Somos un grupo de estudiantes de Ingeniería en Informática de la Universidad Nacional de La Matanza que construye Ztech CRM como trabajo práctico de la materia Gestión Aplicada al Desarrollo de Software II, ciclo 2026.",
+    "Somos un grupo de estudiantes de Ingeniería en Informática de la Universidad Nacional de La Matanza que construye Ztech CRM como trabajo práctico de la materia Gestión Aplicada al Desarrollo de Software I, ciclo 2026.",
 };
 
 export const NOSOTROS_HISTORIA = {
   titulo: "Cómo nació el proyecto",
   parrafos: [
-    "Ztech CRM nació en la materia Gestión Aplicada al Desarrollo de Software II de la carrera de Ingeniería en Informática de la UNLaM. El trabajo práctico pedía construir un producto de software completo, de punta a punta, y el equipo eligió enfocarse en un problema concreto: la gestión comercial de salones para eventos corporativos de hasta 50 personas.",
+    "Ztech CRM nació en la materia Gestión Aplicada al Desarrollo de Software I de la carrera de Ingeniería en Informática de la UNLaM. El trabajo práctico pedía construir un producto de software completo, de punta a punta, y el equipo eligió enfocarse en un problema concreto: la gestión comercial de salones para eventos corporativos de hasta 50 personas.",
     "Un CRM genérico maneja clientes y ventas en abstracto. Ztech CRM está pensado para un negocio específico: el modelo de datos une cada oportunidad a un salón, con su capacidad y su disponibilidad, y el embudo comercial refleja las etapas reales por las que pasa una reserva de evento corporativo, desde la consulta hasta la confirmación.",
     "El equipo trabaja en entregas incrementales, con cada etapa del desarrollo documentada y revisada antes de avanzar a la siguiente. Las decisiones de diseño y las pruebas del sistema quedan registradas junto con el código, para que el resultado se pueda evaluar y seguir mejorando etapa por etapa, como corresponde a un trabajo académico serio.",
   ],

@@ -1,6 +1,6 @@
 # zTech CRM — Contexto del proyecto
 
-TP de **Gestión Aplicada al Desarrollo de Software II** (UNLaM, Ing. en Informática).
+TP de **Gestión Aplicada al Desarrollo de Software I** (UNLaM, Ing. en Informática).
 CRM **especializado en salones de eventos corporativos**. Monorepo, monolito modular.
 
 ## Alcance de cada sesión

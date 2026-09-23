@@ -1,7 +1,7 @@
 # Instrucciones compartidas — zTech CRM
 
 Aplican a todo el repositorio para Claude Code, Codex y otros asistentes.
-TP de Gestión Aplicada al Desarrollo de Software II (UNLaM): CRM especializado en
+TP de Gestión Aplicada al Desarrollo de Software I (UNLaM): CRM especializado en
 salones de eventos corporativos, monorepo y monolito modular.
 
 ## Inicio de una tarea
