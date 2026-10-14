@@ -11,7 +11,7 @@ import {
   type Rol,
   type Sesion,
 } from "./almacenSesion";
-import { Contexto } from "./contextoSesion";
+import { Contexto, type SalidaSesion } from "./contextoSesion";
 
 type Login = components["schemas"]["LoginRequest"];
 type RespuestaLogin = components["schemas"]["LoginResponse"];
@@ -47,20 +47,24 @@ function convertirLogin(respuesta: RespuestaLogin, mantener: boolean): Sesion {
 
 export function ProveedorSesion({ children }: { children: ReactNode }) {
   const [sesion, setSesion] = useState(obtenerSesion);
+  const [salida, setSalida] = useState<SalidaSesion>();
   const navegar = useNavigate();
   const ubicacion = useLocation();
 
-  const cerrar = () => {
+  const cerrar = (destino: SalidaSesion = {}) => {
     borrarSesion();
     cacheApi.clear();
+    setSalida(destino);
     setSesion(null);
+    navegar(destino.desde ? `/ingresar?desde=${encodeURIComponent(destino.desde)}` : "/ingresar", {
+      replace: true, state: destino.mensaje ? { mensaje: destino.mensaje } : undefined,
+    });
   };
 
   useEffect(() => {
     const alExpirar = () => {
-      cerrar();
       const desde = `${ubicacion.pathname}${ubicacion.search}${ubicacion.hash}`;
-      navegar(`/ingresar?desde=${encodeURIComponent(desde)}`, { replace: true });
+      cerrar({ desde });
     };
     window.addEventListener(EVENTO_SESION_EXPIRADA, alExpirar);
     return () => window.removeEventListener(EVENTO_SESION_EXPIRADA, alExpirar);
@@ -73,9 +77,11 @@ export function ProveedorSesion({ children }: { children: ReactNode }) {
       autenticar: false,
     });
     const nuevaSesion = convertirLogin(respuesta, mantener);
+    cacheApi.clear();
+    setSalida(undefined);
     setSesion(nuevaSesion);
     return nuevaSesion;
   };
 
-  return <Contexto value={{ sesion, ingresar, cerrar }}>{children}</Contexto>;
+  return <Contexto value={{ sesion, ingresar, cerrar, salida }}>{children}</Contexto>;
 }

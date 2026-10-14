@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.ztech.crm.access.domain.Role;
 import com.ztech.crm.catalogs.domain.enums.StageKind;
-import com.ztech.crm.catalogs.dto.response.StageResponse;
+import com.ztech.crm.catalogs.service.StageInfo;
 import com.ztech.crm.catalogs.service.StageService;
 import com.ztech.crm.opportunities.domain.Opportunity;
 import com.ztech.crm.opportunities.domain.StageHistory;
@@ -64,7 +64,9 @@ class ChangeStageServiceTest {
                 .setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
 
         opportunity = new Opportunity(TENANT_ID, "Título", 5L, null, 1L, 100L, FROM_STAGE_ID, Instant.now(), 20);
+        opportunity.initializePipeline(1L);
         ReflectionTestUtils.setField(opportunity, "id", OPPORTUNITY_ID);
+        ReflectionTestUtils.setField(opportunity, "version", 0L);
 
         when(opportunityRepository.findByIdAndTenantId(OPPORTUNITY_ID, TENANT_ID)).thenReturn(Optional.of(opportunity));
         when(opportunityAccessService.getReadableOrThrow(OPPORTUNITY_ID)).thenReturn(opportunity);
@@ -77,8 +79,8 @@ class ChangeStageServiceTest {
 
     @Test
     void changesStageAndSavesHistoryTogether() {
-        when(stageService.assertOpenAndActive(TO_STAGE_ID))
-                .thenReturn(new StageResponse(TO_STAGE_ID, "Negociación", 5, StageKind.OPEN, true));
+        when(stageService.assertKindAndActive(TO_STAGE_ID, 1L, "OPEN"))
+                .thenReturn(new StageInfo(TO_STAGE_ID, 1L, "Negociación", 5, "OPEN", true));
 
         changeStageService.changeStage(OPPORTUNITY_ID, new ChangeStageRequest(TO_STAGE_ID, "Avanza tras la reunión"));
 
@@ -95,8 +97,8 @@ class ChangeStageServiceTest {
 
     @Test
     void propagatesExceptionWhenHistoryInsertFailsSoTransactionCanRollBack() {
-        when(stageService.assertOpenAndActive(TO_STAGE_ID))
-                .thenReturn(new StageResponse(TO_STAGE_ID, "Negociación", 5, StageKind.OPEN, true));
+        when(stageService.assertKindAndActive(TO_STAGE_ID, 1L, "OPEN"))
+                .thenReturn(new StageInfo(TO_STAGE_ID, 1L, "Negociación", 5, "OPEN", true));
         when(stageHistoryRepository.save(any())).thenThrow(new DataIntegrityViolationException("boom"));
 
         assertThatThrownBy(() -> changeStageService.changeStage(OPPORTUNITY_ID,
@@ -126,12 +128,12 @@ class ChangeStageServiceTest {
 
     @Test
     void rejectsChangeToAClosedStage() {
-        when(stageService.assertOpenAndActive(eq(TO_STAGE_ID)))
-                .thenThrow(new BusinessException("STAGE_NOT_OPEN", "Una oportunidad sólo puede crearse en una etapa abierta."));
+        when(stageService.assertKindAndActive(eq(TO_STAGE_ID), eq(1L), eq("OPEN")))
+                .thenThrow(new ConflictException("STAGE_KIND_MISMATCH", "La etapa no corresponde a esta operación."));
 
         assertThatThrownBy(() -> changeStageService.changeStage(OPPORTUNITY_ID,
                 new ChangeStageRequest(TO_STAGE_ID, null)))
-                .isInstanceOf(BusinessException.class);
+                .isInstanceOf(ConflictException.class);
 
         verify(opportunityRepository, org.mockito.Mockito.never()).save(any());
     }

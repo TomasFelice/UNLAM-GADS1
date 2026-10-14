@@ -1,0 +1,88 @@
+import { elegirSelector } from "./ayudas/selectores.js";
+import { expect, test } from "@playwright/test";
+
+const API = "http://localhost:18080/api/v1";
+
+test("entrega integral: login, clientes, alta breve, tablero, actividad y cierre persistidos", async ({ page, request }) => {
+  test.setTimeout(120000);
+  const errores: string[] = [];
+  page.on("pageerror", e => errores.push(e.message));
+  page.on("console", m => { if (m.type() === "error") errores.push(m.text()); });
+  // Sin sesión inyectada ni interceptación de red: todo el recorrido usa la API real.
+  await page.goto("/ingresar");
+  await page.getByLabel("Correo electrónico").fill("admin.baseline.a@fixtures.invalid");
+  await page.getByLabel("Contraseña").fill("FixtureTemporal123!");
+  await page.getByRole("button", { name: "Iniciar sesión", exact: true }).click();
+  await expect(page).toHaveURL(/\/app$/);
+  const token = await page.evaluate(() => JSON.parse(sessionStorage.getItem("ztech.crm.sesion")!).token);
+  const headers = { Authorization: `Bearer ${token}` };
+  const embudo = await (await request.get(`${API}/pipelines/default`, { headers })).json();
+  const etapa = await request.post(`${API}/stages`, { headers, data: { pipelineId: embudo.id, name: "Visita entrega integrada", kind: "OPEN", active: true } });
+  expect(etapa.status()).toBe(201);
+  const destino = await etapa.json();
+  const etapas = await (await request.get(`${API}/stages?pipelineId=${embudo.id}`, { headers })).json();
+  const salon = (await (await request.get(`${API}/venues?q=baseline.a&status=DISPONIBLE`, { headers })).json()).content[0];
+  const tipo = (await (await request.get(`${API}/event-types?q=Evento%20corporativo`, { headers })).json()).content[0];
+  const actividad = (await (await request.get(`${API}/activity-types?q=Llamada`, { headers })).json()).content[0];
+
+  await page.goto("/app/empresas/nueva");
+  await page.getByLabel("Razón social").fill("Entrega integrada SA");
+  await page.getByLabel("Nombre comercial").fill("Entrega integrada");
+  await page.getByRole("button", { name: "Crear empresa", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Entrega integrada", exact: true })).toBeVisible();
+  const empresaId = Number(new URL(page.url()).pathname.split("/").at(-1));
+  await page.getByRole("link", { name: "Nuevo contacto", exact: true }).click();
+  await page.getByRole("textbox", { name: "Nombre", exact: true }).fill("Julia");
+  await page.getByRole("textbox", { name: "Apellido", exact: true }).fill("Entrega integrada");
+  await page.getByRole("button", { name: "Crear contacto", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Julia Entrega integrada", exact: true })).toBeVisible();
+  const contactoId = Number(new URL(page.url()).pathname.split("/").at(-1));
+  await page.getByRole("link", { name: "Nueva oportunidad", exact: true }).click();
+  await expect(page.getByRole("combobox", { name: "Contacto", exact: true })).toHaveAttribute("data-valor", String(contactoId));
+  await expect(page.getByRole("combobox", { name: "Empresa", exact: true })).toHaveAttribute("data-valor", String(empresaId));
+  await page.getByRole("textbox", { name: "Título", exact: true }).fill("Evento entrega integrada");
+  await page.getByRole("combobox", { name: "Salón", exact: true }).fill("baseline.a");
+  await elegirSelector(page, "Salón", String(salon.id));
+  await page.getByRole("combobox", { name: "Tipo de evento", exact: true }).fill("Evento corporativo");
+  await elegirSelector(page, "Tipo de evento", String(tipo.id));
+  await page.getByLabel(/Inicio/).fill("2040-06-01T09:00");
+  await page.getByLabel(/Fin/).fill("2040-06-01T13:00");
+  await page.getByRole("spinbutton", { name: "Asistentes", exact: true }).fill("20");
+  await page.getByRole("button", { name: "Crear oportunidad", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Evento entrega integrada", exact: true })).toBeVisible();
+  const ruta = new URL(page.url()).pathname;
+  const id = Number(ruta.split("/").at(-1));
+  await page.goto(`/app/embudo?pipelineId=${embudo.id}&q=Evento%20entrega%20integrada`);
+  await page.getByRole("combobox", { name: "Cambiar etapa de Evento entrega integrada", exact: true }).selectOption(String(destino.id));
+  await expect(page.locator("section").filter({ has: page.getByRole("heading", { name: destino.name, exact: true }) }).getByRole("link", { name: "Evento entrega integrada", exact: true })).toBeVisible();
+  await page.getByRole("link", { name: "Evento entrega integrada", exact: true }).click();
+  await page.getByRole("button", { name: "Registrar actividad", exact: true }).click();
+  const formulario = page.getByRole("form", { name: "Registrar actividad" });
+  await formulario.getByRole("combobox", { name: "Tipo de actividad", exact: true }).fill("Llamada");
+  await elegirSelector(page, "Tipo de actividad", String(actividad.id));
+  await formulario.getByLabel("Fecha y hora del hecho").fill("2026-01-02T09:00");
+  await formulario.getByRole("textbox", { name: "Descripción", exact: true }).fill("Cliente confirma la propuesta integral");
+  await formulario.getByRole("textbox", { name: "Resultado", exact: true }).fill("Reserva acordada");
+  await formulario.getByRole("button", { name: "Guardar actividad", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("Actividad registrada.");
+  await page.getByRole("button", { name: "Marcar como ganada", exact: true }).click();
+  await page.getByRole("combobox", { name: "Etapa destino", exact: true }).selectOption(String(etapas.find((e: any) => e.active && e.kind === "WON").id));
+  await page.getByRole("spinbutton", { name: "Valor final", exact: true }).fill("450000.50");
+  await page.getByRole("button", { name: "Confirmar acción", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Reabrir oportunidad", exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByText(/Ganada · Valor final:/)).toContainText("450.000,50");
+  await expect(page.getByText("Cliente confirma la propuesta integral", { exact: false })).toHaveCount(1);
+  const guardada = await (await request.get(`${API}/opportunities/${id}`, { headers })).json();
+  expect(guardada.status).toBe("GANADA");
+  expect(guardada.finalValue).toBe(450000.5);
+  expect(guardada.company.id).toBe(empresaId);
+  expect(guardada.contact.id).toBe(contactoId);
+  const historia = await (await request.get(`${API}/opportunities/${id}/stage-history`, { headers })).json();
+  expect(historia.map((h: any) => h.eventType)).toEqual(["CREATED", "STAGE_CHANGED", "WON"]);
+  for (const cliente of [`companies/${empresaId}`, `contacts/${contactoId}`, `opportunities/${id}`]) {
+    const hechos = await (await request.get(`${API}/${cliente}/activities`, { headers })).json();
+    expect(hechos.content.filter((h: any) => h.description === "Cliente confirma la propuesta integral")).toHaveLength(1);
+  }
+  expect(errores).toEqual([]);
+});

@@ -1,0 +1,300 @@
+{
+  "estadisticas": {
+    "startTime": "2026-10-10T15:49:44.280Z",
+    "duration": 421890.448,
+    "expected": 24,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "casos": [
+    {
+      "archivo": "actividades.spec.ts",
+      "caso": "alta contextual e históricos completos con tres roles, páginas y bajas",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 34978,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "actividades.spec.ts",
+      "caso": "colección Postman registra un hecho y consulta las tres asociaciones sin cambiar IDs a mano",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 968,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "alta-oportunidades.spec.ts",
+      "caso": "alta breve desde clientes posteriores a página cero conserva contexto, herencia y fechas",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 28672,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "carga.spec.ts",
+      "caso": "carga por ruta, panel acotado, errores independientes y navegación vigente",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 9424,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "catalogos.spec.ts",
+      "caso": "ADMIN administra los cuatro catálogos y los otros roles tienen acceso denegado",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 35876,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "catalogos.spec.ts",
+      "caso": "catálogos posteriores a página cero se seleccionan y conservan en clientes y oportunidades",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 12871,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "catalogos.spec.ts",
+      "caso": "la colección Postman recorre los cuatro ABM y conserva el export runtime",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 2802,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "ciclo-oportunidades.spec.ts",
+      "caso": "ganar, reabrir y perder conserva cierres; un formulario viejo conserva valores ante 409",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 13319,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "ciclo-oportunidades.spec.ts",
+      "caso": "Postman recorre asignación, cierre, reapertura y pérdida capturando versiones reales",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 719,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "clientes.spec.ts",
+      "caso": "origen de empresa, herencia del contacto y reasignación comercial persisten tras recargar",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 14999,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "clientes.spec.ts",
+      "caso": "la edición de clientes respeta asignación directa y consulta por oportunidad en los tres roles",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 11283,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "clientes.spec.ts",
+      "caso": "los ejemplos de clientes de Postman son compatibles con el contrato actual",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 338,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "embudos.spec.ts",
+      "caso": "ADMIN configura dos embudos y consulta oportunidades históricas; otros roles no configuran",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 25342,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "embudos.spec.ts",
+      "caso": "Postman configura un embudo independiente, ordena y restituye el predeterminado",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 530,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "entrega-integrada.spec.ts",
+      "caso": "entrega integral: login, clientes, alta breve, tablero, actividad y cierre persistidos",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 7470,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "oferta.spec.ts",
+      "caso": "requests mantenidos de Postman recorren lectura y administración de oferta",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 384,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "oferta.spec.ts",
+      "caso": "oferta posterior a la primera página se busca y mantiene en formulario y filtros",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 6872,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "oferta.spec.ts",
+      "caso": "administrador gestiona oferta, conserva referencias históricas y roles comerciales sólo consultan",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 14453,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "postman-entrega.spec.ts",
+      "caso": "Newman importa environment y colección completa, captura IDs y valida el contrato",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 13603,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "rutas-entrega.spec.ts",
+      "caso": "regresión de todas las rutas con tres roles, dos tamaños, temas, teclado y SEO",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 137372,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "usuarios.spec.ts",
+      "caso": "administrador crea, edita y restablece; vendedor cambia la clave e ingresa",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 4592,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "usuarios.spec.ts",
+      "caso": "rutas administrativas adaptadas a 390 px, ambos temas y sin errores de consola",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 4621,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "usuarios.spec.ts",
+      "caso": "roles comerciales no obtienen administración por menú ni URL",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 1160,
+          "errores": []
+        }
+      ]
+    },
+    {
+      "archivo": "usuarios.spec.ts",
+      "caso": "las páginas públicas conservan metadatos por ruta",
+      "estado": "expected",
+      "resultados": [
+        {
+          "estado": "passed",
+          "duracionMs": 2560,
+          "errores": []
+        }
+      ]
+    }
+  ]
+}

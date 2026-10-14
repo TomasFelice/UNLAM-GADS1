@@ -13,7 +13,8 @@ public record CompanyResponse(
         String phone,
         String locality,
         PartyStatus status,
-        Long salesRepId
+        Long salesRepId,
+        String salesRepName
 ) {
     public String name() {
         return businessName;

@@ -33,6 +33,13 @@ public class OpportunityAccessService implements CustomerVisibilityPort {
                 .orElseThrow(() -> new NotFoundException("No se encontró la oportunidad solicitada."));
     }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public OpportunityContext getReadableContext(Long id) {
+        var value = getReadableOrThrow(id);
+        return new OpportunityContext(value.getId(), value.getCompanyId(), value.getContactId(),
+                value.getSalesRepId(), value.getStatus().name());
+    }
+
     public Page<Opportunity> findReadable(OpportunityFilter filter, Pageable pageable) {
         return opportunityRepository.findAll(readableSpecification(filter), pageable);
     }
@@ -48,6 +55,7 @@ public class OpportunityAccessService implements CustomerVisibilityPort {
         Specification<Opportunity> spec = OpportunitySpecifications.tenant(current.tenantId());
         if (current.role() == Role.SELLER) spec = spec.and(OpportunitySpecifications.salesRep(current.userId()));
         if (filter == null) return spec;
+        if (filter.pipelineId() != null) spec = spec.and(OpportunitySpecifications.pipeline(filter.pipelineId()));
         if (filter.q() != null && !filter.q().isBlank()) spec = spec.and(OpportunitySpecifications.contains(filter.q()));
         if (filter.status() != null) spec = spec.and(OpportunitySpecifications.status(filter.status()));
         if (filter.stageId() != null) spec = spec.and(OpportunitySpecifications.stage(filter.stageId()));

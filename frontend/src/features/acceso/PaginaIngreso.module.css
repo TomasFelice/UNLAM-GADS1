@@ -59,8 +59,7 @@
   margin-top: var(--e-8);
 }
 
-.errorGeneral,
-.exito {
+.errorGeneral {
   margin-top: var(--e-4);
   padding: var(--e-3);
   border-radius: var(--radio-md);
@@ -71,12 +70,6 @@
   border: 1px solid var(--peligro-borde);
   background: var(--peligro-fondo);
   color: var(--peligro);
-}
-
-.exito {
-  border: 1px solid var(--exito-borde);
-  background: var(--exito-fondo);
-  color: var(--exito);
 }
 
 .fila {

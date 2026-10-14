@@ -2,6 +2,7 @@ package com.ztech.crm.customers.service;
 
 import com.ztech.crm.access.domain.Role;
 import com.ztech.crm.access.service.UserService;
+import com.ztech.crm.catalogs.service.OriginService;
 import com.ztech.crm.customers.domain.Company;
 import com.ztech.crm.customers.domain.Contact;
 import com.ztech.crm.customers.dto.request.ContactRequest;
@@ -33,15 +34,17 @@ public class ContactService {
     private final CompanyRepository companyRepository;
     private final ContactMapper contactMapper;
     private final UserService userService;
+    private final OriginService originService;
     private final CustomerVisibilityPort customerVisibilityPort;
 
     public ContactService(ContactRepository contactRepository, CompanyRepository companyRepository,
                            ContactMapper contactMapper, UserService userService,
-                           CustomerVisibilityPort customerVisibilityPort) {
+                           CustomerVisibilityPort customerVisibilityPort, OriginService originService) {
         this.contactRepository = contactRepository;
         this.companyRepository = companyRepository;
         this.contactMapper = contactMapper;
         this.userService = userService;
+        this.originService = originService;
         this.customerVisibilityPort = customerVisibilityPort;
     }
 
@@ -72,7 +75,8 @@ public class ContactService {
     @Transactional(readOnly = true)
     public ContactDetailResponse getDetail(Long id) {
         Long tenantId = TenantContext.currentTenantId();
-        return contactMapper.toDetailResponse(getReadableOrThrow(id, tenantId));
+        Contact contact = getReadableOrThrow(id, tenantId);
+        return contactMapper.toDetailResponse(contact, userService.getIdentity(contact.getSalesRepId()).fullName());
     }
 
     @Transactional(readOnly = true)
@@ -91,7 +95,10 @@ public class ContactService {
                     tenantId, current.userId());
             filters = filters.and(ContactSpecifications.visibleToSeller(current.userId(), relatedIds));
         }
-        Page<Contact> page = contactRepository.findAll(filters, pageable);
+        var order = pageable.getSort();
+        if (order.getOrderFor("id") == null) order = order.and(org.springframework.data.domain.Sort.by("id"));
+        Page<Contact> page = contactRepository.findAll(filters, org.springframework.data.domain.PageRequest.of(
+                pageable.getPageNumber(), pageable.getPageSize(), order));
         return PageResponse.from(page, contactMapper::toResponse);
     }
 
@@ -123,7 +130,23 @@ public class ContactService {
         getReadableOrThrow(id, TenantContext.currentTenantId());
     }
 
+    /** Lectura en lote con el mismo alcance comercial que el detalle; sin DTO ni entidad ajenos. */
+    @Transactional(readOnly = true)
+    public java.util.Map<Long, String> getNames(java.util.Set<Long> ids) {
+        if (ids.isEmpty()) return java.util.Map.of();
+        var current = TenantContext.currentUser();
+        Specification<Contact> filters = ContactSpecifications.tenant(current.tenantId());
+        filters = filters.and((root, query, builder) -> root.get("id").in(ids));
+        if (current.role() == Role.SELLER) {
+            filters = filters.and(ContactSpecifications.visibleToSeller(current.userId(),
+                    customerVisibilityPort.findContactIdsWithOwnOpportunities(current.tenantId(), current.userId())));
+        }
+        return contactRepository.findAll(filters).stream().collect(java.util.stream.Collectors.toMap(
+                Contact::getId, value -> value.getFirstName() + " " + value.getLastName()));
+    }
+
     private void applyRequest(Contact contact, Company company, ContactRequest request, Long salesRepId) {
+        originService.assertSelectable(request.originId(), contact.getOriginId());
         contact.updateDetails(company, request.firstName(), request.lastName(), request.document(),
                 request.position(), request.email(), request.phone(), request.status(),
                 salesRepId, request.originId(), request.notes());
@@ -139,6 +162,13 @@ public class ContactService {
         }
         userService.assertActiveAndAssignable(resolved);
         return resolved;
+    }
+
+    /** Escritura de hechos sobre asignación directa; la lectura indirecta no la habilita. */
+    @Transactional(readOnly = true)
+    public CustomerActivityContext getForActivity(Long id) {
+        var value = getDirectlyAssignedOrThrow(id, TenantContext.currentTenantId());
+        return new CustomerActivityContext(value.getId(), value.getCompany() == null ? null : value.getCompany().getId(), value.getSalesRepId());
     }
 
     private Contact getReadableOrThrow(Long id, Long tenantId) {

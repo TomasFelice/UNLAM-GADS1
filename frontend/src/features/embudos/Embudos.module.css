@@ -1,0 +1,4 @@
+.etapas { margin: var(--e-4) 0; padding-left: var(--e-6); }
+.acciones { display: flex; flex-wrap: wrap; gap: var(--e-2); align-items: center; }
+.etapa { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--e-3); align-items: center; padding: var(--e-4); border-bottom: 1px solid var(--linea); }
+.lista { list-style: none; padding: 0; margin: 0; }

@@ -21,10 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
  * transacción — si el insert del historial falla, Spring revierte también el cambio
  * de etapa (no hay ningún {@code catch} acá que lo evite).
  *
- * <p>Sólo mueve entre etapas {@code OPEN} (pasos 1-4 de design.md §9.1). Los pasos 5-6
- * (destino {@code WON}/{@code LOST} delega en "ganar"/"perder") llegan en la Fase 7:
- * por ahora, pedir un destino cerrado devuelve el mismo error que cualquier etapa no
- * abierta ({@link StageService#assertOpenAndActive}).
+ * <p>Sólo mueve entre etapas activas OPEN del embudo fijo de la oportunidad.
+ * Ganar, perder y reabrir son operaciones independientes; no se delegan desde /stage.
  */
 @Service
 public class ChangeStageService {
@@ -55,13 +53,15 @@ public class ChangeStageService {
             throw new ConflictException("OPPORTUNITY_CLOSED", "No se puede cambiar de etapa una oportunidad cerrada.");
         }
 
+        OpportunityVersion.assertExpected(opportunity, request.version());
+
         Long fromStageId = opportunity.getStageId();
         Long toStageId = request.stageId();
         if (fromStageId.equals(toStageId)) {
             throw new BusinessException("SAME_STAGE", "La oportunidad ya está en esa etapa.");
         }
 
-        stageService.assertOpenAndActive(toStageId);
+        stageService.assertKindAndActive(toStageId, opportunity.getPipelineId(), "OPEN");
 
         opportunity.changeStage(toStageId);
         opportunityRepository.save(opportunity);
@@ -71,6 +71,7 @@ public class ChangeStageService {
                 request.note());
         stageHistoryRepository.save(history);
 
+        opportunityRepository.flush();
         return opportunityMapper.toResponse(opportunity);
     }
 

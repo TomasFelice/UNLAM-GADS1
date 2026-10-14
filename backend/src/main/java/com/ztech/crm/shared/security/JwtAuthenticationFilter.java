@@ -27,6 +27,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String MDC_TENANT_ID = "tenantId";
     private static final String MDC_USER_ID = "userId";
@@ -47,52 +49,58 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                      @NonNull FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
+        long started = System.nanoTime();
         boolean authenticated = false;
 
-        if (header != null && header.startsWith(BEARER_PREFIX)) {
-            AuthenticatedUser tokenUser;
-            try {
-                tokenUser = jwtService.parseToken(header.substring(BEARER_PREFIX.length()));
-            } catch (InvalidTokenException ex) {
-                RestAuthenticationEntryPoint.writeProblem(response, request, HttpStatus.UNAUTHORIZED,
-                        "UNAUTHENTICATED", "Credenciales inválidas o token vencido.");
-                return;
-            }
-
-            User persistedUser = userRepository.findByIdAndTenantId(tokenUser.userId(), tokenUser.tenantId())
-                    .filter(User::isActive)
-                    .filter(candidate -> candidate.getAuthVersion() == tokenUser.authVersion())
-                    .orElse(null);
-            if (persistedUser == null || persistedUser.getRole() != tokenUser.role()) {
-                RestAuthenticationEntryPoint.writeProblem(response, request, HttpStatus.UNAUTHORIZED,
-                        "TOKEN_REVOKED", "La sesión dejó de ser válida.");
-                return;
-            }
-
-            AuthenticatedUser user = new AuthenticatedUser(
-                    persistedUser.getId(), persistedUser.getTenantId(), persistedUser.getEmail(), null,
-                    persistedUser.getRole(), persistedUser.isActive(), persistedUser.mustChangePassword(),
-                    persistedUser.getAuthVersion());
-
-            if (enforcePasswordChange && user.mustChangePassword()
-                    && !request.getRequestURI().equals("/api/v1/auth/change-password")) {
-                RestAuthenticationEntryPoint.writeProblem(response, request, HttpStatus.FORBIDDEN,
-                        "PASSWORD_CHANGE_REQUIRED", "Debe cambiar la contraseña antes de continuar.");
-                return;
-            }
-
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            MDC.put(MDC_TENANT_ID, String.valueOf(user.tenantId()));
-            MDC.put(MDC_USER_ID, String.valueOf(user.userId()));
-            authenticated = true;
-        }
-
         try {
+            if (header != null && header.startsWith(BEARER_PREFIX)) {
+                AuthenticatedUser tokenUser;
+                try {
+                    tokenUser = jwtService.parseToken(header.substring(BEARER_PREFIX.length()));
+                } catch (InvalidTokenException ex) {
+                    RestAuthenticationEntryPoint.writeProblem(response, request, HttpStatus.UNAUTHORIZED,
+                            "UNAUTHENTICATED", "Credenciales inválidas o token vencido.");
+                    return;
+                }
+
+                User persistedUser = userRepository.findByIdAndTenantId(tokenUser.userId(), tokenUser.tenantId())
+                        .filter(User::isActive)
+                        .filter(candidate -> candidate.getAuthVersion() == tokenUser.authVersion())
+                        .orElse(null);
+                if (persistedUser == null || persistedUser.getRole() != tokenUser.role()) {
+                    RestAuthenticationEntryPoint.writeProblem(response, request, HttpStatus.UNAUTHORIZED,
+                            "TOKEN_REVOKED", "La sesión dejó de ser válida.");
+                    return;
+                }
+
+                AuthenticatedUser user = new AuthenticatedUser(
+                        persistedUser.getId(), persistedUser.getTenantId(), persistedUser.getEmail(), null,
+                        persistedUser.getRole(), persistedUser.isActive(), persistedUser.mustChangePassword(),
+                        persistedUser.getAuthVersion());
+
+                MDC.put(MDC_TENANT_ID, String.valueOf(user.tenantId()));
+                MDC.put(MDC_USER_ID, String.valueOf(user.userId()));
+                authenticated = true;
+
+                if (enforcePasswordChange && user.mustChangePassword()
+                        && !request.getRequestURI().equals("/api/v1/auth/change-password")) {
+                    RestAuthenticationEntryPoint.writeProblem(response, request, HttpStatus.FORBIDDEN,
+                            "PASSWORD_CHANGE_REQUIRED", "Debe cambiar la contraseña antes de continuar.");
+                    return;
+                }
+
+                var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            }
+
             filterChain.doFilter(request, response);
         } finally {
             if (authenticated) {
+                // Sólo metadatos de operación: nunca cuerpo, query, cabeceras, email ni SQL.
+                log.info("Solicitud autenticada method={} path={} status={} durationMs={}",
+                        request.getMethod(), request.getRequestURI(), response.getStatus(),
+                        (System.nanoTime() - started) / 1_000_000);
                 MDC.remove(MDC_TENANT_ID);
                 MDC.remove(MDC_USER_ID);
             }

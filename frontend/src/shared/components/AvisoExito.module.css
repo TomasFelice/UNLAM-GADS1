@@ -1,0 +1,24 @@
+.aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-3);
+  min-width: 0;
+  margin-block: var(--e-4);
+  padding: var(--e-4);
+  border: 1px solid var(--exito-borde);
+  border-inline-start-width: var(--e-1);
+  border-radius: var(--radio-md);
+  background: var(--exito-fondo);
+  color: var(--exito);
+  font-size: var(--texto-sm);
+}
+
+.icono {
+  flex-shrink: 0;
+  margin-top: var(--e-1);
+}
+
+.contenido {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

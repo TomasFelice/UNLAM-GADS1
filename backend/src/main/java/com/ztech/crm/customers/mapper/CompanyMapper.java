@@ -1,17 +1,14 @@
 package com.ztech.crm.customers.mapper;
 
 import com.ztech.crm.customers.domain.Company;
-import com.ztech.crm.customers.domain.Contact;
 import com.ztech.crm.customers.dto.response.CompanyDetailResponse;
 import com.ztech.crm.customers.dto.response.CompanyResponse;
-import com.ztech.crm.customers.dto.response.ContactSummaryResponse;
-import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CompanyMapper {
 
-    public CompanyResponse toResponse(Company company) {
+    public CompanyResponse toResponse(Company company, String salesRepName) {
         return new CompanyResponse(
                 company.getId(),
                 company.getLegalName(),
@@ -22,11 +19,12 @@ public class CompanyMapper {
                 company.getPhone(),
                 company.getLocality(),
                 company.getStatus(),
-                company.getSalesRepId()
+                company.getSalesRepId(),
+                salesRepName
         );
     }
 
-    public CompanyDetailResponse toDetailResponse(Company company, List<Contact> contacts) {
+    public CompanyDetailResponse toDetailResponse(Company company, String salesRepName) {
         return new CompanyDetailResponse(
                 company.getId(),
                 company.getLegalName(),
@@ -40,21 +38,10 @@ public class CompanyMapper {
                 company.getWebsite(),
                 company.getStatus(),
                 company.getSalesRepId(),
+                salesRepName,
                 company.getOriginId(),
-                company.getNotes(),
-                contacts.stream().map(this::toContactSummary).toList()
+                company.getNotes()
         );
     }
 
-    private ContactSummaryResponse toContactSummary(Contact contact) {
-        return new ContactSummaryResponse(
-                contact.getId(),
-                contact.getFirstName(),
-                contact.getLastName(),
-                contact.getEmail(),
-                contact.getStatus(),
-                contact.getCompany() == null ? null : contact.getCompany().getId(),
-                contact.getSalesRepId()
-        );
-    }
 }

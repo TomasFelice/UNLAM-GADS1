@@ -29,6 +29,8 @@ public record OpportunityResponse(
         String contactName,
         String salesRepName,
         String venueName,
-        String stageName
+        String stageName,
+        Long pipelineId,
+        Long version
 ) {
 }

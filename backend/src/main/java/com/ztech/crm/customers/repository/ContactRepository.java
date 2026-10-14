@@ -13,6 +13,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface ContactRepository extends JpaRepository<Contact, Long>, JpaSpecificationExecutor<Contact> {
 
+    java.util.List<Contact> findAllByTenantIdAndIdIn(Long tenantId, java.util.Set<Long> ids);
+
     Optional<Contact> findByIdAndTenantId(Long id, Long tenantId);
 
     Page<Contact> findAllByTenantId(Long tenantId, Pageable pageable);

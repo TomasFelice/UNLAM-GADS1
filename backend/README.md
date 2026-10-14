@@ -1,14 +1,17 @@
 # zTech CRM — Backend
 
 API del CRM de salones de eventos corporativos (UNLaM GADS1). Este README refleja el
-estado del backend a la **Entrega 1** (24/09/2026): login, empresas y contactos,
-salones/servicios/etapas precargados, oportunidades y embudo con cambio de etapa
-persistido. Se actualiza en cada entrega — ver la sección [Estado](#estado-y-alcance)
+estado implementado al **10/10/2026**: acceso, clientes, oferta, catálogos y embudos
+configurables, oportunidades, cambio de etapa, cierres, reapertura, reservas y
+registro append-only de actividades con históricos paginados. Se actualiza en cada corte — ver la sección [Estado](#estado-y-alcance)
 al final para el detalle de qué está implementado y qué no.
 
 Contexto funcional y arquitectónico completo: [`docs/`](../docs/README.md) en la raíz
 del repositorio. Decisiones técnicas del backend: [`docs/context/`](../docs/context/)
 y [`docs/specs-backend/`](../docs/specs-backend/), compartidas por todos los asistentes.
+
+Regresión local y límites de publicación:
+[validación de §11](../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/validacion-punto-11-2026-10-10.md).
 
 ## Stack
 
@@ -100,7 +103,7 @@ shell de otra forma), `./mvnw spring-boot:run` a secas también funciona — per
 sos vos quien tiene que exportar `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` y `JWT_SECRET`
 antes, no alcanza con que `.env` exista en el directorio.
 
-`run.ps1`/`run.sh` fuerzan el perfil `local` (más logging, `show-sql`) si no está seteado
+`run.ps1`/`run.sh` fuerzan el perfil `local` (logging de desarrollo sin SQL) si no está seteado
 `SPRING_PROFILES_ACTIVE`. Un `./mvnw spring-boot:run` a secas, sin el script, **no** usa
 ese perfil por su cuenta — corre con el perfil `default` de Spring (sin las variantes de
 `application-local.yml`).
@@ -142,28 +145,58 @@ Surefire en `test` — es la convención estándar de Maven) levantan su propio 
 efímero con Testcontainers y corren las migraciones de Flyway desde una base vacía en
 cada ejecución. No dependen de Supabase ni de `.env`.
 
-La suite usa PostgreSQL 16 de Testcontainers y la migración consolidada V1 desde base
-vacía. Incluye verificaciones del esquema, datos semilla, exclusión GiST, filtros,
-actividades e historial.
+La suite usa PostgreSQL 16 de Testcontainers y las migraciones V1/V2 desde base
+vacía, además de actualización V1→V2 con datos existentes. Incluye verificaciones
+del esquema, datos semilla, exclusión GiST, filtros, actividades e historial.
 
 El 17/09/2026 se consolidaron V1–V4 en `V1__initial_schema.sql` tras el reinicio de la
 base autorizado por el usuario. Requiere una base vacía, incluido el historial
 `flyway_schema_history`; no es una actualización de bases con las versiones anteriores.
 Los cambios posteriores se incorporan en nuevas migraciones desde V2.
 
+`V2__normalize_company_cuit.sql` normaliza CUIT sin guiones y blancos a `null`.
+Detecta equivalentes repetidos por tenant antes de escribir y revierte la migración
+con IDs de empresas para corregir los datos; no fusiona ni elimina registros.
+Los dígitos incorrectos existentes se conservan: la API exige corregirlos u omitir
+el CUIT opcional al guardar. No se recalcula una identidad fiscal automáticamente.
+Altas y ediciones validan el dígito y la unicidad canónica, email y sitio HTTP/HTTPS;
+normalizan blancos opcionales de empresas/contactos antes de validar.
+
 ## Documentación de la API
+
+### Diagnóstico de solicitudes y carga
+
+Las solicitudes autenticadas registran método, ruta sin query, estado y duración,
+con `requestId`/`userId`/`tenantId` en el MDC. Errores controlados registran sólo
+estado/código; los inesperados, la clase de excepción. No se registran cuerpos,
+cabeceras, contraseñas, tokens ni parámetros de búsqueda. Los tres identificadores
+se limpian al finalizar; una solicitud anónima no hereda actor/tenant.
+`X-Request-Id` permite correlacionar un `ProblemDetail` sin exponer actor/tenant
+en el error. SQL, binds y diagnósticos JDBC de Hibernate están deshabilitados
+también en el perfil local; no habilitarlos para capturas compartidas.
+
+El listado/tablero de oportunidades resuelve nombres y servicios en lotes por
+IDs autorizados, con mapas por request. `OpportunityLoadIT` comprueba el conteo
+con 20/100 filas y aislamiento; `ObservabilityIT` captura logs reales de errores
+400/401/403/404/409/422 y comprueba correlación y ausencia de datos sensibles.
+La instrumentación de carga existe sólo en test: ver los comandos de la
+[línea base](../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/evidencias/linea-base-carga.md).
+
+### Contrato
 
 - **Swagger UI** (con la app corriendo en local): http://localhost:8080/swagger-ui.html
 - **OpenAPI estático**: [`docs/openapi.yaml`](docs/openapi.yaml) — exportado desde
   `/v3/api-docs.yaml`; se regenera cada vez que cambia el contrato.
 - **Colección de Postman**: [`docs/postman/`](docs/postman/) — importar
   `zTech-CRM.postman_collection.json` y el environment `zTech-CRM-Local.postman_environment.json`.
-  Correr primero el request **Login** de la carpeta *Auth*: autosetea `{{accessToken}}`
-  para el resto de la colección.
-- **Diagramas**: [`docs/diagrams/`](docs/diagrams/) — componentes y las secuencias que
-  ya existen en esta entrega (login, cambio de etapa). Los diagramas de ganar/perder
-  oportunidad y reserva concurrente se agregan cuando esas funcionalidades se
-  implementen (Fases 7-8).
+  Completar `baseUrl`, `email` y `password` de un ADMIN de prueba que ya haya
+  cambiado su contraseña temporal. Correr primero **Login** de *Auth*: autosetea
+  `{{accessToken}}`; las carpetas siguientes capturan IDs/versiones. Usar datos
+  de prueba: la colección crea registros, los edita y ejecuta bajas lógicas.
+  El E2E con Newman valida las 69 operaciones runtime sin ajustar IDs manualmente;
+  preparación en [README frontend](../frontend/README.md#pruebas-integradas-locales).
+- **Diagramas**: [`docs/diagrams/`](docs/diagrams/) — componentes y secuencias
+  implementadas de login, cambio de etapa, cierre/reapertura y reserva concurrente.
 
 ## Estructura de paquetes
 
@@ -177,7 +210,7 @@ com.ztech.crm/
 ├── tenancy/          # Tenant
 ├── access/           # User, Role, login, contraseña y administración de usuarios
 ├── customers/        # Company, Contact
-├── offerings/        # Venue, EventService (sólo lectura en E1)
+├── offerings/        # Venue, EventService, ABM ADMIN y consulta comercial paginada
 ├── catalogs/         # Etapas, tipos de evento/actividad, orígenes y motivos
 ├── opportunities/    # Opportunity, StageHistory, cambio de etapa, tablero
 └── activities/       # Lectura del historial comercial
@@ -189,7 +222,32 @@ com.ztech.crm/
 
 - Login con JWT (`POST /api/v1/auth/login`).
 - ABM de empresas y contactos, con relación opcional entre ambos.
-- Lectura de salones, servicios adicionales y etapas (precargados por Flyway).
+- Origen comercial validado por tenant y actividad al escribir clientes; las
+  referencias históricas inactivas pueden conservarse. Listado de empresas y
+  detalles de empresa/contacto incluyen `salesRepName`, también para responsables
+  inactivos, sin ampliar `/users/assignable` del vendedor.
+- ABM de salones y servicios adicionales por ADMIN, con baja lógica y consulta
+  comercial para los tres roles. Listados paginados con `q`, `status` en salones o
+  `active` en servicios, tamaño 20/máximo 100 y orden validado.
+- Oferta histórica conservada al editar oportunidades; nuevas asociaciones exigen
+  disponibilidad. Omitir `serviceIds` al editar conserva los actuales; `[]` los quita.
+- Reducción de capacidad rechazada con 409 si invalida una reserva ganada; las
+  oportunidades abiertas se revalidan al editar. Puerto `VenueReservationPort` sin
+  acceso a repositorios ajenos. Al ganar se revalidan salón y capacidad bajo bloqueo compartido.
+- ABM ADMIN de orígenes, motivos de pérdida y tipos de actividad/evento: `GET/POST`,
+  detalle `GET` y edición/baja lógica `PUT /{id}`. Lecturas para los tres roles,
+  nombre no vacío y único por catálogo/tenant. Listados con `q`, `active`, página
+  de 20/máximo 100 y orden permitido `id`, `name`, `active` (estable por ID).
+- Referencias de catálogos nuevas activas; clientes/oportunidades pueden conservar
+  las inactivas anteriores. IDs ajenos devuelven 404, nuevas inactivas 422.
+  `CatalogEntryInfo` es el contrato de consulta entre módulos. Los cierres consumen
+  el motivo y el registro de actividades valida el tipo activo.
+- ABM ADMIN de embudos y etapas propias, orden completo atómico y baja lógica.
+  Predeterminado activo único, activación con clases OPEN/WON/LOST y copias
+  independientes de plantillas corporativa/breve. V3 conserva IDs e historial.
+- Oportunidad con embudo fijo; `pipelineId` filtra listado/tablero. Omitido en alta
+  o tablero usa predeterminado. Columnas por tipo y actividad, incluidas históricas.
+  Embudo inactivo no permite altas; abiertas existentes pueden seguir operándose.
 - ABM de oportunidades (título, empresa/contacto, responsable, salón, etapa inicial,
   fecha del evento, cantidad de asistentes).
 - Cambio de etapa con historial atómico (`POST /{id}/stage`).
@@ -203,14 +261,51 @@ com.ztech.crm/
 - Oportunidades con rango horario, tipo de evento, servicios asociados, control de
   capacidad y restricción GiST de reservas ganadas.
 - Filtros DP-10, paginación acotada y orden validado en clientes y oportunidades.
-- Lectura de actividades por empresa, contacto y oportunidad, con autor y tipo resueltos.
+  Búsqueda de contactos con unión izquierda para incluir individuales; filtro
+  companyId aplicado en servidor. OpportunityCreationIT verifica contexto, herencia,
+  contradicciones, tenant, fechas reales y capacidad (60 permitido dentro de 80).
+- Registro y lectura paginada de actividades por empresa, contacto y oportunidad,
+  con autor y tipo resueltos, orden estable por fecha/ID y alcance comercial.
 - Lectura del historial de etapas; el alta registra también la etapa inicial.
 
-**Todavía no implementado** (ver `docs/specs-backend/tasks.md` para el detalle fase
-por fase):
+**Cierre de OpenSpec (13/10/2026)**: el usuario aprobó el testing integral local y
+autorizó archivar con §11.8 pendiente. Ver el
+[cierre](../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/cierre-2026-10-13.md).
+Las pruebas locales no certifican el ambiente remoto; no se realizó despliegue.
 
-- ABM administrativo de salones/servicios y de los catálogos configurables — Fase 6.
-- Alta de actividades y cierre ganado/perdido — Fase 7.
-- Confirmación ganada con traducción amigable del conflicto de reserva y prueba de
-  concurrencia — Fase 8; la restricción GiST ya existe en V1.
-- Deploy en Render — en curso, gestionado por el equipo.
+### Ciclo comercial y conflictos
+
+POST `/opportunities/{id}/assign|win|lose|reopen`: versión leída obligatoria también
+en PUT/stage. Assign/reopen sólo ADMIN/SALES_MANAGER; cierre por alcance comercial.
+Ganada exige valor final ≥0 y etapa WON; perdida, motivo activo y etapa LOST.
+Reapertura exige nota, embudo activo y etapa OPEN. Cierres y auditoría se guardan
+atómicamente, con fecha del servidor. GET `/{id}/availability` orienta; ganar revalida.
+V4 conserva historial anterior como LEGACY sin snapshots inventados y agrega datos
+de futuros cierres. IDs/nombres de motivo y valor sobreviven a reaperturas/renombres.
+GiST de V1 no cambia. Exclusión → 409 VENUE_ALREADY_BOOKED; versión → 409
+OPPORTUNITY_VERSION_CONFLICT; aborto concurrente de bloqueo → 409
+CONCURRENT_WRITE_CONFLICT. No se registran SQL/claves del error desde el advice.
+Recargar antes de reintentar; no se hacen reintentos automáticos de escrituras.
+Postman incluye carpeta Ciclo comercial y reservas, captura IDs/versiones y crea
+un embudo independiente. Diagramas en docs/diagrams describen transacciones reales.
+
+### Actividades e historial comercial
+
+`POST /api/v1/activities` recibe `typeId`, `occurredAt` (instante no futuro),
+`description`, `result` y al menos `companyId`, `contactId` u `opportunityId`.
+Tipo activo obligatorio; descripción y resultado no vacíos. Actor, tenant y fecha
+de registro proceden del servidor. Una oportunidad deriva sus clientes y un contacto
+deriva su empresa; asociaciones explícitas contradictorias reciben `422`.
+
+SELLER registra en clientes asignados directamente o en oportunidades propias,
+incluso cerradas; la consulta indirecta de un cliente no autoriza escritura general.
+No se filtran las actividades de oportunidades ajenas por compartir cliente.
+Las bajas lógicas conservan hechos y autores; no hay PUT/DELETE de actividades.
+
+GET `/activities` y `/{companies|contacts|opportunities}/{id}/activities` aceptan
+`page`, `size` (20, máximo 100) y `sort` validado. Orden habitual:
+`occurredAt desc, id desc`. `occurredAt` identifica el hecho, `createdAt` el registro.
+V5 agrega índices por relación y cronología. La colección Postman incorpora
+**Registro de actividades e historial**, con referencias capturadas de la API.
+`ActivityRegistrationIT` cubre asociaciones, validación, alcance, páginas con empates,
+bajas y autor inactivo. La UI ofrece alta contextual y navegación completa.

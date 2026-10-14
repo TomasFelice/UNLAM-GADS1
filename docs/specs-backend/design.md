@@ -75,7 +75,7 @@ REFERENCES tenants(id)`. Tipos de fecha/hora en `timestamptz`. Moneda: `NUMERIC(
 | tenant_id | bigint not null FK | |
 | business_name | text not null | nombre comercial; recibe el `name` histórico |
 | legal_name | text not null | razón social; recibe el `name` histórico en el backfill |
-| cuit | text null | `UNIQUE (tenant_id, cuit)` con índice parcial `WHERE cuit IS NOT NULL` |
+| cuit | text null | Canónico sin guiones, dígito validado en solicitudes; `UNIQUE (tenant_id, cuit)` con índice parcial `WHERE cuit IS NOT NULL` |
 | industry | text null | |
 | email | text null | formato validado, no único |
 | phone | text null | |
@@ -104,6 +104,14 @@ REFERENCES tenants(id)`. Tipos de fecha/hora en `timestamptz`. Moneda: `NUMERIC(
 | notes | text null | |
 | auditoría | | |
 
+En los contratos implementados de clientes, el listado de empresas y los detalles
+de empresa/contacto incluyen `salesRepName`, resuelto en servidor para el tenant
+autenticado, también para responsables inactivos. Los nuevos consumidores usan
+`UserIdentity` de `access/service`; la página de empresas resuelve identidades por
+lote. No se amplía `/users/assignable` para dar acceso a usuarios ajenos al alcance.
+`OriginService.assertSelectable` comprueba pertenencia del origen (404 si es ajeno),
+actividad en nuevas asociaciones (422) y conservación del origen inactivo anterior.
+
 ### 3.5 `venues`
 | Columna | Tipo | Notas |
 |---|---|---|
@@ -131,20 +139,72 @@ REFERENCES tenants(id)`. Tipos de fecha/hora en `timestamptz`. Moneda: `NUMERIC(
 | auditoría | | |
 
 ### 3.7 `stages`
+
+El modelo implementado mediante V3 sigue
+[ADR-006](../decisiones/adr/ADR-006-multiples-embudos.md): `Pipeline` pertenece a
+`catalogs`, cada etapa lleva `pipeline_id NOT NULL` y la unicidad del orden pasa a
+`(tenant_id, pipeline_id, position)`, diferible para reordenamientos completos
+atómicos con bloqueo del embudo. El tipo de una etapa con uso comercial no cambia.
+Un puerto en `catalogs/service`, implementado por `opportunities`, permite consultar
+ese uso sin dependencias inversas. `PipelineInfo` y `StageInfo` son los contratos de
+consulta de `catalogs/service`; oportunidades usa DTOs propios para representar esas
+referencias en HTTP.
+
+La tabla `pipelines` tiene `id`, `tenant_id`, `name`, `active`, `is_default`
+y auditoría, nombre único por tenant e índice único parcial del predeterminado.
+Activar exige etapas activas `OPEN`/`WON`/`LOST`; reemplazar el predeterminado es
+atómico y serializa la configuración del tenant. Baja lógica y plantillas copiadas
+con IDs propios preservan independencia e historia.
 | Columna | Tipo | Notas |
 |---|---|---|
 | id | bigint identity PK | |
 | tenant_id | bigint not null FK | |
+| pipeline_id | bigint not null | FK compuesta tenant/embudo |
 | name | text not null | |
-| position | integer not null | orden del embudo, `UNIQUE (tenant_id, position)` |
+| position | integer not null | `UNIQUE (tenant_id, pipeline_id, position)` diferible |
 | kind | text not null | `OPEN` \| `WON` \| `LOST` |
 | active | boolean not null default true | |
 
 ### 3.8 `activity_types`, `origins`, `loss_reasons`, `event_types`
 Mismo patrón simple: `id`, `tenant_id`, `name`, `active`. `UNIQUE (tenant_id, name)` en
-cada uno.
+cada uno. El ABM de estos cuatro catálogos está implementado con `CatalogEntryRequest`
+(nombre no vacío, actividad obligatoria), detalle y listados `PageResponse` de 20,
+máximo 100. Búsqueda literal por nombre sin distinguir mayúsculas; filtro `active`,
+orden permitido `id`/`name`/`active` y desempate por ID. Las escrituras requieren
+ADMIN; la unicidad exacta después de recortar blancos se comprueba en service y DB.
+Las bajas son `PUT` con `active=false`; no hay DELETE.
+
+`CatalogEntryInfo` de `catalogs/service` resuelve referencias, incluidas inactivas.
+`assertSelectable` valida tenant y actividad para nuevas asociaciones y permite
+conservar el ID anterior. Clientes y oportunidades ya consumen esta regla para
+origen; oportunidades también para tipo de evento. Motivo de pérdida y tipo de
+actividad exponen el mismo contrato para los casos de uso pendientes de §8/§9.
 
 ### 3.9 `opportunities`
+
+V3 implementa ADR-006 y agrega `pipeline_id NOT NULL`, fijo tras crear, y un índice por
+tenant/embudo/estado. FKs compuestas aseguran coherencia de tenant/embudo/etapa.
+La migración crea un embudo corporativo por tenant, vincula etapas y deriva el
+embudo de la oportunidad desde su etapa antes de imponer restricciones. Conserva
+los IDs e historial sin modificar V1. Los tenants sin etapas reciben sólo las siete
+iniciales de DP-06; una configuración parcial sin clases activas requeridas falla
+con diagnóstico y rollback, sin agregar etapas para ocultar el problema. La exclusión GiST siguiente
+no incorpora embudo: el recurso reservado sigue siendo el salón.
+
+Alta/detalle/filtros incorporan `pipelineId`; en alta omitido resuelve el predeterminado
+por compatibilidad. El tablero usa el predeterminado si se omite y devuelve identidad
+y todas sus columnas con `kind`/`active`, incluidas cerradas e inactivas. `PUT` rechaza
+transferencias. Crear exige embudo activo; las abiertas existentes de uno inactivo
+pueden cambiar a etapas activas propias. Reabrir sigue pendiente en §8 y exigirá activo.
+
+ADMIN configura `/pipelines`, `/stages` y `/pipelines/{id}/stages/reorder`;
+`/pipeline-templates` consulta dos definiciones inmutables que se copian con IDs propios.
+Toda configuración bloquea tenant y luego embudo. El uso comercial mantiene bloqueos
+compartidos de embudo y etapa durante su transacción; editar etapa toma bloqueo
+exclusivo antes de consultar su uso. No puede cambiar de tipo mientras se crea una
+referencia concurrente. Reordenar valida todos los IDs y difiere sólo su restricción
+de posición. Reemplazar predeterminado desmarca/flush del anterior antes de marcar el
+nuevo, en una transacción protegida por el índice parcial.
 | Columna | Tipo | Notas |
 |---|---|---|
 | id | bigint identity PK | |
@@ -197,6 +257,13 @@ sus dos identificadores. No persiste cantidad ni precio histórico (DP-05).
 | changed_at | timestamptz not null | |
 | changed_by | bigint not null FK → users | |
 | note | text null | |
+| event_type | varchar(24) not null | V4: LEGACY/CREATED/STAGE_CHANGED/WON/LOST/REOPENED |
+| snapshot_complete | boolean not null | false para legacy, true para eventos nuevos |
+| destination_status | varchar(20) null | snapshot del estado destino |
+| final_value | numeric(15,2) null | snapshot de cierre WON |
+| closed_at | timestamptz null | fecha del cierre del servidor |
+| loss_reason_id | bigint null | ID histórico del motivo LOST |
+| loss_reason_name | varchar(255) null | etiqueta al cerrar; no cambia por renombrado |
 
 **Append-only**: sin `UPDATE`/`DELETE` desde la aplicación; no se expone endpoint de
 edición ni borrado. `StageHistoryRepository` no declara `deleteById` ni `save` sobre una
@@ -251,6 +318,10 @@ erDiagram
   pasos de conversión de datos legacy; los cambios posteriores se versionan desde V2.
 - Las migraciones aplicadas vuelven a ser inmutables; se validan desde base vacía con
   Testcontainers y en CI (DT-20).
+- `V2__normalize_company_cuit.sql`: quita guiones y espacios exteriores del CUIT,
+  convierte blancos a `null` y falla transaccionalmente ante equivalentes por tenant
+  antes de escribir. No cambia dígitos ni relaciones de datos existentes. Se prueba
+  instalación vacía, actualización V1 y colisión sin pérdida de empresas.
 
 ## 5. Capas y flujo de una request
 
@@ -264,7 +335,7 @@ HTTP → JwtAuthenticationFilter (resuelve AuthenticatedUser + TenantContext)
 
 Un `service` de un módulo que necesita datos de otro módulo **llama al `service` del
 módulo dueño**, no a su repositorio (ADR-001). Ejemplo: `OpportunityService` valida que el
-`venueId` exista y esté activo llamando a `VenueService.getActiveOrThrow(id, tenantId)`,
+`venueId` exista y sea seleccionable llamando a `VenueService.getForAssociation(id, previousId)`,
 no a `VenueRepository` directamente.
 
 ## 6. Seguridad
@@ -316,6 +387,17 @@ Formato de respuesta (extiende `ProblemDetail`, RFC 7807):
 }
 ```
 
+### Oferta comercial implementada — 09/10/2026
+
+Escrituras ADMIN de Venue/EventService sobre esquema V1 sin borrado físico.
+VenueInfo es contrato de service; OpportunityVenueResponse conserva el JSON del
+detalle sin importar DTO de oferta. getForAssociation acepta la referencia previa
+inactiva y exige disponibilidad para una nueva. Servicios omitidos en edición
+conservan los previos; [] los quita. Capacidad siempre se valida al editar abiertas.
+VenueReservationPort, implementado por OpportunityVenueReservations, consulta
+reservas GANADA por tenant/salón; una reducción que las invalida devuelve 409.
+El cierre ganado (§8) revalida disponibilidad/capacidad y coordina las reservas concurrentes.
+
 ## 8. Paginación y filtros
 
 - `PageResponse<T>` propio (`content`, `page`, `size`, `totalElements`, `totalPages`),
@@ -325,33 +407,86 @@ Formato de respuesta (extiende `ProblemDetail`, RFC 7807):
   módulo que lo necesite (`CompanySpecifications`, `OpportunitySpecifications`).
   Alcance exacto de campos filtrables: DP-10.
 
+### Carga de oportunidades por lotes (OpenSpec §10)
+
+El listado y el tablero autorizan primero las oportunidades y luego reúnen sus IDs
+relacionados. `CompanyService`/`ContactService` resuelven nombres en lotes con tenant
+y alcance de vendedor; `UserService.getIdentities`, `VenueService.getNames` y
+`StageService.getNames` conservan tenant y referencias históricas inactivas.
+Los mapas viven sólo durante el request; no hay caché global ni joins entre módulos.
+Los servicios adicionales se consultan en el repositorio propio mediante los IDs
+de la página autorizada, sin inicializar una colección por oportunidad ni cargar
+colecciones de otras páginas. El contrato HTTP y sus campos se conservan.
+
+`OpportunityLoadIT` mide SQL por request con 20/100 filas y referencias distintas,
+incluyendo autenticación, y comprueba alcance SELLER y segundo tenant.
+La instrumentación `LoadBaselineApplication` existe sólo en classpath de test.
+
 ## 9. Casos de uso no triviales
 
 ### 9.1 Cambio de etapa (`ChangeStageService` dentro de `opportunities`)
-1. Cargar `Opportunity` por id + tenant (404 si no existe).
-2. Verificar `status = ABIERTA` (409 si está cerrada, salvo reapertura explícita — DP-01).
-3. Verificar que la `Stage` destino pertenece al tenant y está `active`.
-4. Si `stage.kind = OPEN`: actualizar `stage_id`, insertar `StageHistory`.
-5. Si `stage.kind = WON`: exige body con `finalValue`; delega en el caso de uso de "ganar".
-6. Si `stage.kind = LOST`: exige `lossReasonId`; delega en el caso de uso de "perder".
-7. Todo en una única transacción (`@Transactional`): si falla el insert de historial, se
-   revierte el cambio de etapa.
+1. Cargar por tenant y alcance; verificar abierta y `version` leída obligatoria.
+2. Exigir destino distinto, activo, `OPEN` y del embudo fijo. Otro tipo/embudo → 409;
+   misma etapa → 422; ID ajeno → 404. No delega cierres desde `/stage` (DP-01/06).
+3. Cambiar etapa e insertar historial append-only en una transacción; flush antes
+   de responder para detectar versión y devolver la nueva.
 
-### 9.2 Ganar / perder oportunidad
-- `WinOpportunityService`: valida etapa destino `kind = WON`, exige `finalValue` (si el
-  negocio usa valores), setea `status = GANADA`, `closedAt = now()`, inserta
-  `StageHistory`. Transaccional.
-- `LoseOpportunityService`: análogo, exige `lossReasonId`, `status = PERDIDA`.
+### 9.2 Asignación, cierre y reapertura
+`OpportunityLifecycleService` coordina cuatro operaciones transaccionales:
+- `/assign`: ADMIN/SALES_MANAGER, abierta, destinatario activo del tenant;
+  actualiza auditoría actor/fecha sin modificar actividades ni autores.
+- `/win`: abierta, etapa activa WON propia, valor final obligatorio no negativo
+  con hasta dos decimales, fecha del servidor; valida salón y registra snapshot.
+- `/lose`: abierta, etapa activa LOST y motivo activo del tenant, fecha del servidor;
+  registra ID y nombre del motivo como eran al cerrar, sin reservar.
+- `/reopen`: ADMIN/SALES_MANAGER, cerrada, nota obligatoria, embudo activo y etapa
+  OPEN activa propia. Limpia cierre vigente y libera reserva en la misma transacción;
+  conserva todos los cierres anteriores. PUT/stage cerrados → 409.
 
-### 9.3 Reserva concurrente (POST-E1/EF)
-- Validación de aplicación: antes de marcar `GANADA`, `OpportunityService` consulta si
-  existe otra oportunidad `GANADA` del mismo `venue_id` y tenant cuyo rango se superponga;
-  si existe, `409` con mensaje comprensible.
-- Restricción física: la exclusión GiST de la sección 3.9 es la última línea de defensa
-  ante una carrera entre dos transacciones concurrentes; su violación se captura
-  (`DataIntegrityViolationException` → se traduce a `409` en el `GlobalExceptionHandler`).
-- Test de Testcontainers: dos hilos confirman la misma reserva a la vez; exactamente uno
-  tiene éxito.
+V4 agrega `event_type`, `snapshot_complete`, estado destino, valor, fecha e ID/nombre
+del motivo al historial. Los eventos nuevos CREATED/STAGE_CHANGED/WON/LOST/REOPENED
+son completos. Los anteriores quedan LEGACY, incompletos y sin datos inferidos;
+ningún campo histórico previo ni cierre vigente se reescribe. No se inventan ciclos.
+Cada edición/acción requiere `version`; la comparación explícita rechaza peticiones
+tardías y `@Version` resuelve carreras. Ambos conflictos devuelven 409 y exigen recargar.
+
+### 9.3 Reserva concurrente (implementada en §8 del cambio final)
+`GET /opportunities/{id}/availability` consulta sin revelar la reserva ajena.
+`OpportunityAvailabilityService` vuelve a validar al ganar: salón disponible,
+capacidad actual y ausencia de otra GANADA del tenant/salón con rangos superpuestos.
+No depende del embudo. Los rangos son `[inicio, fin)` y admiten contiguos.
+
+La confirmación toma bloqueo compartido de salón, compatible con otra confirmación;
+la edición de oferta usa bloqueo exclusivo para serializar capacidad/estado. La GiST
+V1 sigue siendo la garantía final: SQLSTATE 23P01 de su constraint se traduce a
+409 VENUE_ALREADY_BOOKED, incluso cuando Hibernate no extrae el nombre. Un aborto
+por competencia de bloqueos también responde 409 CONCURRENT_WRITE_CONFLICT, sin
+reintentar ni sobrescribir automáticamente. El formulario conserva valores y ofrece
+recargar. [PostgreSQL documenta ambos abortos](https://www.postgresql.org/docs/16/mvcc-serialization-failure-handling.html).
+
+OpportunityLifecycleIT fuerza una barrera **después de ambos prechecks** con dos
+requests HTTP y oportunidades distintas. Exige una ganada, un 409, un único cierre
+y rollback de la otra; se repite tres veces. Otra carrera prueba una misma versión.
+Un trigger de prueba que rechaza el historial demuestra rollback HTTP real del cierre.
+
+### 9.4 Actividades e historia íntegra — implementado 10/10/2026
+
+`ActivityService` consume `OpportunityAccessService.getReadableContext` como record
+de service, sin entidades ajenas. `CustomerActivityContext` valida asignación directa
+para hechos generales; con oportunidad se conserva su alcance aunque esté cerrada.
+Asociaciones contradictorias → 422; referencias fuera de tenant/alcance → 404.
+`CreateActivityRequest` exige tipo, fecha no futura, descripción y resultado. Actor,
+tenant y fecha de registro proceden del contexto/reloj del servidor. Activity no tiene
+mutadores y sus columnas son no actualizables; la API sólo agrega y consulta hechos.
+
+La visibilidad distingue actividades con oportunidad (sólo propias para SELLER) de
+hechos generales de clientes visibles. Las lecturas por asociación validan primero
+su alcance. Las actividades se ordenan por fecha descendente e ID descendente como
+desempate; etapas por fecha/ID ascendentes. Contactos y oportunidades paginados también
+desempatan por ID para recorrer relaciones con fechas/nombres repetidos. V5 agrega
+índices históricos por relación. Bajas lógicas y autores inactivos conservan lectura.
+La interfaz pagina actividades, contactos de empresa y oportunidades de ambos clientes,
+registra desde los tres detalles y presenta ambos cierres conservados por V4.
 
 ## 10. Contrato HTTP (resumen, se detalla en OpenAPI)
 
@@ -373,11 +508,14 @@ GET    /api/v1/contacts/{id}
 PUT    /api/v1/contacts/{id}
 GET    /api/v1/contacts/{id}/activities
 
-GET    /api/v1/venues
+GET    /api/v1/venues                    (q, status, page, size, sort)
+GET    /api/v1/venues/{id}
 POST   /api/v1/venues                     (ADMIN, EF)
 PUT    /api/v1/venues/{id}                (ADMIN, EF)
-GET    /api/v1/event-services
-POST   /api/v1/event-services              (ADMIN, EF)
+GET    /api/v1/event-services             (q, active, page, size, sort)
+GET    /api/v1/event-services/{id}
+POST   /api/v1/event-services              (ADMIN, implementado)
+PUT    /api/v1/event-services/{id}         (ADMIN, implementado)
 
 GET    /api/v1/stages
 POST   /api/v1/stages                     (ADMIN, EF)
@@ -461,19 +599,20 @@ Se regenera cada vez que cambia un endpoint, request o response — no sólo al 
 - **`sequence-change-stage.md`**: cliente → `OpportunityController` → `ChangeStageService`
   → valida etapa/estado → `OpportunityRepository.save` + `StageHistoryRepository.save` en
   una transacción → commit o rollback. Ilustra la regla BE-OPP-05.
-- **`sequence-win-lose-opportunity.md`**: análogo para `WinOpportunityService` /
-  `LoseOpportunityService` (design §9.2).
+- **`sequence-win-lose-opportunity.md`**: `OpportunityLifecycleService` coordina
+  ganar/perder/reabrir y sus snapshots transaccionales (design §9.2).
 - **`sequence-concurrent-reservation.md`**: dos requests simultáneas confirmando el mismo
   salón/rango — una llega a la restricción GiST antes que la otra, la segunda recibe `409`
-  (design §9.3). Este diagrama documenta el mecanismo aunque su implementación caiga en la
-  fase de especialización.
+  (design §9.3). `OpportunityLifecycleIT` verifica el mecanismo con barrera después
+  del precheck; el diagrama refleja el flujo implementado.
 
 ### 12.4 Colección de Postman
 
 - Una carpeta por módulo (Auth, Companies, Contacts, Venues, EventServices, Stages,
   Catalogs, Opportunities, Activities), con un request por endpoint de la sección 10.
-- Variables de colección: `{{baseUrl}}` (default `http://localhost:8080/api/v1`) y
-  `{{accessToken}}`.
+- Variables: `{{baseUrl}}` (default `http://localhost:8080/api/v1`), `{{email}}`,
+  `{{password}}` de un ADMIN de prueba con cambio inicial completado y
+  `{{accessToken}}`. El environment guarda credenciales vacías.
 - El request de login incluye un test script que hace
   `pm.collectionVariables.set("accessToken", pm.response.json().accessToken)`; el resto de
   los requests usan `Bearer {{accessToken}}` en la auth de la carpeta raíz, así no hay que

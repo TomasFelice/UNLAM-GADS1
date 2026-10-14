@@ -29,6 +29,9 @@ public class Stage {
     @Column(name = "tenant_id", nullable = false, updatable = false)
     private Long tenantId;
 
+    @Column(name = "pipeline_id", nullable = false, updatable = false)
+    private Long pipelineId;
+
     @Column(nullable = false)
     private String name;
 
@@ -48,8 +51,9 @@ public class Stage {
     protected Stage() {
     }
 
-    public Stage(Long tenantId, String name, Integer position, StageKind kind) {
+    public Stage(Long tenantId, Long pipelineId, String name, Integer position, StageKind kind) {
         this.tenantId = tenantId;
+        this.pipelineId = pipelineId;
         this.name = name;
         this.position = position;
         this.kind = kind;
@@ -61,6 +65,12 @@ public class Stage {
             createdAt = Instant.now();
         }
     }
+
+    public Long getPipelineId() { return pipelineId; }
+    public void updateDetails(String name, StageKind kind, boolean active) {
+        this.name = name.strip(); this.kind = kind; this.active = active;
+    }
+    public void reorder(Integer position) { this.position = position; }
 
     public Long getId() {
         return id;

@@ -54,7 +54,7 @@ backend/src/main/java/com/ztech/crm/
 ├── offerings/        # Venue (salón) y EventService — el "producto o servicio" de la consigna
 ├── catalogs/         # Stage, ActivityType, Origin, LossReason
 ├── opportunities/    # Opportunity, StageHistory, reserva del salón
-└── activities/       # Activity — lectura global y por asociaciones; alta pendiente
+└── activities/       # Activity — alta append-only e históricos paginados
 ```
 
 Cada módulo de negocio tiene adentro:
@@ -76,6 +76,44 @@ Dirección permitida: `activities → opportunities → {customers, offerings, c
 Migraciones: `backend/src/main/resources/db/migration/V1__initial_schema.sql`, etc.
 
 ## Estado del backend y cómo retomar
+
+**Cambio archivado el 13/10/2026 (apply iniciado el 09/10):** el cambio
+[`completar-crm-entrega-final`](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/tasks.md)
+conserva el registro de entrega final; sus nueve specs están sincronizadas. ADR-006 ya tiene migración V3, API y pantallas
+de múltiples embudos y etapas configurables. Se incorpora administración de usuarios en el
+frontend sobre el backend existente, sólo para `ADMIN`. La evidencia actual se
+registra en la [validación del apply](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/validacion-2026-10-09.md);
+los resultados fechados de septiembre siguientes siguen siendo antecedentes.
+El corte de clientes incorpora CUIT con dígito válido y unicidad canónica, formato
+de email/sitio y blancos opcionales. V2 normaliza CUIT existentes sin inventar
+verificadores ni fusionar colisiones. Los formularios incluyen origen y responsables
+por nombre, incluso inactivos. SELLER consulta relacionados por oportunidad propia y
+edita sólo asignados directos, tanto en acciones visibles como en URL de formulario.
+El backend valida tenant y actividad del origen y permite conservar la referencia
+inactiva anterior. La baja por estado preserva oportunidades, actividades y autoría,
+comprobada por HTTP/SQL. La pausa anterior cerró §3–§4. La continuación incorpora §5: ABM ADMIN de los cuatro
+catálogos, lecturas paginadas y selectores por búsqueda/ID; referencias históricas
+conservadas en clientes/oportunidades. §6 agrega embudos propios con predeterminado,
+plantillas, orden atómico, etapas históricas y pipeline fijo de oportunidad.
+§7 incorpora selección remota de clientes y alta breve contextual con datos
+obligatorios del evento, sin inventar fechas. §8 implementa asignación, cierre,
+reapertura, versión esperada y reservas concurrentes con snapshots V4; el registro
+de actividades y la navegación histórica quedaron completados en §9. Ver el
+[punto de retomada](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/retomada.md)
+y la [validación de §9 del 10/10](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/validacion-2026-10-10.md)
+para la evidencia reciente. La continuación del 10/10 cerró también §10: carga
+por ruta, panel acotado, lecturas por lotes, caché por sesión y errores/logs
+correlacionados. La [validación de §10](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/validacion-punto-10-2026-10-10.md)
+y la [comparación de carga](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/evidencias/comparacion-carga-punto-10.md)
+registran 5 unitarias/108 IT, 45 frontend, 21 E2E y 48 muestras válidas.
+La continuación de §11 completó 11.1–11.7: recorrido integrado por interfaz, rutas
+con tres roles, regresión EF/PDF/reglas e instalación/artefactos. Estado: 71/72 tareas;
+5 unitarias/109 IT, 45 frontend y 24 E2E correctos.
+La [validación de §11](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/validacion-punto-11-2026-10-10.md)
+registra los resultados de esa sesión. El usuario confirmó testing integral local
+satisfactorio el 13/10 y autorizó archivar con §11.8 pendiente; ver el
+[cierre](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/cierre-2026-10-13.md).
+No se certifica el ambiente remoto desde pruebas locales.
 
 `requirements.md`/`design.md`/`tasks.md` (`docs/specs-backend/`) ya fueron aprobados
 por el usuario e implementación arrancó — no son un borrador esperando luz verde.
@@ -134,7 +172,7 @@ la oportunidad y exige fecha real de cierre (y motivo de pérdida si es `LOST`).
 **Oportunidad** (DP-05/07/09): **un solo salón** (`venue_id`, no N:N), rango
 `[event_start,event_end)`, tipo de evento obligatorio y `attendee_count`. V1 incluye
 la asociación N:N simple con `EventService`, la validación de capacidad y la exclusión
-GiST para reservas ganadas; falta integrar el caso de uso de cierre y su concurrencia.
+GiST para reservas ganadas; cierre y concurrencia se incorporaron en §8.
 
 **Producto o servicio** (ADR-004): módulo `offerings/` con `Venue` (salón: capacidad,
 tarifa, se reserva) y `EventService` (catering, audio, decoración: precio, no se reserva).

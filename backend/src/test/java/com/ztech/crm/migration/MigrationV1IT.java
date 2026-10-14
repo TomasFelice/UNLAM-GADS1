@@ -23,6 +23,7 @@ class MigrationV1IT {
         var flyway = Flyway.configure()
                 .dataSource(postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword())
                 .locations("classpath:db/migration")
+                .target("1")
                 .load();
 
         assertThat(flyway.migrate().migrationsExecuted).isEqualTo(1);

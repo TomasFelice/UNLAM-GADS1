@@ -46,8 +46,9 @@ esa decisión concreta; avanzar con el trabajo independiente.
 
 - `backend/`: API REST Java 25 + Spring Boot 4, Maven, PostgreSQL en Supabase,
   Flyway, Spring Security + JWT propio y despliegue Docker en Render.
-- `frontend/`: aplicación React 19 + TypeScript + Vite. Actualmente es una maqueta
-  navegable con datos de demostración, sin autenticación, HTTP ni persistencia.
+- `frontend/`: aplicación React 19 + TypeScript + Vite integrada con la API:
+  autenticación, clientes, oferta, configuración, oportunidades y actividades.
+  Los datos comerciales proceden del backend; la caché se limpia al cambiar de sesión.
 - `backend/docs/openapi.yaml`: contrato estático exportado desde
   `/v3/api-docs.yaml`; JSON de runtime en `/v3/api-docs`. Regenerarlo si cambia la API.
 - La integración frontend-backend consume ese contrato; no duplicar DTOs ni reglas de
@@ -123,8 +124,9 @@ Los pendientes actuales están en `docs/specs-backend/tasks.md`; no darlos por c
 
 Para cambios de frontend, ejecutar `npm run build`; recorrer las rutas tocadas y
 confirmar que no haya errores de consola, scroll horizontal a 390 px y que cada página
-pública conserve su `title`, `description` y `canonical`. Al integrar la API, agregar
-las pruebas pertinentes; hoy no hay suite automatizada de frontend.
+pública conserve su `title`, `description` y `canonical`. Ejecutar las pruebas
+pertinentes de Vitest (`npm test`) y los recorridos Playwright (`npm run test:e2e`)
+según el cambio; preparar API/PostgreSQL efímeros según `frontend/README.md`.
 
 Para todo cambio, ejecutar `git diff --check` y revisar `git status --short`.
 Para documentación, verificar rutas, enlaces y coherencia de instrucciones.

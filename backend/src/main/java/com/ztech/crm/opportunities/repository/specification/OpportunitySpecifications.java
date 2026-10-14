@@ -17,6 +17,7 @@ public final class OpportunitySpecifications {
                 cb.like(cb.lower(root.get("notes")), pattern));
     }
     public static Specification<Opportunity> status(OpportunityStatus value) { return equal("status", value); }
+    public static Specification<Opportunity> pipeline(Long value) { return equal("pipelineId", value); }
     public static Specification<Opportunity> stage(Long value) { return equal("stageId", value); }
     public static Specification<Opportunity> origin(Long value) { return equal("originId", value); }
     public static Specification<Opportunity> salesRep(Long value) { return equal("salesRepId", value); }

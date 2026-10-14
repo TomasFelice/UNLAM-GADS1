@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
 import { ErrorDeApi } from "../../shared/api/errores";
@@ -11,6 +11,8 @@ import { EstadoVacio } from "../../shared/components/EstadoVacio";
 import { Tarjeta, TarjetaCuerpo, TarjetaPie } from "../../shared/components/Tarjeta";
 import { ESTADO_CLIENTE } from "../../shared/data/formato";
 import { Seo } from "../../shared/seo/Seo";
+import { usePuedeEditarCliente } from "../../shared/sesion/usePuedeEditarCliente";
+import { SelectorCatalogo } from "../catalogos/SelectorCatalogo";
 import { useUsuariosAsignables } from "../acceso/apiUsuarios";
 import { useEmpresa, useGuardarEmpresa } from "./apiEmpresas";
 import css from "./Empresas.module.css";
@@ -28,6 +30,7 @@ const esquema = z.object({
   localidad: opcional,
   sitioWeb: opcional.refine((valor) => !valor || z.url().safeParse(valor).success, "Ingresá una URL completa, por ejemplo https://empresa.com."),
   responsableId: z.string(),
+  origenId: z.string(),
   observaciones: opcional,
 });
 
@@ -36,14 +39,14 @@ type DatosEmpresa = z.infer<typeof esquema>;
 const VACIA: DatosEmpresa = {
   razonSocial: "", nombreComercial: "", cuit: "", industria: "", estado: "POTENCIAL",
   email: "", telefono: "", direccion: "", localidad: "", sitioWeb: "",
-  responsableId: "", observaciones: "",
+  responsableId: "", origenId: "", observaciones: "",
 };
 
 const camposBackend: Record<string, keyof DatosEmpresa> = {
   legalName: "razonSocial", businessName: "nombreComercial", cuit: "cuit",
   industry: "industria", status: "estado", email: "email", phone: "telefono",
   address: "direccion", locality: "localidad", website: "sitioWeb",
-  salesRepId: "responsableId", notes: "observaciones",
+  salesRepId: "responsableId", originId: "origenId", notes: "observaciones",
 };
 
 const nuloSiVacio = (valor: string) => valor.trim() || undefined;
@@ -54,13 +57,17 @@ export function PaginaEmpresaFormulario() {
   const edicion = id !== undefined;
   const navegar = useNavigate();
   const empresa = useEmpresa(id);
+  const puedeEditar = usePuedeEditarCliente(empresa.data?.salesRepId);
   const usuarios = useUsuariosAsignables();
   const guardar = useGuardarEmpresa(id);
   const [errorGeneral, setErrorGeneral] = useState<string>();
   const {
-    register, handleSubmit, reset, setError,
+    register, handleSubmit, reset, setError, setValue, control,
     formState: { errors, isSubmitting },
   } = useForm<DatosEmpresa>({ resolver: zodResolver(esquema), mode: "onBlur", defaultValues: VACIA });
+
+  const origenSeleccionado = useWatch({ control, name: "origenId" });
+  const responsableSeleccionado = useWatch({ control, name: "responsableId" });
 
   useEffect(() => {
     if (!empresa.data) return;
@@ -76,6 +83,7 @@ export function PaginaEmpresaFormulario() {
       localidad: empresa.data.locality ?? "",
       sitioWeb: empresa.data.website ?? "",
       responsableId: empresa.data.salesRepId?.toString() ?? "",
+      origenId: empresa.data.originId?.toString() ?? "",
       observaciones: empresa.data.notes ?? "",
     });
   }, [empresa.data, reset]);
@@ -95,6 +103,7 @@ export function PaginaEmpresaFormulario() {
         locality: nuloSiVacio(datos.localidad),
         website: nuloSiVacio(datos.sitioWeb),
         salesRepId: datos.responsableId ? Number(datos.responsableId) : undefined,
+        originId: datos.origenId ? Number(datos.origenId) : undefined,
         notes: nuloSiVacio(datos.observaciones),
       });
       navegar(`/app/empresas/${guardada.id}`, { replace: true });
@@ -112,10 +121,16 @@ export function PaginaEmpresaFormulario() {
   });
 
   if (edicion && empresa.isPending) {
-    return <EstadoVacio icono="empresas" titulo="Cargando empresa…" descripcion="Estamos preparando el formulario." />;
+    return <><Seo titulo="Editar empresa" descripcion="" noIndexar /><EstadoVacio icono="empresas" titulo="Cargando empresa…" descripcion="Estamos preparando el formulario." /></>;
   }
   if (edicion && (empresa.isError || !empresa.data)) {
-    return <EstadoVacio icono="empresas" titulo="No pudimos abrir la empresa" descripcion={empresa.error?.message ?? "El enlace no es válido."} />;
+    return <><Seo titulo="Editar empresa" descripcion="" noIndexar /><EstadoVacio icono="empresas" titulo="No pudimos abrir la empresa" descripcion={empresa.error?.message ?? "El enlace no es válido."} /></>;
+  }
+
+  if (edicion && !puedeEditar) {
+    return <><Seo titulo="Empresa de consulta" descripcion="" noIndexar /><EstadoVacio icono="empresas"
+      titulo="Este cliente es de consulta" descripcion="Podés consultar su información. Sólo su responsable y la supervisión comercial pueden editarlo."
+      accion={<BotonEnlace a={`/app/empresas/${id}`} variante="secundario">Volver a la empresa</BotonEnlace>} /></>;
   }
 
   return (
@@ -140,7 +155,7 @@ export function PaginaEmpresaFormulario() {
                   {(campoId, descripcion) => <Entrada id={campoId} aria-describedby={descripcion} aria-invalid={Boolean(errors.nombreComercial)} {...register("nombreComercial")} />}
                 </Campo>
                 <Campo etiqueta="CUIT" ayuda="11 dígitos, con o sin guiones." error={errors.cuit?.message}>
-                  {(campoId, descripcion) => <Entrada id={campoId} inputMode="numeric" placeholder="30-71234567-8" aria-describedby={descripcion} aria-invalid={Boolean(errors.cuit)} {...register("cuit")} />}
+                  {(campoId, descripcion) => <Entrada id={campoId} inputMode="numeric" placeholder="30-71234567-1" aria-describedby={descripcion} aria-invalid={Boolean(errors.cuit)} {...register("cuit")} />}
                 </Campo>
                 <Campo etiqueta="Industria o actividad" error={errors.industria?.message}>
                   {(campoId, descripcion) => <Entrada id={campoId} aria-describedby={descripcion} {...register("industria")} />}
@@ -171,12 +186,18 @@ export function PaginaEmpresaFormulario() {
               </GrupoCampos>
 
               <GrupoCampos titulo="Gestión comercial">
-                <Campo etiqueta="Responsable comercial" ayuda="Si no elegís uno, el backend aplica la asignación correspondiente a tu rol." error={errors.responsableId?.message}>
-                  {(campoId, descripcion) => <Selector id={campoId} aria-describedby={descripcion} {...register("responsableId")}>
+                <Campo etiqueta="Responsable comercial" ayuda="Si no elegís uno, la empresa queda a tu cargo." error={errors.responsableId?.message}>
+                  {(campoId, descripcion) => <Selector id={campoId} aria-describedby={descripcion} {...register("responsableId")} value={responsableSeleccionado}>
                     <option value="">Asignación automática</option>
+                    {empresa.data?.salesRepId && !usuarios.data?.some((usuario) => usuario.id === empresa.data?.salesRepId) &&
+                      <option value={empresa.data.salesRepId}>{empresa.data.salesRepName}</option>}
                     {usuarios.data?.map((usuario) => <option key={usuario.id} value={usuario.id}>{usuario.firstName} {usuario.lastName}</option>)}
                   </Selector>}
                 </Campo>
+                <Campo etiqueta="Origen" error={errors.origenId?.message}>
+                  {(campoId, descripcion) => <SelectorCatalogo id={campoId} descripcion={descripcion} catalogo="origenes" valor={origenSeleccionado} alCambiar={v => setValue("origenId", v, { shouldDirty: true, shouldValidate: true })} soloActivos />}
+                </Campo>
+                {usuarios.isError && <p role="alert">No pudimos cargar los responsables. <Boton type="button" variante="secundario" onClick={() => usuarios.refetch()}>Reintentar</Boton></p>}
                 <Campo etiqueta="Observaciones" ancho ayuda="Notas internas del equipo comercial." error={errors.observaciones?.message}>
                   {(campoId, descripcion) => <AreaTexto id={campoId} aria-describedby={descripcion} {...register("observaciones")} />}
                 </Campo>
@@ -187,7 +208,7 @@ export function PaginaEmpresaFormulario() {
             <span>Los campos marcados con asterisco son obligatorios.</span>
             <span className={css.accionesFormulario}>
               <BotonEnlace a={id ? `/app/empresas/${id}` : "/app/empresas"} variante="secundario">Cancelar</BotonEnlace>
-              <Boton type="submit" icono="check" disabled={isSubmitting}>{isSubmitting ? "Guardando…" : edicion ? "Guardar cambios" : "Crear empresa"}</Boton>
+              <Boton type="submit" icono="check" disabled={isSubmitting || usuarios.isPending || usuarios.isError}>{isSubmitting ? "Guardando…" : edicion ? "Guardar cambios" : "Crear empresa"}</Boton>
             </span>
           </TarjetaPie>
         </Tarjeta>

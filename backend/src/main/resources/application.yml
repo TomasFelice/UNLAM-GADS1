@@ -11,6 +11,7 @@ spring:
 
   jpa:
     open-in-view: false
+    show-sql: false
     hibernate:
       # Flyway es la única fuente de verdad del esquema (docs/arquitectura/03-...).
       # "validate" detiene el arranque si el modelo Java no coincide con la BD real.
@@ -53,5 +54,10 @@ app:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
 
 logging:
+  level:
+    # Los conflictos se registran sin SQL ni claves comerciales desde el advice.
+    org.hibernate.orm.jdbc.error: OFF
+    org.hibernate.SQL: OFF
+    org.hibernate.orm.jdbc.bind: OFF
   pattern:
     level: "%5p [tenant=%X{tenantId} user=%X{userId} req=%X{requestId}]"

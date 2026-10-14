@@ -1,9 +1,8 @@
 package com.ztech.crm.customers.dto.response;
 
 import com.ztech.crm.customers.domain.enums.PartyStatus;
-import java.util.List;
 
-/** {@code GET /api/v1/companies/{id}} incluye sus contactos (BE-CUS-03). */
+/** Datos de empresa; contactos asociados se consultan paginados por companyId (BE-CUS-03). */
 public record CompanyDetailResponse(
         Long id,
         String legalName,
@@ -17,9 +16,9 @@ public record CompanyDetailResponse(
         String website,
         PartyStatus status,
         Long salesRepId,
+        String salesRepName,
         Long originId,
-        String notes,
-        List<ContactSummaryResponse> contacts
+        String notes
 ) {
     public String name() {
         return businessName;

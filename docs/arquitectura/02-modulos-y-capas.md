@@ -29,15 +29,29 @@ flowchart LR
     activities --> access
     activities --> customers
     activities --> opportunities
+    activities --> catalogs
 ```
 
 Las flechas van del consumidor a la API pública del módulo consumido; no representan acceso directo a implementación. Se deben evitar dependencias circulares.
+
+`activities` recibe `OpportunityContext` y `CustomerActivityContext`, records en
+`service`, para derivar asociaciones autorizadas sin consumir entidades ni DTOs
+internos ajenos. La oportunidad propia permite registrar hechos aun cerrada; un
+cliente visible sólo por relación no habilita el alta general. Las lecturas paginadas
+no exponen actividades de oportunidades ajenas por compartir cliente (OpenSpec §9).
 
 La visibilidad de clientes derivada de oportunidades aplica inversión de dependencias:
 `customers` define `CustomerVisibilityPort` y `opportunities` lo implementa mediante
 `OpportunityAccessService`. Así, empresas y contactos pueden consultar si un vendedor
 tiene una oportunidad propia relacionada sin acceder a tablas del otro módulo ni crear
 una dependencia `customers → opportunities`.
+
+Oferta usa la misma inversión: `offerings/service/VenueReservationPort` consulta
+si una reducción de capacidad invalidaría una reserva ganada. La implementación
+`OpportunityVenueReservations` usa sólo su repositorio. `VenueInfo`, en `service`,
+es el contrato de consulta entre oferta y oportunidades; el detalle HTTP se arma
+con DTO propio de oportunidades. Las asociaciones anteriores pueden conservarse
+inactivas; las nuevas requieren disponibilidad.
 
 ## Capas internas
 
@@ -73,8 +87,9 @@ aplicado: `ChangeStage` es `ChangeStageService` propio, porque escribe `Opportun
 cambio, crear o editar una oportunidad son métodos de `OpportunityService`: validan
 reglas reales (empresa o contacto, salón activo, etapa inicial abierta) pero escriben
 una sola entidad, así que no ganan nada con una clase aparte. `ConfirmReservation` y
-`LoseOpportunity` (Fase 7/8) se esperan como servicios propios, siguiendo el mismo
-criterio que `ChangeStage` — coordinan más de una escritura con reglas de estado.
+`LoseOpportunity` se resuelven en `OpportunityLifecycleService`, junto con
+asignación y reapertura (OpenSpec §8): coordinan estado, auditoría e historial en
+una transacción. `ActivityService` registra hechos autorizados sin mutar oportunidades.
 
 ## Organización del backend
 
@@ -84,13 +99,13 @@ backend/src/main/java/com/ztech/crm/
 ├── tenancy/        # implementado (Fase 0-1)
 ├── access/         # implementado (login, cambio de clave y ABM de usuarios)
 ├── customers/      # implementado (Fase 2)
-├── offerings/      # implementado, sólo lectura (Fase 3) — ABM es Fase 6
-├── catalogs/       # lectura de Stage y EventType; ABM configurable pendiente
+├── offerings/      # consulta paginada y ABM ADMIN implementados (09/10)
+├── catalogs/       # ABM ADMIN de catálogos, embudos y etapas; lecturas comerciales
 ├── opportunities/  # implementado (Fase 3-5, incluido alcance comercial)
-└── activities/     # no existe todavía — Fase 7
+└── activities/     # registro append-only e históricos paginados — OpenSpec §9
 ```
 
-Estado real al cierre de Entrega 1 (24/09), detalle fase por fase en
+Estado actualizado de oferta/catálogos/embudos al 09/10; detalle fase por fase en
 `docs/specs-backend/tasks.md`.
 
 Las migraciones viven en `backend/src/main/resources/db/migration/` con `V1__initial_schema.sql` como instalación consolidada de esquema y datos semilla. Los cambios posteriores se versionan desde V2.
@@ -100,8 +115,9 @@ Las migraciones viven en `backend/src/main/resources/db/migration/` con `V1__ini
 ```text
 frontend/src/
 ├── app/{router,providers,layouts}/
-├── features/{auth,users,companies,contacts,offerings,opportunities,activities,settings}/
-└── shared/{api,components,hooks,types}/
+├── features/{acceso,usuarios,empresas,contactos,salones,servicios,catalogos,embudos,
+│             embudo,oportunidades,actividades,clientes,panel,inicio,institucional}/
+└── shared/{api,components,hooks,sesion,seo,styles,data,tema}/
 ```
 
 Cada feature contiene páginas, componentes, validaciones, consultas y tipos propios. `shared` solo recibe piezas reutilizadas por varias features. TanStack Query administra estado remoto; el estado de formularios queda en React Hook Form y Zod valida entradas. Las restricciones mostradas en la interfaz mejoran la experiencia, pero nunca reemplazan la validación del backend.

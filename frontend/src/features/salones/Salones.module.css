@@ -1,6 +1,6 @@
 .grilla {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ancho-lectura)), 1fr));
   gap: var(--e-4);
   margin: 0;
   padding: 0;
@@ -53,7 +53,7 @@
 }
 
 .numeros dt {
-  font-size: 0.6875rem;
+  font-size: var(--texto-xs);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -85,14 +85,14 @@
 .equipamiento {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: var(--e-2);
   margin: var(--e-4) 0 0;
   padding: 0;
   list-style: none;
 }
 
 .equipamiento li {
-  padding: 3px var(--e-2);
+  padding: var(--e-1) var(--e-2);
   border: 1px solid var(--linea);
   border-radius: var(--radio);
   background: var(--papel-2);

@@ -14,6 +14,10 @@ public record ChangeStageRequest(
         Long stageId,
 
         @Schema(description = "Observación opcional sobre el cambio")
-        String note
+        String note,
+        @NotNull(message = "La versión leída es obligatoria.")
+        @jakarta.validation.constraints.Min(value = 0, message = "La versión no puede ser negativa.")
+        Long version
 ) {
+    public ChangeStageRequest(Long stageId, String note) { this(stageId, note, 0L); }
 }

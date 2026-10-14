@@ -166,12 +166,13 @@ separadas; detalle y motivo en `docs/specs-backend/design.md` §13:
   no recoge `*IT.java` por defecto.
 - No se usó `@WebMvcTest`/`MockMvc` con el service mockeado, ni tests de dominio
   aislados: se prefirió entrar siempre por HTTP real contra infraestructura real.
-- Casos negativos obligatorios: rol insuficiente (desde que exista `@PreAuthorize`,
-  Fase 6), **acceso a otro tenant** (pendiente — hace falta un segundo tenant de
-  prueba), cambio de etapa inválido (cubierto), reserva superpuesta y capacidad
-  excedida (Fase 8, todavía no implementadas).
+- Casos negativos obligatorios: rol insuficiente, **acceso a otro tenant** por
+  listado e ID, cambio de etapa inválido, reserva superpuesta y capacidad excedida.
+  Los fixtures actuales incluyen dos tenants; los cortes OpenSpec §2–§9 incorporan
+  estos casos por HTTP real. Consultar la evidencia vigente antes de afirmar cobertura.
 - Concurrencia: dos confirmaciones simultáneas del mismo salón y rango → exactamente una
-  tiene éxito, la otra recibe `409` — Fase 8, todavía no implementado.
+  tiene éxito, la otra recibe `409`; `OpportunityLifecycleIT` sincroniza ambos
+  requests después del precheck y comprueba historial y estado persistidos.
 
 ## Gotchas conocidos de la infra
 

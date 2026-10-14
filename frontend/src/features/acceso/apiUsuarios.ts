@@ -4,8 +4,9 @@ import { solicitarApi } from "../../shared/api/clienteApi";
 
 export type UsuarioAsignable = components["schemas"]["UserResponse"];
 
-export function useUsuariosAsignables() {
+export function useUsuariosAsignables(habilitado = true) {
   return useQuery({
+    enabled: habilitado,
     queryKey: ["usuarios", "asignables"],
     queryFn: ({ signal }) => solicitarApi<UsuarioAsignable[]>("/users/assignable", { signal }),
     staleTime: 5 * 60_000,

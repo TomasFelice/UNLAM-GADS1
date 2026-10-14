@@ -15,9 +15,11 @@ public final class ActivitySpecifications {
     public static Specification<Activity> visible(Set<Long> companyIds, Set<Long> contactIds,
                                                    Set<Long> opportunityIds) {
         return (root, query, cb) -> cb.or(
-                companyIds.isEmpty() ? cb.disjunction() : root.get("companyId").in(companyIds),
-                contactIds.isEmpty() ? cb.disjunction() : root.get("contactId").in(contactIds),
-                opportunityIds.isEmpty() ? cb.disjunction() : root.get("opportunityId").in(opportunityIds));
+                cb.and(cb.isNotNull(root.get("opportunityId")),
+                        opportunityIds.isEmpty() ? cb.disjunction() : root.get("opportunityId").in(opportunityIds)),
+                cb.and(cb.isNull(root.get("opportunityId")), cb.or(
+                        companyIds.isEmpty() ? cb.disjunction() : root.get("companyId").in(companyIds),
+                        contactIds.isEmpty() ? cb.disjunction() : root.get("contactId").in(contactIds))));
     }
     private static Specification<Activity> equal(String field, Long id) {
         return (root, query, cb) -> cb.equal(root.get(field), id);

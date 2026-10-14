@@ -1,9 +1,11 @@
 package com.ztech.crm.opportunities.mapper;
 
-import com.ztech.crm.catalogs.dto.response.StageResponse;
+import com.ztech.crm.catalogs.service.StageInfo;
+import com.ztech.crm.opportunities.dto.response.OpportunityStageResponse;
 import com.ztech.crm.customers.dto.response.CompanySummaryResponse;
 import com.ztech.crm.customers.dto.response.ContactSummaryResponse;
-import com.ztech.crm.offerings.dto.response.VenueResponse;
+import com.ztech.crm.offerings.service.VenueInfo;
+import com.ztech.crm.opportunities.dto.response.OpportunityVenueResponse;
 import com.ztech.crm.opportunities.domain.Opportunity;
 import com.ztech.crm.opportunities.dto.response.OpportunityDetailResponse;
 import com.ztech.crm.opportunities.dto.response.OpportunityResponse;
@@ -24,6 +26,11 @@ public class OpportunityMapper {
 
     public OpportunityResponse toResponse(Opportunity opportunity, String companyName, String contactName,
                                            String salesRepName, String venueName, String stageName) {
+        return toResponse(opportunity, companyName, contactName, salesRepName, venueName, stageName, opportunity.getEventServiceIds());
+    }
+
+    public OpportunityResponse toResponse(Opportunity opportunity, String companyName, String contactName,
+                                           String salesRepName, String venueName, String stageName, java.util.Set<Long> serviceIds) {
         return new OpportunityResponse(
                 opportunity.getId(),
                 opportunity.getTitle(),
@@ -38,22 +45,23 @@ public class OpportunityMapper {
                 opportunity.getEventStart(),
                 opportunity.getEventEnd(),
                 opportunity.getAttendeeCount(),
-                opportunity.getEventServiceIds(),
-                companyName, contactName, salesRepName, venueName, stageName
+                serviceIds,
+                companyName, contactName, salesRepName, venueName, stageName, opportunity.getPipelineId(), opportunity.getVersion()
         );
     }
 
     public OpportunityDetailResponse toDetailResponse(Opportunity opportunity, CompanySummaryResponse company,
-                                                        ContactSummaryResponse contact, VenueResponse venue,
-                                                        StageResponse stage) {
+                                                        ContactSummaryResponse contact, VenueInfo venue,
+                                                        StageInfo stage) {
         return new OpportunityDetailResponse(
                 opportunity.getId(),
                 opportunity.getTitle(),
                 company,
                 contact,
                 opportunity.getSalesRepId(),
-                venue,
-                stage,
+                new OpportunityVenueResponse(venue.id(), venue.name(), venue.capacity(), venue.rate(),
+                        venue.address(), venue.locality(), venue.description(), venue.equipment(), venue.status()),
+                OpportunityStageResponse.from(stage),
                 opportunity.getEventTypeId(),
                 opportunity.getStatus(),
                 opportunity.getEstimatedValue(),
@@ -67,7 +75,8 @@ public class OpportunityMapper {
                 opportunity.getOriginId(),
                 opportunity.getLossReasonId(),
                 opportunity.getEventServiceIds(),
-                opportunity.getNotes()
+                opportunity.getNotes(),
+                opportunity.getPipelineId(), opportunity.getVersion()
         );
     }
 }

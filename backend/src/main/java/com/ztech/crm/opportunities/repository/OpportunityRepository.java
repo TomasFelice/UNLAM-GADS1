@@ -13,6 +13,34 @@ import org.springframework.data.repository.query.Param;
 
 public interface OpportunityRepository extends JpaRepository<Opportunity, Long>, JpaSpecificationExecutor<Opportunity> {
 
+    interface ServiceLink {
+        Long getOpportunityId();
+        Long getServiceId();
+    }
+
+    /** Sólo colecciones de las oportunidades ya autorizadas de esta página/tablero. */
+    @Query("select o.id as opportunityId, s as serviceId from Opportunity o join o.eventServiceIds s "
+            + "where o.tenantId = :tenantId and o.id in :ids")
+    List<ServiceLink> findServiceLinks(Long tenantId, Set<Long> ids);
+
+    @Query("""
+            select (count(o) > 0) from Opportunity o
+            where o.tenantId = :tenantId and o.venueId = :venueId
+              and o.status = com.ztech.crm.opportunities.domain.enums.OpportunityStatus.GANADA
+              and o.attendeeCount > :capacity
+            """)
+    boolean hasWonReservationAboveCapacity(@Param("tenantId") Long tenantId,
+                                          @Param("venueId") Long venueId, @Param("capacity") int capacity);
+
+    @Query("""
+            select (count(o) > 0) from Opportunity o
+            where o.tenantId = :tenantId and o.venueId = :venueId and o.id <> :excludedId
+              and o.status = com.ztech.crm.opportunities.domain.enums.OpportunityStatus.GANADA
+              and o.eventStart < :eventEnd and o.eventEnd > :eventStart
+            """)
+    boolean hasOverlappingReservation(Long tenantId, Long venueId, Long excludedId,
+            java.time.Instant eventStart, java.time.Instant eventEnd);
+
     Optional<Opportunity> findByIdAndTenantId(Long id, Long tenantId);
 
     Optional<Opportunity> findByIdAndTenantIdAndSalesRepId(Long id, Long tenantId, Long salesRepId);
@@ -25,6 +53,8 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Long>,
     List<Opportunity> findAllByTenantId(Long tenantId);
 
     List<Opportunity> findAllByTenantIdAndSalesRepId(Long tenantId, Long salesRepId);
+
+    boolean existsByTenantIdAndStageId(Long tenantId, Long stageId);
 
     boolean existsByTenantIdAndSalesRepIdAndCompanyId(Long tenantId, Long salesRepId, Long companyId);
 

@@ -11,8 +11,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * {@code deleteAll()}), pero cubre los casos que realmente se podrían invocar por error.
  */
 public interface StageHistoryRepository extends JpaRepository<StageHistory, Long> {
+    boolean existsByTenantIdAndFromStageIdOrTenantIdAndToStageId(Long tenantId, Long fromStageId, Long otherTenantId, Long toStageId);
 
-    List<StageHistory> findAllByTenantIdAndOpportunityIdOrderByChangedAtAsc(Long tenantId, Long opportunityId);
+
+    List<StageHistory> findAllByTenantIdAndOpportunityIdOrderByChangedAtAscIdAsc(Long tenantId, Long opportunityId);
 
     @Override
     default void deleteById(Long id) {

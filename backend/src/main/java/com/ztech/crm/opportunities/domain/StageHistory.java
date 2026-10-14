@@ -44,6 +44,21 @@ public class StageHistory {
     @Column(updatable = false)
     private String note;
 
+    @Column(name = "event_type", nullable = false, updatable = false)
+    private String eventType;
+    @Column(name = "snapshot_complete", nullable = false, updatable = false)
+    private boolean snapshotComplete;
+    @Column(name = "destination_status", updatable = false)
+    private String destinationStatus;
+    @Column(name = "final_value", updatable = false)
+    private java.math.BigDecimal finalValue;
+    @Column(name = "closed_at", updatable = false)
+    private Instant closedAt;
+    @Column(name = "loss_reason_id", updatable = false)
+    private Long lossReasonId;
+    @Column(name = "loss_reason_name", updatable = false)
+    private String lossReasonName;
+
     protected StageHistory() {
     }
 
@@ -55,7 +70,32 @@ public class StageHistory {
         this.toStageId = toStageId;
         this.changedBy = changedBy;
         this.note = note;
+        this.eventType = fromStageId == null ? "CREATED" : "STAGE_CHANGED";
+        this.snapshotComplete = true;
+        this.destinationStatus = "ABIERTA";
     }
+
+    /** Snapshot append-only: el motivo conserva el nombre que tenía al cerrar. */
+    public static StageHistory lifecycle(Opportunity opportunity, Long fromStageId, Long actor,
+            String note, String eventType, String lossReasonName) {
+        var history = new StageHistory(opportunity.getTenantId(), opportunity.getId(), fromStageId,
+                opportunity.getStageId(), actor, note);
+        history.eventType = eventType;
+        history.destinationStatus = opportunity.getStatus().name();
+        history.finalValue = opportunity.getFinalValue();
+        history.closedAt = opportunity.getClosedAt();
+        history.lossReasonId = opportunity.getLossReasonId();
+        history.lossReasonName = lossReasonName;
+        return history;
+    }
+
+    public String getEventType() { return eventType; }
+    public boolean isSnapshotComplete() { return snapshotComplete; }
+    public String getDestinationStatus() { return destinationStatus; }
+    public java.math.BigDecimal getFinalValue() { return finalValue; }
+    public Instant getClosedAt() { return closedAt; }
+    public Long getLossReasonId() { return lossReasonId; }
+    public String getLossReasonName() { return lossReasonName; }
 
     @PrePersist
     void onCreate() {

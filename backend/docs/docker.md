@@ -52,3 +52,12 @@ login devuelve un JWT válido. No es sólo la recomendación teórica de DT-07.
 Los tests `*IT` (Testcontainers) levantan su propio contenedor de PostgreSQL efímero
 por corrida — sólo necesitan el **daemon de Docker Desktop corriendo**, nada de este
 `docker-compose.yml`. Ver `../README.md` para correrlos.
+
+## Verificación local de entrega — 10/10/2026
+
+§11 construyó la imagen multietapa y arrancó una copia de la configuración Compose
+con conexión/puerto de prueba y PostgreSQL efímero: health UP, login semilla con
+cambio obligatorio, V1–V5 aplicadas y exclusión GiST presente. Los recursos se cerraron
+al finalizar. Esto verifica el empaquetado y arranque; la conexión a Supabase y el
+ambiente publicado siguen sujetos al ensayo manual del usuario.
+Detalle en la [validación integrada](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/validacion-punto-11-2026-10-10.md).

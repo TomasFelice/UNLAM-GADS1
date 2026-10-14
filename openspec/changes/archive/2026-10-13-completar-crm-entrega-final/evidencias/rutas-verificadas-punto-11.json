@@ -1,0 +1,5186 @@
+[
+  {
+    "rol": "admin",
+    "ruta": "/app",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/72",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/72",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/72",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/72",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/96",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/96",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/96",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/96",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/7",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/7",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/7",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/7",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/10",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/10",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/10",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/10",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/4",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/4",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/4",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/4",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "admin",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/72",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/72",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/72",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/72",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/96",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/96",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/96",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/96",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/7",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/7",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/7",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/7",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/10",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/10",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/10",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/10",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/4",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/4",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/4",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/4",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "manager",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/nueva",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/72",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/72",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/72",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/72",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/empresas/72/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/96",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/96",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/96",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/96",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/contactos/96/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva?empresaId=72",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/nueva?contactoId=96",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/145",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/oportunidades/145/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/embudo?pipelineId=2",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/7",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/7",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/7",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/7",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/10",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/10",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/10",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/10",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/4",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/4",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/4",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/4",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/usuarios/4/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/salones/7/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/servicios/10/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/embudos/2",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/11",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/origenes/11/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/10",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/motivos-perdida/10/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/13",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-actividad/13/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/nuevo",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/11",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 390,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 390,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 1440,
+    "tema": "claro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  },
+  {
+    "rol": "seller",
+    "ruta": "/app/configuracion/tipos-evento/11/editar",
+    "ancho": 1440,
+    "tema": "oscuro",
+    "scrollHorizontal": false,
+    "teclado": true,
+    "noindex": true
+  }
+]

@@ -4,10 +4,13 @@ import type { Sesion } from "./almacenSesion";
 
 type Login = components["schemas"]["LoginRequest"];
 
+export type SalidaSesion = { desde?: string; mensaje?: string };
+
 export type ContextoSesion = {
   sesion: Sesion | null;
   ingresar: (credenciales: Login, mantener: boolean) => Promise<Sesion>;
-  cerrar: () => void;
+  cerrar: (salida?: SalidaSesion) => void;
+  salida?: SalidaSesion;
 };
 
 export const Contexto = createContext<ContextoSesion | null>(null);

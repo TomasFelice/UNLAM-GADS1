@@ -135,6 +135,20 @@ public class UserService {
         return new UserSummaryResponse(user.getId(), user.getFirstName(), user.getLastName());
     }
 
+    @Transactional(readOnly = true)
+    public UserIdentity getIdentity(Long id) {
+        User user = getOwnedOrThrow(id);
+        return new UserIdentity(user.getId(), user.getFirstName(), user.getLastName());
+    }
+
+    @Transactional(readOnly = true)
+    public java.util.Map<Long, UserIdentity> getIdentities(java.util.Set<Long> ids) {
+        if (ids.isEmpty()) return java.util.Map.of();
+        return userRepository.findAllByTenantIdAndIdIn(TenantContext.currentTenantId(), ids).stream()
+                .collect(java.util.stream.Collectors.toMap(User::getId,
+                        user -> new UserIdentity(user.getId(), user.getFirstName(), user.getLastName())));
+    }
+
     private void assertLastAdminRemains(User user, Role newRole, boolean newActive) {
         boolean removesActiveAdmin = user.getRole() == Role.ADMIN && user.isActive()
                 && (newRole != Role.ADMIN || !newActive);

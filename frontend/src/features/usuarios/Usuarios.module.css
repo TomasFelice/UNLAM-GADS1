@@ -1,0 +1,26 @@
+.formulario, .pila {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-5);
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-3);
+}
+
+.error {
+  padding: var(--e-3);
+  margin-bottom: var(--e-4);
+  border: 1px solid var(--peligro-borde);
+  border-radius: var(--radio-md);
+  color: var(--peligro);
+  background: var(--peligro-fondo);
+  overflow-wrap: anywhere;
+}
+
+.ayuda {
+  color: var(--tinta-500);
+  font-size: var(--texto-sm);
+}

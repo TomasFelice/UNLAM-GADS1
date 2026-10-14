@@ -8,6 +8,7 @@ export default defineConfig({
     "import.meta.env.VITE_SITE_URL": JSON.stringify("http://localhost:5173"),
   },
   test: {
+    include: ["src/**/*.test.{ts,tsx}"],
     environment: "jsdom",
     setupFiles: "./src/test/configurar.ts",
     restoreMocks: true,

@@ -1,9 +1,8 @@
 package com.ztech.crm.opportunities.dto.response;
 
-import com.ztech.crm.catalogs.dto.response.StageResponse;
 import com.ztech.crm.customers.dto.response.CompanySummaryResponse;
 import com.ztech.crm.customers.dto.response.ContactSummaryResponse;
-import com.ztech.crm.offerings.dto.response.VenueResponse;
+
 import com.ztech.crm.opportunities.domain.enums.OpportunityStatus;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -21,8 +20,8 @@ public record OpportunityDetailResponse(
         CompanySummaryResponse company,
         ContactSummaryResponse contact,
         Long salesRepId,
-        VenueResponse venue,
-        StageResponse stage,
+        OpportunityVenueResponse venue,
+        OpportunityStageResponse stage,
         Long eventTypeId,
         OpportunityStatus status,
         BigDecimal estimatedValue,
@@ -36,6 +35,8 @@ public record OpportunityDetailResponse(
         Long originId,
         Long lossReasonId,
         Set<Long> serviceIds,
-        String notes
+        String notes,
+        Long pipelineId,
+        Long version
 ) {
 }

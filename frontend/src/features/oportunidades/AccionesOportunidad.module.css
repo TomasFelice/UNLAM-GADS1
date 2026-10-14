@@ -1,0 +1,4 @@
+.acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); }
+.formulario { display: grid; gap: var(--e-4); margin-block-start: var(--e-5); }
+.aviso { padding: var(--e-3); background: var(--papel-2); border-radius: var(--radio-sm); }
+.error { color: var(--peligro); }

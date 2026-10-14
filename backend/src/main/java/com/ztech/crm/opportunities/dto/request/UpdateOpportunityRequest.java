@@ -53,10 +53,32 @@ public record UpdateOpportunityRequest(
 
         Long originId,
 
+        @Schema(description = "Servicios asociados. Omitido o null conserva los actuales; [] los quita. Sólo nuevas asociaciones requieren servicio activo.")
         Set<Long> serviceIds,
 
-        String notes
+        String notes,
+
+        @Schema(description = "Embudo comercial. En alta, omitido usa el predeterminado; en edición no puede cambiar.")
+        Long pipelineId,
+
+        @NotNull(message = "La versión leída es obligatoria.")
+        @Min(value = 0, message = "La versión no puede ser negativa.")
+        Long version
 ) {
+    public UpdateOpportunityRequest(String title, Long companyId, Long contactId, Long venueId, Long eventTypeId,
+            BigDecimal estimatedValue, Integer probability, Instant eventStart, Instant eventEnd, Integer attendeeCount,
+            LocalDate estimatedCloseDate, Long originId, Set<Long> serviceIds, String notes, Long pipelineId) {
+        this(title, companyId, contactId, venueId, eventTypeId, estimatedValue, probability, eventStart, eventEnd,
+                attendeeCount, estimatedCloseDate, originId, serviceIds, notes, pipelineId, 0L);
+    }
+
+    public UpdateOpportunityRequest(String title, Long companyId, Long contactId, Long venueId, Long eventTypeId,
+            BigDecimal estimatedValue, Integer probability, Instant eventStart, Instant eventEnd, Integer attendeeCount,
+            LocalDate estimatedCloseDate, Long originId, Set<Long> serviceIds, String notes) {
+        this(title, companyId, contactId, venueId, eventTypeId, estimatedValue, probability, eventStart, eventEnd,
+                attendeeCount, estimatedCloseDate, originId, serviceIds, notes, null, 0L);
+    }
+
     public UpdateOpportunityRequest(String title, Long companyId, Long contactId, Long venueId,
                                     BigDecimal estimatedValue, Integer probability, Instant eventDate,
                                     Integer attendeeCount, LocalDate estimatedCloseDate, Long originId,

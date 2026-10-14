@@ -13,6 +13,7 @@ public record ContactDetailResponse(
         String phone,
         PartyStatus status,
         Long salesRepId,
+        String salesRepName,
         Long originId,
         String notes
 ) {

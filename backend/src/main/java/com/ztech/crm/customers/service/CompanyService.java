@@ -2,15 +2,14 @@ package com.ztech.crm.customers.service;
 
 import com.ztech.crm.access.domain.Role;
 import com.ztech.crm.access.service.UserService;
+import com.ztech.crm.catalogs.service.OriginService;
 import com.ztech.crm.customers.domain.Company;
-import com.ztech.crm.customers.domain.Contact;
 import com.ztech.crm.customers.dto.request.CompanyRequest;
 import com.ztech.crm.customers.dto.response.CompanyDetailResponse;
 import com.ztech.crm.customers.dto.response.CompanyResponse;
 import com.ztech.crm.customers.dto.response.CompanySummaryResponse;
 import com.ztech.crm.customers.mapper.CompanyMapper;
 import com.ztech.crm.customers.repository.CompanyRepository;
-import com.ztech.crm.customers.repository.ContactRepository;
 import com.ztech.crm.customers.repository.specification.CompanySpecifications;
 import com.ztech.crm.shared.dto.PageResponse;
 import com.ztech.crm.shared.exception.ConflictException;
@@ -18,6 +17,7 @@ import com.ztech.crm.shared.exception.NotFoundException;
 import com.ztech.crm.shared.exception.ForbiddenException;
 import com.ztech.crm.shared.security.AuthenticatedUser;
 import com.ztech.crm.shared.security.TenantContext;
+import com.ztech.crm.shared.validation.OptionalText;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
@@ -31,18 +31,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
-    private final ContactRepository contactRepository;
     private final CompanyMapper companyMapper;
     private final UserService userService;
+    private final OriginService originService;
     private final CustomerVisibilityPort customerVisibilityPort;
 
-    public CompanyService(CompanyRepository companyRepository, ContactRepository contactRepository,
+    public CompanyService(CompanyRepository companyRepository,
                            CompanyMapper companyMapper, UserService userService,
-                           CustomerVisibilityPort customerVisibilityPort) {
+                           CustomerVisibilityPort customerVisibilityPort, OriginService originService) {
         this.companyRepository = companyRepository;
-        this.contactRepository = contactRepository;
         this.companyMapper = companyMapper;
         this.userService = userService;
+        this.originService = originService;
         this.customerVisibilityPort = customerVisibilityPort;
     }
 
@@ -56,7 +56,7 @@ public class CompanyService {
                 request.status(), salesRepId);
         applyRequest(company, request, salesRepId);
 
-        return companyMapper.toResponse(companyRepository.save(company));
+        return toResponse(companyRepository.save(company));
     }
 
     @Transactional
@@ -67,15 +67,14 @@ public class CompanyService {
 
         applyRequest(company, request, resolveSalesRep(request.salesRepId()));
 
-        return companyMapper.toResponse(companyRepository.save(company));
+        return toResponse(companyRepository.save(company));
     }
 
     @Transactional(readOnly = true)
     public CompanyDetailResponse getDetail(Long id) {
         Long tenantId = TenantContext.currentTenantId();
         Company company = getReadableOrThrow(id, tenantId);
-        List<Contact> contacts = findReadableContacts(tenantId, id);
-        return companyMapper.toDetailResponse(company, contacts);
+        return companyMapper.toDetailResponse(company, userService.getIdentity(company.getSalesRepId()).fullName());
     }
 
     @Transactional(readOnly = true)
@@ -94,7 +93,10 @@ public class CompanyService {
             filters = filters.and(CompanySpecifications.visibleToSeller(current.userId(), relatedIds));
         }
         Page<Company> page = companyRepository.findAll(filters, pageable);
-        return PageResponse.from(page, companyMapper::toResponse);
+        var responsibleIds = page.stream().map(Company::getSalesRepId).collect(java.util.stream.Collectors.toSet());
+        var identities = userService.getIdentities(responsibleIds);
+        return PageResponse.from(page, company -> companyMapper.toResponse(company,
+                identities.get(company.getSalesRepId()).fullName()));
     }
 
     @Transactional(readOnly = true)
@@ -124,9 +126,29 @@ public class CompanyService {
         getReadableOrThrow(id, TenantContext.currentTenantId());
     }
 
+    private CompanyResponse toResponse(Company company) {
+        return companyMapper.toResponse(company, userService.getIdentity(company.getSalesRepId()).fullName());
+    }
+
+    /** Lectura en lote con el mismo alcance comercial que el detalle; sin DTO ni entidad ajenos. */
+    @Transactional(readOnly = true)
+    public java.util.Map<Long, String> getNames(java.util.Set<Long> ids) {
+        if (ids.isEmpty()) return java.util.Map.of();
+        var current = TenantContext.currentUser();
+        Specification<Company> filters = CompanySpecifications.tenant(current.tenantId());
+        filters = filters.and((root, query, builder) -> root.get("id").in(ids));
+        if (current.role() == Role.SELLER) {
+            filters = filters.and(CompanySpecifications.visibleToSeller(current.userId(),
+                    customerVisibilityPort.findCompanyIdsWithOwnOpportunities(current.tenantId(), current.userId())));
+        }
+        return companyRepository.findAll(filters).stream().collect(java.util.stream.Collectors.toMap(
+                Company::getId, value -> value.getBusinessName()));
+    }
+
     private void applyRequest(Company company, CompanyRequest request, Long salesRepId) {
+        originService.assertSelectable(request.originId(), company.getOriginId());
         company.updateDetails(request.legalName().strip(), request.businessName().strip(),
-                normalizeBlank(request.cuit()), normalizeBlank(request.industry()), normalizeBlank(request.email()),
+                OptionalText.canonicalCuit(request.cuit()), normalizeBlank(request.industry()), normalizeBlank(request.email()),
                 normalizeBlank(request.phone()), normalizeBlank(request.address()), normalizeBlank(request.locality()),
                 normalizeBlank(request.website()), request.status(), salesRepId,
                 request.originId(), normalizeBlank(request.notes()));
@@ -145,6 +167,13 @@ public class CompanyService {
 
     private String normalizeBlank(String value) {
         return value == null || value.isBlank() ? null : value.strip();
+    }
+
+    /** Escritura de hechos sobre asignación directa; la lectura indirecta no la habilita. */
+    @Transactional(readOnly = true)
+    public CustomerActivityContext getForActivity(Long id) {
+        var value = getDirectlyAssignedOrThrow(id, TenantContext.currentTenantId());
+        return new CustomerActivityContext(value.getId(), value.getId(), value.getSalesRepId());
     }
 
     private Company getReadableOrThrow(Long id, Long tenantId) {
@@ -176,21 +205,8 @@ public class CompanyService {
         return new NotFoundException("No se encontró la empresa solicitada.");
     }
 
-    private List<Contact> findReadableContacts(Long tenantId, Long companyId) {
-        AuthenticatedUser current = TenantContext.currentUser();
-        if (current.role() != Role.SELLER) {
-            return contactRepository.findAllByTenantIdAndCompanyId(tenantId, companyId);
-        }
-        Set<Long> relatedIds = customerVisibilityPort.findContactIdsWithOwnOpportunities(
-                tenantId, current.userId());
-        return relatedIds.isEmpty()
-                ? contactRepository.findAllByTenantIdAndCompanyIdAndSalesRepId(
-                        tenantId, companyId, current.userId())
-                : contactRepository.findAllVisibleToSellerByCompany(
-                        tenantId, companyId, current.userId(), relatedIds);
-    }
-
     private void validateCuitUniqueness(Long tenantId, String cuit, Long excludeId) {
+        cuit = OptionalText.canonicalCuit(cuit);
         if (cuit == null || cuit.isBlank()) {
             return;
         }

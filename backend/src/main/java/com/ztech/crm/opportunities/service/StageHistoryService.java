@@ -3,6 +3,7 @@ package com.ztech.crm.opportunities.service;
 import com.ztech.crm.access.service.UserService;
 import com.ztech.crm.catalogs.service.StageService;
 import com.ztech.crm.opportunities.dto.response.StageHistoryResponse;
+import com.ztech.crm.opportunities.dto.response.OpportunityStageResponse;
 import com.ztech.crm.opportunities.repository.StageHistoryRepository;
 import com.ztech.crm.shared.security.TenantContext;
 import java.util.List;
@@ -25,11 +26,13 @@ public class StageHistoryService {
     @Transactional(readOnly = true)
     public List<StageHistoryResponse> list(Long opportunityId) {
         opportunityAccessService.getReadableOrThrow(opportunityId);
-        return repository.findAllByTenantIdAndOpportunityIdOrderByChangedAtAsc(
+        return repository.findAllByTenantIdAndOpportunityIdOrderByChangedAtAscIdAsc(
                 TenantContext.currentTenantId(), opportunityId).stream()
                 .map(value -> new StageHistoryResponse(value.getId(), value.getFromStageId() == null ? null
-                        : stageService.getSummary(value.getFromStageId()), stageService.getSummary(value.getToStageId()),
-                        value.getChangedAt(), userService.getSummary(value.getChangedBy()), value.getNote()))
+                        : OpportunityStageResponse.from(stageService.getSummary(value.getFromStageId())), OpportunityStageResponse.from(stageService.getSummary(value.getToStageId())),
+                        value.getChangedAt(), userService.getSummary(value.getChangedBy()), value.getNote(),
+                        value.getEventType(), value.isSnapshotComplete(), value.getDestinationStatus(),
+                        value.getFinalValue(), value.getClosedAt(), value.getLossReasonId(), value.getLossReasonName()))
                 .toList();
     }
 }

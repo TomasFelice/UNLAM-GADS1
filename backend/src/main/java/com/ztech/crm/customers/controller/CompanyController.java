@@ -38,7 +38,9 @@ public class CompanyController {
     @Operation(summary = "Crea una empresa")
     @ApiResponse(responseCode = "201", description = "Empresa creada")
     @ApiResponse(responseCode = "400", description = "Datos inválidos")
+    @ApiResponse(responseCode = "404", description = "El responsable u origen no existe en la organización")
     @ApiResponse(responseCode = "409", description = "Ya existe una empresa con ese CUIT")
+    @ApiResponse(responseCode = "422", description = "El responsable o el nuevo origen no está activo")
     public ResponseEntity<CompanyResponse> create(@Valid @RequestBody CompanyRequest request,
                                                    UriComponentsBuilder uriBuilder) {
         CompanyResponse response = companyService.create(request);
@@ -49,15 +51,16 @@ public class CompanyController {
     @PutMapping("/{id}")
     @Operation(summary = "Edita una empresa")
     @ApiResponse(responseCode = "200", description = "Empresa actualizada")
-    @ApiResponse(responseCode = "404", description = "No existe una empresa con ese id")
+    @ApiResponse(responseCode = "404", description = "Empresa fuera de alcance, o responsable/origen ajeno a la organización")
     @ApiResponse(responseCode = "409", description = "Ya existe una empresa con ese CUIT")
+    @ApiResponse(responseCode = "422", description = "El responsable o el nuevo origen no está activo; se permite conservar el origen inactivo anterior")
     public ResponseEntity<CompanyResponse> update(@PathVariable Long id, @Valid @RequestBody CompanyRequest request) {
         return ResponseEntity.ok(companyService.update(id, request));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Detalle de una empresa, con sus contactos (BE-CUS-03)",
-            description = "Para SELLER exige asignación directa o una oportunidad propia; los contactos anidados también se filtran por ese alcance.")
+            description = "Para SELLER exige asignación directa o una oportunidad propia; los contactos anidados también se filtran por ese alcance. Incluye salesRepName aun si el responsable está inactivo.")
     @ApiResponse(responseCode = "200", description = "OK")
     @ApiResponse(responseCode = "404", description = "No existe una empresa con ese id")
     public ResponseEntity<CompanyDetailResponse> getById(@PathVariable Long id) {

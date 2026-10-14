@@ -25,6 +25,11 @@ antes de la final).
 | BE-SEC-09 | Auditoría mínima en cambios importantes | E1 | Toda entidad auditable registra `created_at`, `created_by`, `updated_at`, `updated_by`, tomados del contexto autenticado, nunca del cliente |
 | BE-SEC-10 | Errores no filtran información | E1 | Ninguna respuesta de error incluye stacktrace, datos de otro tenant, ni distingue credenciales inválidas de usuario inexistente |
 
+Validación de BE-SEC-10 en §10 (10/10/2026): errores HTTP y logs correlacionados
+por `requestId`, sin cuerpos, credenciales, SQL ni datos ajenos. Actor/tenant sólo
+en MDC de solicitudes autenticadas; no se incluyen en ProblemDetail y se limpian
+al finalizar. `ObservabilityIT` verifica 400/401/403/404/409/422 por HTTP real.
+
 ## BE-ACC — Usuarios y acceso
 
 | ID | Requisito | Prioridad | Criterio de aceptación |
@@ -39,7 +44,7 @@ antes de la final).
 
 | ID | Requisito | Prioridad | Criterio de aceptación |
 |---|---|---|---|
-| BE-CUS-01 | Alta de empresa | E1 | `POST /api/v1/companies`; razón social, nombre comercial, estado y responsable obligatorios; `cuit` único por tenant si está presente |
+| BE-CUS-01 | Alta de empresa | E1 | `POST /api/v1/companies`; razón social, nombre comercial, estado y responsable obligatorios; CUIT opcional con dígito válido, canónico sin guiones y único por tenant; email y sitio HTTP/HTTPS por formato, blancos opcionales a `null` (DP-03) |
 | BE-CUS-02 | Edición de empresa | E1 | `PUT /api/v1/companies/{id}` actualiza los campos editables |
 | BE-CUS-03 | Listado y detalle de empresa | E1 | `GET /api/v1/companies` paginado; `GET /api/v1/companies/{id}` incluye sus contactos |
 | BE-CUS-04 | Alta de contacto | E1 | `POST /api/v1/contacts`; `firstName`, `lastName`, `status` obligatorios; `companyId` **opcional** (cliente individual) |
@@ -49,6 +54,13 @@ antes de la final).
 | BE-CUS-08 | Baja lógica por cambio de estado | POST-E1 | Cambiar `status` a `INACTIVO`/`NO_CONTACTAR` no borra el registro ni rompe sus oportunidades/actividades históricas; no existe `DELETE` físico |
 | BE-CUS-09 | Búsqueda y filtros de empresas/contactos | POST-E1 | Filtro por nombre, estado, origen, responsable; ver DP-10 para el detalle exacto |
 
+Clientes implementados al 09/10/2026: origen seleccionable en alta/edición de empresa,
+nombres de responsables en listado de empresas y detalle de ambos clientes, sin
+ampliar asignables del vendedor. Las nuevas referencias a origen exigen tenant y
+actividad; puede conservarse la referencia histórica inactiva. La UI permite
+edición sólo a asignados directos para SELLER, conforme DP-02; el backend conserva
+la autorización efectiva. La baja por estado mantiene relaciones e historial.
+
 ## BE-OFF — Salones y servicios (producto/servicio de la consigna)
 
 | ID | Requisito | Prioridad | Criterio de aceptación |
@@ -57,24 +69,45 @@ antes de la final).
 | BE-OFF-02 | ABM completo de salones | EF | `POST`/`PUT`/`GET` de `Venue`; capacidad, localidad, descripción, equipamiento y estado `DISPONIBLE`/`MANTENIMIENTO`/`INACTIVO`, sólo por `ADMIN` (DP-04) |
 | BE-OFF-03 | Servicios adicionales precargados | E1 | Al menos algunos `EventService` cargados por migración (catering, audio, decoración) |
 | BE-OFF-04 | ABM completo de servicios | EF | `POST`/`PUT`/`GET` de `EventService` |
-| BE-OFF-05 | Desactivar un salón no rompe oportunidades existentes | EF | `active=false` no afecta oportunidades ya creadas con ese `venue_id`; sólo impide seleccionarlo en altas nuevas |
+| BE-OFF-05 | Desactivar oferta no rompe oportunidades existentes | EF | Salón `MANTENIMIENTO`/`INACTIVO` o servicio `active=false` conserva asociaciones anteriores; impide nuevas. Editar otros campos permite conservarlas, pero ganar exige salón disponible y capacidad suficiente |
+
+Implementado al 09/10/2026: POST/PUT/GET de oferta, baja lógica ADMIN y lecturas
+comerciales paginadas por tenant. Tamaño 20/máximo 100, búsqueda `q`, filtro
+`status`/`active` y orden permitido. Conservar asociaciones anteriores está cubierto
+por HTTP; omitir `serviceIds` en edición conserva y `[]` quita. Reducir capacidad
+por debajo de una reserva ganada devuelve 409. Confirmación ganada y su revalidación
+se implementaron en el corte de cierres (§8): confirmación revalida salón y capacidad.
 
 ## BE-CAT — Catálogos configurables
+
+Ampliación aceptada el 09/10/2026: [ADR-006](../decisiones/adr/ADR-006-multiples-embudos.md).
+Los criterios de múltiples embudos están implementados en §6; su evidencia se sigue
+en `openspec/changes/archive/2026-10-13-completar-crm-entrega-final/tasks.md` §6.
 
 | ID | Requisito | Prioridad | Criterio de aceptación |
 |---|---|---|---|
 | BE-CAT-01 | Etapas precargadas | E1 | Las 7 etapas de DP-06 cargadas por migración, consultables por `GET /api/v1/stages` |
-| BE-CAT-02 | ABM de etapas | EF | `ADMIN` crea/edita/reordena etapas; no se elimina una etapa en uso, se desactiva |
+| BE-CAT-02 | ABM de etapas | EF | `ADMIN` crea/edita/reordena etapas propias de un embudo; orden único por embudo y reordenamiento completo atómico; tipo inmutable si está en uso; baja lógica sin perder historia ni dejar un embudo activo incompleto |
 | BE-CAT-03 | ABM de tipos de actividad | EF | Catálogo `ActivityType` con al menos los tipos mínimos de la consigna |
-| BE-CAT-04 | ABM de orígenes comerciales | EF | Catálogo `Origin` |
-| BE-CAT-05 | ABM de motivos de pérdida | EF | Catálogo `LossReason` |
+| BE-CAT-04 | ABM de orígenes comerciales | EF | Catálogo `Origin`; nuevas asociaciones activas y conservación de referencias previas inactivas |
+| BE-CAT-05 | ABM de motivos de pérdida | EF | Catálogo `LossReason`, disponible para el caso de uso de cierre perdido |
 | BE-CAT-06 | ABM de tipos de evento | EF | Catálogo `EventType`; toda oportunidad referencia uno activo al crearla |
+| BE-CAT-07 | Múltiples embudos por tenant | EF | `ADMIN` administra embudos con un predeterminado activo único; activar exige etapas activas `OPEN`/`WON`/`LOST`; baja lógica, consulta histórica y plantillas copiadas independientes; migración desde V1 conserva IDs e historial (ADR-006) |
 
 ## BE-OPP — Oportunidades y embudo
 
+Para EF (ADR-006), alta, detalle y filtros incorporan `pipelineId`; todas las etapas
+deben pertenecer al embudo de la oportunidad, fijo tras el alta. `PUT` rechaza un
+cambio de embudo. El tablero usa el predeterminado si se omite el filtro y devuelve
+identidad del embudo, `kind` y `active` de sus columnas, incluidas las históricas
+necesarias. Crear/reabrir exige embudo activo; las abiertas de un embudo inactivo
+pueden operarse con sus etapas activas. La exclusión de reservas sigue siendo por
+tenant/salón, independientemente del embudo. §6 implementa migración, configuración,
+altas, filtros y tablero; el ciclo de cierre/reapertura se implementó en §8.
+
 | ID | Requisito | Prioridad | Criterio de aceptación |
 |---|---|---|---|
-| BE-OPP-01 | Alta de oportunidad | E1 | `POST /api/v1/opportunities`: título, cliente, responsable heredado/reemplazable según rol, salón, tipo de evento, etapa inicial, `eventStart`, `eventEnd`, asistentes y `serviceIds` |
+| BE-OPP-01 | Alta de oportunidad | E1 | `POST /api/v1/opportunities`: título, cliente, responsable heredado/reemplazable según rol, embudo fijo y etapa inicial abierta, salón, tipo de evento, `eventStart`, `eventEnd`, asistentes y `serviceIds`; contacto deriva empresa y rechaza contradicciones; fechas reales obligatorias |
 | BE-OPP-02 | Edición de oportunidad abierta | E1 | `PUT /api/v1/opportunities/{id}` mientras `status = ABIERTA` |
 | BE-OPP-03 | Listado y detalle de oportunidad | E1 | `GET /api/v1/opportunities` paginado; `GET /api/v1/opportunities/{id}` con etapa actual, salón, cliente, responsable |
 | BE-OPP-04 | Asignar/reasignar responsable | POST-E1 | `POST /api/v1/opportunities/{id}/assign`; reasignación libre para `ADMIN`/`SALES_MANAGER` |
@@ -91,8 +124,8 @@ antes de la final).
 
 | ID | Requisito | Prioridad | Criterio de aceptación |
 |---|---|---|---|
-| BE-ACT-01 | Registrar actividad | POST-E1 | `POST /api/v1/activities`: `type`, `occurredAt`, relacionada a empresa **o** contacto **u** oportunidad, `description`, `result`; usuario y fecha de registro los asigna el servidor |
-| BE-ACT-02 | Historial cronológico por empresa/contacto/oportunidad | POST-E1 | `GET /api/v1/companies/{id}/activities`, análogos para contact y opportunity, ordenados por `occurredAt desc` |
+| BE-ACT-01 | Registrar actividad | POST-E1 | `POST /api/v1/activities`: `typeId` activo, `occurredAt` no futuro, relacionada a empresa **o** contacto **u** oportunidad, `description` y `result` no vacíos; asociaciones derivadas/coherentes, usuario/tenant/fecha de registro del servidor; append-only |
+| BE-ACT-02 | Historial cronológico por empresa/contacto/oportunidad | POST-E1 | `GET /api/v1/companies/{id}/activities`, análogos para contact y opportunity, paginados y ordenados por `occurredAt desc, id desc`, navegables íntegramente con bajas y autores inactivos; alcance por tenant/vendedor |
 | BE-ACT-03 | Historial de cambios de etapa consultable | POST-E1 | `GET /api/v1/opportunities/{id}/stage-history` devuelve todos los cambios, append-only, sin edición ni borrado posible vía API |
 | BE-ACT-04 | El historial reconstruye el recorrido completo | POST-E1 | Para una oportunidad se puede responder: etapa inicial, etapas atravesadas, cuándo cambió cada una, quién lo hizo, cuándo y cómo cerró |
 
@@ -132,3 +165,17 @@ resoluciones forman parte del criterio de aceptación.
 | DP-07 | BE-OPP-11 |
 | DP-08 | BE-OPP-10 |
 | DP-10 | BE-CUS-09, BE-OPP-12 |
+
+### Estado implementado del ciclo comercial (§8)
+
+Assign/win/lose/reopen y PUT/stage exigen versión leída obligatoria; creación no.
+Conflictos tardíos/JPA → 409 sin sobrescritura. Asignación sólo elevada y abierta;
+reapertura sólo elevada, nota y embudo activo, limpia cierre actual y libera reserva.
+Ganar/perder usan clases WON/LOST activas del embudo fijo, fecha del servidor y
+snapshot append-only. Motivo conserva nombre original; V4 marca legacy incompleto
+sin inventar datos. Disponibilidad consultable y revalidada, GiST entre embudos y
+rollback ante fallo histórico; prueba HTTP concurrente después del precheck.
+La interfaz conserva valores ante 409 y ofrece recarga; los cierres muestran centavos.
+§9 implementa alta append-only con asociaciones derivadas, fecha no futura y actor
+del servidor, alcance por tenant/vendedor y navegación íntegra del historial comercial.
+V5 agrega índices de cronología; las bajas lógicas conservan hechos y autores.

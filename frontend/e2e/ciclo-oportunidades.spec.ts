@@ -1,0 +1,128 @@
+import { elegirSelector } from "./ayudas/selectores.js";
+import { expect, test, type Page } from "@playwright/test";
+import { readFileSync } from "node:fs";
+import { runInNewContext } from "node:vm";
+const API = "http://localhost:18080/api/v1";
+const guardarSesion = async (page: Page, datos: any) => {
+  await page.evaluate(d => sessionStorage.setItem("ztech.crm.sesion", JSON.stringify({ token: d.accessToken, venceEn: Date.now() + 3600000, debeCambiarClave: false, usuario: { id: d.user.id, nombre: d.user.firstName, apellido: d.user.lastName, email: d.user.email, rol: d.user.role } })), datos);
+};
+
+test("ganar, reabrir y perder conserva cierres; un formulario viejo conserva valores ante 409", async ({ page, request }) => {
+  test.setTimeout(120000);
+  const acceso = await (await request.post(`${API}/auth/login`, { data: { email: "admin.baseline.a@fixtures.invalid", password: "FixtureTemporal123!" } })).json();
+  const headers = { Authorization: `Bearer ${acceso.accessToken}` };
+  const usuarios = await (await request.get(`${API}/users/assignable`, { headers })).json();
+  const vendedor = usuarios.find((u: any) => u.email === "seller.baseline.a@fixtures.invalid");
+  const empresa = await (await request.post(`${API}/companies`, { headers, data: { legalName: "Ciclo UI", businessName: "Ciclo UI", status: "POTENCIAL", salesRepId: vendedor.id } })).json();
+  const embudo = await (await request.get(`${API}/pipelines/default`, { headers })).json();
+  const etapas = await (await request.get(`${API}/stages?pipelineId=${embudo.id}`, { headers })).json();
+  const abierta = etapas.find((e: any) => e.active && e.kind === "OPEN");
+  const ganada = etapas.find((e: any) => e.active && e.kind === "WON"); const perdida = etapas.find((e: any) => e.active && e.kind === "LOST");
+  const tipo = await (await request.post(`${API}/event-types`, { headers, data: { name: "Ciclo UI E2E", active: true } })).json();
+  const motivo = await (await request.post(`${API}/loss-reasons`, { headers, data: { name: "Decisión del cliente E2E", active: true } })).json();
+  const salones = await (await request.get(`${API}/venues?status=DISPONIBLE`, { headers })).json();
+  const salon = salones.content.find((v: any) => v.capacity >= 20);
+  const creada = await request.post(`${API}/opportunities`, { headers, data: { title: "Ciclo completo UI", companyId: empresa.id, salesRepId: vendedor.id, pipelineId: embudo.id, stageId: abierta.id, venueId: salon.id, eventTypeId: tipo.id, eventStart: "2033-05-01T12:00:00Z", eventEnd: "2033-05-01T16:00:00Z", attendeeCount: 20 } });
+  expect(creada.status()).toBe(201); const oportunidad = await creada.json(); const ruta = `/app/oportunidades/${oportunidad.id}`;
+  await page.goto("/ingresar"); await guardarSesion(page, acceso); await page.goto(ruta);
+  const errores: string[] = []; page.on("pageerror", e => errores.push(e.message));
+  await (await request.post(API + "/stages", { headers, data: { pipelineId: embudo.id, name: "Calificación ciclo E2E", kind: "OPEN", active: true } })).json();
+  await page.reload();
+  await page.getByRole("button", { name: /Calificación ciclo E2E/ }).click();
+  await expect(page.getByRole("region", { name: "Historial de etapas", exact: true }).getByText(/a Calificación ciclo E2E/)).toBeVisible();
+  await page.getByRole("button", { name: "Marcar como ganada", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("El salón está disponible");
+  await page.getByRole("combobox", { name: "Etapa destino" }).selectOption(String(ganada.id));
+  await page.getByRole("spinbutton", { name: "Valor final" }).fill("1234.50");
+  await page.getByRole("textbox", { name: "Nota del cierre" }).fill("Cliente confirmó");
+  await page.getByRole("button", { name: "Confirmar acción" }).click();
+  await expect(page.getByRole("button", { name: "Reabrir oportunidad" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Editar", exact: true })).toHaveCount(0);
+  await page.reload(); await expect(page.getByText(/Ganada · Valor final:/)).toContainText("1.234,50");
+  await page.getByRole("button", { name: "Reabrir oportunidad" }).click();
+  await page.getByRole("combobox", { name: "Etapa destino" }).selectOption(String(abierta.id));
+  await page.getByRole("textbox", { name: "Nota de reapertura" }).fill("Nueva propuesta solicitada");
+  await page.getByRole("button", { name: "Confirmar acción" }).click();
+  await expect(page.getByRole("button", { name: "Marcar como perdida", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Marcar como perdida", exact: true }).click();
+  await page.getByRole("combobox", { name: "Etapa destino" }).selectOption(String(perdida.id));
+  await page.getByRole("combobox", { name: "Motivo de pérdida" }).fill("Decisión del cliente E2E");
+  await elegirSelector(page, "Motivo de pérdida", String(motivo.id));
+  await page.getByRole("textbox", { name: "Nota del cierre" }).fill("No acepta nueva propuesta");
+  await page.getByRole("button", { name: "Confirmar acción" }).click();
+  await expect(page.getByRole("button", { name: "Reabrir oportunidad" })).toBeVisible();
+  await request.put(`${API}/loss-reasons/${motivo.id}`, { headers, data: { name: "Nombre posterior", active: false } });
+  await page.reload();
+  await expect(page.getByText(/Perdida · Motivo:/)).toContainText("Decisión del cliente E2E");
+  await expect(page.getByText(/Ganada · Valor final:/)).toBeVisible();
+  const historia = await (await request.get(`${API}/opportunities/${oportunidad.id}/stage-history`, { headers })).json();
+  expect(historia.map((h: any) => h.eventType)).toEqual(["CREATED", "STAGE_CHANGED", "WON", "REOPENED", "LOST"]);
+  const vendedorSesion = await (await request.post(`${API}/auth/login`, { data: { email: vendedor.email, password: "FixtureTemporal123!" } })).json();
+  await guardarSesion(page, vendedorSesion); await page.reload();
+  await expect(page.getByRole("heading", { name: "Ciclo completo UI" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Reabrir oportunidad" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Reasignar responsable" })).toHaveCount(0);
+  await page.goto(`${ruta}/editar`); await expect(page.getByRole("heading", { name: "La oportunidad está cerrada" })).toBeVisible();
+  await guardarSesion(page, acceso); await page.goto(ruta);
+  await page.getByRole("button", { name: "Reabrir oportunidad" }).click();
+  await page.getByRole("combobox", { name: "Etapa destino" }).selectOption(String(abierta.id));
+  await page.getByRole("textbox", { name: "Nota de reapertura" }).fill("Otra revisión");
+  await page.getByRole("button", { name: "Confirmar acción" }).click();
+  await expect(page.getByRole("link", { name: "Editar", exact: true })).toBeVisible();
+  await page.getByRole("link", { name: "Editar", exact: true }).click();
+  await page.getByRole("textbox", { name: "Observaciones", exact: true }).fill("Mis valores se conservan");
+  const actual = await (await request.get(`${API}/opportunities/${oportunidad.id}`, { headers })).json();
+  expect((await request.post(`${API}/opportunities/${oportunidad.id}/assign`, { headers, data: { salesRepId: acceso.user.id, version: actual.version } })).status()).toBe(200);
+  await page.getByRole("button", { name: "Guardar cambios" }).click();
+  await expect(page.getByRole("button", { name: "Recargar datos" })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Observaciones", exact: true })).toHaveValue("Mis valores se conservan");
+  await expect(page.getByRole("button", { name: "Guardar cambios" })).toBeDisabled();
+  await page.getByRole("button", { name: "Recargar datos" }).click();
+  await expect(page.getByRole("textbox", { name: "Observaciones", exact: true })).toHaveValue("");
+  await page.goto(ruta); await page.getByRole("button", { name: "Reasignar responsable" }).click();
+  await page.getByRole("combobox", { name: "Nuevo responsable" }).selectOption(String(vendedor.id));
+  await page.getByRole("button", { name: "Confirmar acción" }).click();
+  await expect(page.getByRole("button", { name: "Marcar como ganada", exact: true })).toBeVisible();
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const tema of ["claro", "oscuro"]) {
+      await page.evaluate(t => document.documentElement.setAttribute("data-tema", t), tema);
+      await page.getByRole("button", { name: "Marcar como ganada", exact: true }).click();
+      await page.getByRole("combobox", { name: "Etapa destino" }).focus(); await page.keyboard.press("ArrowDown");
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+      await page.screenshot({ path: `test-results/ciclo-${width}-${tema}.png`, fullPage: true });
+      await page.getByRole("button", { name: "Cancelar acción" }).click();
+    }
+  }
+  await page.getByRole("button", { name: "Marcar como ganada", exact: true }).click();
+  await page.getByRole("combobox", { name: "Etapa destino" }).selectOption(String(ganada.id));
+  await page.getByRole("spinbutton", { name: "Valor final" }).fill("999.25");
+  await page.getByRole("textbox", { name: "Nota del cierre" }).fill("Nota conservada ante conflicto");
+  const anterior = await (await request.get(`${API}/opportunities/${oportunidad.id}`, { headers })).json();
+  expect((await request.post(`${API}/opportunities/${oportunidad.id}/assign`, { headers, data: { salesRepId: acceso.user.id, version: anterior.version } })).status()).toBe(200);
+  await page.getByRole("button", { name: "Confirmar acción" }).click();
+  await expect(page.getByRole("button", { name: "Recargar datos" })).toBeVisible();
+  await expect(page.getByRole("spinbutton", { name: "Valor final" })).toHaveValue("999.25");
+  await expect(page.getByRole("textbox", { name: "Nota del cierre" })).toHaveValue("Nota conservada ante conflicto");
+  await expect(page.getByRole("button", { name: "Confirmar acción" })).toBeDisabled();
+  expect(errores).toEqual([]);
+});
+
+test("Postman recorre asignación, cierre, reapertura y pérdida capturando versiones reales", async ({ request }) => {
+  const acceso = await (await request.post(`${API}/auth/login`, { data: { email: "admin.baseline.a@fixtures.invalid", password: "FixtureTemporal123!" } })).json();
+  const coleccion = JSON.parse(readFileSync("../backend/docs/postman/zTech-CRM.postman_collection.json", "utf8"));
+  const carpeta = coleccion.item.find((c: any) => c.name === "Ciclo comercial y reservas");
+  const variables: Record<string, string> = { baseUrl: API, $timestamp: String(Date.now()) };
+  const sustituir = (texto: string) => texto.replace(/\{\{([\w$]+)\}\}/g, (_, clave: string) => { expect(variables[clave], clave).toBeDefined(); return variables[clave]; });
+  for (const item of carpeta.item) {
+    const respuesta = await request.fetch(sustituir(item.request.url.raw), { method: item.request.method, headers: { Authorization: `Bearer ${acceso.accessToken}` }, ...(item.request.body ? { data: JSON.parse(sustituir(item.request.body.raw)) } : {}) });
+    expect(respuesta.status(), item.name).toBe(["Crear negociación para el ciclo", "Crear embudo independiente para el ciclo"].includes(item.name) ? 201 : 200);
+    const datos = await respuesta.json();
+    for (const evento of item.event ?? []) if (evento.listen === "test") runInNewContext(evento.script.exec.join("\n"), { pm: { response: { code: respuesta.status(), json: () => datos }, collectionVariables: { set: (clave: string, valor: unknown) => { variables[clave] = String(valor); } } } }, { timeout: 1000 });
+    if (item.name === "Consultar cierres conservados") expect(datos.map((h: any) => h.eventType)).toEqual(["CREATED", "STAGE_CHANGED", "WON", "REOPENED", "LOST"]);
+  }
+  expect(carpeta.item).toHaveLength(16);
+  const runtime = await (await request.get("http://localhost:18080/v3/api-docs.yaml")).text();
+  for (const accion of ["assign", "win", "lose", "reopen", "availability"]) expect(runtime).toContain(`/api/v1/opportunities/{id}/${accion}:`);
+});

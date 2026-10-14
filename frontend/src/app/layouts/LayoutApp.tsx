@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { Logo } from "../../shared/components/Logo";
 import { Icono, type NombreIcono } from "../../shared/components/Icono";
 import { Avatar } from "../../shared/components/Avatar";
@@ -24,10 +24,15 @@ const CATALOGO: ItemNav[] = [
   { a: "/app/salones", texto: "Salones", icono: "salones" },
 ];
 
+const ADMINISTRACION: ItemNav[] = [
+  { a: "/app/configuracion", texto: "Configuración comercial", icono: "salones" },
+  { a: "/app/servicios", texto: "Servicios adicionales", icono: "salones" },
+  { a: "/app/usuarios", texto: "Usuarios", icono: "usuario" },
+];
+
 export function LayoutApp() {
   const [lateralAbierto, setLateralAbierto] = useState(false);
   const { pathname } = useLocation();
-  const navegar = useNavigate();
   const { sesion, cerrar } = useSesion();
   const usuario = sesion!.usuario;
   const iniciales = `${usuario.nombre.charAt(0)}${usuario.apellido.charAt(0)}`;
@@ -92,6 +97,7 @@ export function LayoutApp() {
           {grupo("Comercial", PRINCIPAL)}
           {grupo("Clientes", CLIENTES)}
           {grupo("Catálogo", CATALOGO)}
+          {usuario.rol === "ADMIN" && grupo("Administración", ADMINISTRACION)}
         </nav>
 
         <div className={css.lateralPie}>
@@ -133,7 +139,6 @@ export function LayoutApp() {
               aria-label="Cerrar sesión"
               onClick={() => {
                 cerrar();
-                navegar("/ingresar", { replace: true });
               }}
             >
               <Icono nombre="salir" tamano={18} />

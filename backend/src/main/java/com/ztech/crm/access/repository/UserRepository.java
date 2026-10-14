@@ -11,6 +11,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     Optional<User> findByIdAndTenantId(Long id, Long tenantId);
 
+    java.util.List<User> findAllByTenantIdAndIdIn(Long tenantId, java.util.Set<Long> ids);
+
     boolean existsByEmailIgnoreCase(String email);
 
     boolean existsByEmailIgnoreCaseAndIdNot(String email, Long id);

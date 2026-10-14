@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 public class StageMapper {
 
     public StageResponse toResponse(Stage stage) {
-        return new StageResponse(stage.getId(), stage.getName(), stage.getPosition(), stage.getKind(), stage.isActive());
+        return new StageResponse(stage.getId(), stage.getPipelineId(), stage.getName(), stage.getPosition(), stage.getKind(), stage.isActive());
     }
 }

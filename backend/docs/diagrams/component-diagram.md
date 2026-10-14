@@ -1,96 +1,56 @@
 # Diagrama de componentes
 
-Snapshot del corte de **estabilización post-E1** (13/09). Refleja los módulos y capas
-implementados; todavía no incluye `activities` ni el ABM administrativo de offerings y
-catálogos.
+Modelo efectivo al 10/10/2026, revisado en §11. Módulos del monolito; dependencias
+consumen contratos de service y los puertos invierten las consultas de uso comercial.
 
 ```mermaid
 flowchart TB
-    subgraph shared["shared (transversal)"]
-        config["config\nSecurityConfig, CorsConfig, OpenApiConfig,\nJpaAuditingConfig, RequestIdFilter"]
-        security["security\nJwtService, JwtAuthenticationFilter,\nAuthenticatedUser, TenantContext"]
-        exception["exception\nApiException, GlobalExceptionHandler"]
-        audit["audit\nAuditableEntity, TenantOwnedEntity,\nAuditorAwareImpl"]
-        validation["validation\n@ValidCuit, @ValidPassword"]
-        dto["dto\nPageResponse&lt;T&gt;"]
-    end
-
-    subgraph tenancy["tenancy"]
-        Tenant["Tenant"]
-    end
-
-    subgraph access["access"]
-        User["User, Role"]
-        AuthController["AuthController"]
-        UserController["UserController"]
-        AuthService["AuthService"]
-        UserService["UserService"]
-        CustomUserDetailsService["CustomUserDetailsService"]
-    end
-
-    subgraph customers["customers"]
-        Company["Company"]
-        Contact["Contact"]
-        CompanyController["CompanyController"]
-        ContactController["ContactController"]
-        CompanyService["CompanyService"]
-        ContactService["ContactService"]
-        CustomerVisibilityPort["CustomerVisibilityPort<br/>(puerto)"]
-    end
-
-    subgraph offerings["offerings"]
-        Venue["Venue"]
-        EventService["EventService"]
-        VenueController["VenueController"]
-        EventServiceController["EventServiceController"]
-    end
-
-    subgraph catalogs["catalogs"]
-        Stage["Stage"]
-        EventType["EventType"]
-        StageController["StageController"]
-        EventTypeController["EventTypeController"]
-    end
-
-    subgraph opportunities["opportunities"]
-        Opportunity["Opportunity + servicios N:N"]
-        StageHistory["StageHistory (append-only)"]
-        OpportunityController["OpportunityController"]
-        OpportunityService["OpportunityService"]
-        OpportunityAccessService["OpportunityAccessService<br/>(alcance SELLER)"]
-        ChangeStageService["ChangeStageService"]
-    end
+    shared["shared: seguridad JWT, tenant, errores, validación, auditoría y PageResponse"]
+    tenancy["tenancy: Tenant y serialización de configuración"]
+    access["access: login, clave temporal, usuarios, roles e identidades históricas"]
+    customers["customers: empresas, contactos, responsables y alcance"]
+    offerings["offerings: ABM ADMIN de salones y servicios; capacidad"]
+    catalogs["catalogs: embudos, etapas, plantillas y cuatro catálogos"]
+    opportunities["opportunities: alta/edición, tablero, asignación, cierres, reapertura, disponibilidad e historial"]
+    activities["activities: POST append-only e históricos paginados por asociación"]
+    visibility["CustomerVisibilityPort"]
+    reservations["VenueReservationPort"]
+    usage["StageUsagePort"]
 
     access --> tenancy
     customers --> access
+    customers --> catalogs
     offerings --> tenancy
     catalogs --> tenancy
-    opportunities --> access
     opportunities --> customers
     opportunities --> offerings
     opportunities --> catalogs
-    OpportunityAccessService -. implementa .-> CustomerVisibilityPort
-
-    access -.-> shared
-    customers -.-> shared
-    offerings -.-> shared
-    catalogs -.-> shared
+    opportunities --> access
+    activities --> opportunities
+    activities --> customers
+    activities --> catalogs
+    activities --> access
+    customers --- visibility
+    offerings --- reservations
+    catalogs --- usage
+    opportunities -. implementa .-> visibility
+    opportunities -. implementa .-> reservations
+    opportunities -. implementa .-> usage
+    activities -.-> shared
     opportunities -.-> shared
+    customers -.-> shared
+    catalogs -.-> shared
+    offerings -.-> shared
+    access -.-> shared
 ```
 
-## Reglas de dependencia (ADR-001)
-
-- Las flechas llenas van del módulo consumidor al `service` público del módulo
-  consumido — nunca a su `repository` ni a su `domain`. Por ejemplo,
-  `OpportunityService` llama a `CompanyService.getSummary(id)`, nunca a
-  `CompanyRepository`.
-- Todo FK de `Opportunity` hacia otro módulo (`companyId`, `contactId`, `salesRepId`,
-  `venueId`, `stageId`, `originId`) es un `Long` plano, no un `@ManyToOne` — evita el
-  acoplamiento de entidades JPA entre módulos.
-- Dentro de un mismo módulo sí hay relaciones JPA normales: `Contact.company` es un
-  `@ManyToOne` real porque `Contact` y `Company` viven los dos en `customers`.
-- Las flechas punteadas hacia `shared` son de uso transversal (seguridad, auditoría,
-  errores), no relaciones de negocio.
-- La flecha punteada `OpportunityAccessService → CustomerVisibilityPort` representa
-  inversión de dependencias: el puerto pertenece a `customers`, mientras
-  `opportunities` resuelve las relaciones usando exclusivamente su propio repositorio.
+- Las flechas llenas apuntan a service público, sin acceso a repositorios ajenos.
+  Los puertos pertenecen al módulo que necesita la consulta; opportunities los implementa
+  con su propio repositorio. No introducen ciclos de dependencias.
+- activities consume OpportunityContext y CustomerActivityContext, records de service.
+  No recibe la entidad Opportunity ni DTOs internos. El rol compartido de access
+  conserva la excepción transversal documentada en las convenciones.
+- Referencias entre módulos por ID; relaciones JPA sólo dentro del módulo propietario.
+  Tenant y actor proceden de la sesión; cada lectura/escritura valida el alcance.
+- Flyway V1–V5 gobierna el esquema. GiST protege reservas concurrentes; V4 conserva
+  snapshots de cierres y V5 indexa los históricos. No hay edición/borrado de hechos.

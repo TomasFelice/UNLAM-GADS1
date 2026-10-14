@@ -3,6 +3,7 @@ package com.ztech.crm.customers.repository.specification;
 import com.ztech.crm.customers.domain.Contact;
 import com.ztech.crm.customers.domain.enums.PartyStatus;
 import java.util.Locale;
+import jakarta.persistence.criteria.JoinType;
 import java.util.Set;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -22,7 +23,7 @@ public final class ContactSpecifications {
                 builder.like(builder.lower(root.get("lastName")), pattern),
                 builder.like(builder.lower(root.get("email")), pattern),
                 builder.like(builder.lower(root.get("document")), pattern),
-                builder.like(builder.lower(root.get("company").get("businessName")), pattern));
+                builder.like(builder.lower(root.join("company", JoinType.LEFT).get("businessName")), pattern));
     }
 
     public static Specification<Contact> status(PartyStatus status) {

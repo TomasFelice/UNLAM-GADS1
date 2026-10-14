@@ -9,16 +9,34 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Set;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
+import com.ztech.crm.activities.dto.request.CreateActivityRequest;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Tag(name = "Activities", description = "Lectura tenant-aware del historial comercial")
+@Tag(name = "Activities", description = "Registro append-only e historial comercial autorizado")
 public class ActivityController {
     private static final Set<String> SORTS = Set.of("occurredAt", "createdAt", "id");
     private final ActivityService service;
     public ActivityController(ActivityService service) { this.service = service; }
+
+    @PostMapping("/api/v1/activities")
+    @Operation(summary = "Registra una interacción ya realizada, con autor y tenant de la sesión")
+    @ApiResponse(responseCode = "201", description = "Actividad registrada")
+    @ApiResponse(responseCode = "400", description = "Faltan datos o la fecha es futura")
+    @ApiResponse(responseCode = "404", description = "Referencia inexistente o fuera de alcance")
+    @ApiResponse(responseCode = "422", description = "Asociaciones contradictorias, falta cliente o tipo inactivo")
+    public ResponseEntity<ActivityResponse> create(@Valid @RequestBody CreateActivityRequest request) {
+        var response = service.create(request);
+        // No se anuncia un Location de detalle: la API sólo expone históricos paginados.
+        return ResponseEntity.status(201).body(response);
+    }
 
     @GetMapping("/api/v1/activities")
     @Operation(summary = "Lista actividades visibles, ordenadas y paginadas")

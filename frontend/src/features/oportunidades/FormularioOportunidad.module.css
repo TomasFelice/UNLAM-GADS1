@@ -1,0 +1,5 @@
+.resumen { color: var(--peligro); margin-bottom: var(--e-4); }
+.opcionales { margin-top: var(--e-6); border-top: 1px solid var(--linea); padding-top: var(--e-5); }
+.opcionales summary { cursor: pointer; font-weight: 600; padding: var(--e-2) 0; }
+.contenidoOpcional { margin-top: var(--e-5); }
+.acciones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--e-3); }

@@ -25,8 +25,17 @@ export async function solicitarApi<T>(ruta: string, opciones: Opciones = {}): Pr
     body: body === undefined ? undefined : JSON.stringify(body),
   });
 
+  // Una respuesta de la cuenta anterior no debe poblar caché ni expirar la nueva sesión.
+  const comprobarSesion = () => {
+    if (autenticar && sesion?.token !== obtenerSesion()?.token) {
+      throw new DOMException("La sesión cambió durante la consulta.", "AbortError");
+    }
+  };
+  comprobarSesion();
+
   if (!respuesta.ok) {
     const problema = await interpretarProblema(respuesta);
+    comprobarSesion();
     if (respuesta.status === 401 && autenticar) {
       borrarSesion();
       window.dispatchEvent(new CustomEvent(EVENTO_SESION_EXPIRADA));
@@ -35,5 +44,7 @@ export async function solicitarApi<T>(ruta: string, opciones: Opciones = {}): Pr
   }
 
   if (respuesta.status === 204) return undefined as T;
-  return (await respuesta.json()) as T;
+  const datos = (await respuesta.json()) as T;
+  comprobarSesion();
+  return datos;
 }

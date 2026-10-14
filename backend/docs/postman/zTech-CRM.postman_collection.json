@@ -1,21 +1,164 @@
 {
   "info": {
     "name": "zTech CRM API",
-    "description": "Colección para probar la API en local — Entrega 1 (24/09). Endpoints: Auth, Companies, Contacts, Venues, EventServices, Stages, Opportunities. Correr primero 'Login' — auto-setea {{accessToken}} para el resto de la colección.",
+    "description": "CRM integrado: ejecutar con un ADMIN de prueba que ya haya cambiado su contraseña temporal. Configurar baseUrl, email y password en el environment. Los IDs y versiones se capturan automáticamente. La colección crea y modifica datos: usar una base de prueba. Incluye usuarios, clientes, oferta, catálogos, embudos, cierres y actividades.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
     "type": "bearer",
-    "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8080/api/v1", "type": "string" },
-    { "key": "accessToken", "value": "", "type": "string" },
-    { "key": "companyId", "value": "", "type": "string" },
-    { "key": "contactId", "value": "", "type": "string" },
-    { "key": "venueId", "value": "", "type": "string" },
-    { "key": "stageId", "value": "", "type": "string" },
-    { "key": "opportunityId", "value": "", "type": "string" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "originId",
+      "value": "null",
+      "type": "string"
+    },
+    {
+      "key": "companyId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "contactId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "venueId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "stageId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "opportunityId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "managedCatalogId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "managedPipelineId",
+      "value": ""
+    },
+    {
+      "key": "managedPipelineName",
+      "value": ""
+    },
+    {
+      "key": "managedStageId",
+      "value": ""
+    },
+    {
+      "key": "pipelineStageIds",
+      "value": ""
+    },
+    {
+      "key": "previousPipelineId",
+      "value": ""
+    },
+    {
+      "key": "pipelineId",
+      "value": ""
+    },
+    {
+      "key": "opportunityVersion",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "cycleOpportunityId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "cycleVersion",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "openStageId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "alternateOpenStageId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "wonStageId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "lostStageId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "lossReasonId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "email",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "eventTypeId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "salesRepId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "managedUserId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "managedUserToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "managedUserEmail",
+      "value": "",
+      "type": "string"
+    }
   ],
   "item": [
     {
@@ -24,14 +167,30 @@
         {
           "name": "Login",
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@ztech.local\",\n  \"password\": \"Admin123!\"\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
           },
           "event": [
             {
@@ -52,18 +211,312 @@
       ]
     },
     {
+      "name": "Administración de usuarios",
+      "item": [
+        {
+          "name": "Listar usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Crear vendedor temporal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"coleccion.{{$timestamp}}@fixtures.invalid\",\n  \"firstName\": \"Colección\",\n  \"lastName\": \"Prueba\",\n  \"role\": \"SELLER\",\n  \"temporaryPassword\": \"TemporalColeccion123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('managedUserId', pm.response.json().id); pm.collectionVariables.set('managedUserEmail', pm.response.json().email);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar vendedor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{managedUserId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{managedUserId}}"
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Editar vendedor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{managedUserEmail}}\",\n  \"firstName\": \"Colección editada\",\n  \"lastName\": \"Prueba\",\n  \"role\": \"SELLER\",\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{managedUserId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{managedUserId}}"
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Ingreso temporal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{managedUserEmail}}\",\n  \"password\": \"TemporalColeccion123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('managedUserToken', pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cambiar contraseña propia",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{managedUserToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"TemporalColeccion123!\",\n  \"newPassword\": \"NuevaColeccion123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/change-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "change-password"
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Restablecer contraseña temporal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"temporaryPassword\": \"RestablecidaColeccion123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{managedUserId}}/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{managedUserId}}",
+                "reset-password"
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Baja lógica del vendedor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{managedUserEmail}}\",\n  \"firstName\": \"Colección editada\",\n  \"lastName\": \"Prueba\",\n  \"role\": \"SELLER\",\n  \"active\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{managedUserId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{managedUserId}}"
+              ]
+            }
+          },
+          "event": []
+        }
+      ]
+    },
+    {
+      "name": "Origen para clientes",
+      "item": [
+        {
+          "name": "Preparar origen activo para empresas y contactos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/origins?page=0&size=20&sort=name,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "origins"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "name,asc"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Orígenes consultables', function () { pm.response.to.have.status(200); });",
+                  "if (pm.response.code === 200) {",
+                  "    const origin = pm.response.json().content.find(value => value.active);",
+                  "    pm.collectionVariables.set('originId', origin ? origin.id : 'null');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "Companies",
       "item": [
         {
           "name": "Crear empresa",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Eventos del Sur SA\",\n  \"cuit\": \"30-71234567-9\",\n  \"industry\": \"Turismo y eventos\",\n  \"email\": \"contacto@eventosdelsur.com\",\n  \"phone\": \"+54 11 4000-0000\",\n  \"address\": \"Av. Rivadavia 4500, San Justo\",\n  \"website\": \"https://eventosdelsur.com\",\n  \"status\": \"POTENCIAL\",\n  \"salesRepId\": null,\n  \"originId\": null,\n  \"notes\": \"Cliente potencial grande\"\n}"
+              "raw": "{\n  \"legalName\": \"Eventos del Sur SA\",\n  \"businessName\": \"Eventos del Sur SA\",\n  \"cuit\": \"30-81234567-9\",\n  \"industry\": \"Turismo y eventos\",\n  \"email\": \"contacto@eventosdelsur.com\",\n  \"phone\": \"+54 11 4000-0000\",\n  \"address\": \"Av. Rivadavia 4500, San Justo\",\n  \"website\": \"https://eventosdelsur.com\",\n  \"status\": \"POTENCIAL\",\n  \"salesRepId\": null,\n  \"originId\": {{originId}},\n  \"notes\": \"Cliente potencial grande\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/companies", "host": ["{{baseUrl}}"], "path": ["companies"] }
+            "url": {
+              "raw": "{{baseUrl}}/companies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies"
+              ]
+            }
           },
           "event": [
             {
@@ -83,17 +536,28 @@
           "name": "Editar empresa",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Eventos del Sur SA\",\n  \"cuit\": \"30-71234567-9\",\n  \"industry\": \"Turismo y eventos\",\n  \"email\": \"contacto@eventosdelsur.com\",\n  \"phone\": \"+54 11 4000-0000\",\n  \"address\": \"Av. Rivadavia 4500, San Justo\",\n  \"website\": \"https://eventosdelsur.com\",\n  \"status\": \"CLIENTE\",\n  \"salesRepId\": null,\n  \"originId\": null,\n  \"notes\": \"Pasó a ser cliente\"\n}"
+              "raw": "{\n  \"legalName\": \"Eventos del Sur SA\",\n  \"businessName\": \"Eventos del Sur SA\",\n  \"cuit\": \"30-81234567-9\",\n  \"industry\": \"Turismo y eventos\",\n  \"email\": \"contacto@eventosdelsur.com\",\n  \"phone\": \"+54 11 4000-0000\",\n  \"address\": \"Av. Rivadavia 4500, San Justo\",\n  \"website\": \"https://eventosdelsur.com\",\n  \"status\": \"CLIENTE\",\n  \"salesRepId\": null,\n  \"originId\": {{originId}},\n  \"notes\": \"Pasó a ser cliente\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/companies/{{companyId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["companies", "{{companyId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies",
+                "{{companyId}}"
+              ]
             }
-          }
+          },
+          "event": []
         },
         {
           "name": "Detalle de empresa (con contactos)",
@@ -101,10 +565,16 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/companies/{{companyId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["companies", "{{companyId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies",
+                "{{companyId}}"
+              ]
             }
-          }
+          },
+          "event": []
         },
         {
           "name": "Listar empresas",
@@ -112,14 +582,25 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/companies?page=0&size=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["companies"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies"
+              ],
               "query": [
-                { "key": "page", "value": "0" },
-                { "key": "size", "value": "20" }
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
               ]
             }
-          }
+          },
+          "event": []
         }
       ]
     },
@@ -130,12 +611,25 @@
           "name": "Crear contacto (vinculado a empresa)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"companyId\": {{companyId}},\n  \"firstName\": \"María\",\n  \"lastName\": \"Gómez\",\n  \"document\": \"30111222\",\n  \"position\": \"Responsable de compras\",\n  \"email\": \"maria.gomez@eventosdelsur.com\",\n  \"phone\": \"+54 11 4111-1111\",\n  \"status\": \"POTENCIAL\",\n  \"salesRepId\": null,\n  \"originId\": null,\n  \"notes\": null\n}"
+              "raw": "{\n  \"companyId\": {{companyId}},\n  \"firstName\": \"María\",\n  \"lastName\": \"Gómez\",\n  \"document\": \"30111222\",\n  \"position\": \"Responsable de compras\",\n  \"email\": \"maria.gomez@eventosdelsur.com\",\n  \"phone\": \"+54 11 4111-1111\",\n  \"status\": \"POTENCIAL\",\n  \"salesRepId\": null,\n  \"originId\": {{originId}},\n  \"notes\": null\n}"
             },
-            "url": { "raw": "{{baseUrl}}/contacts", "host": ["{{baseUrl}}"], "path": ["contacts"] }
+            "url": {
+              "raw": "{{baseUrl}}/contacts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contacts"
+              ]
+            }
           },
           "event": [
             {
@@ -155,17 +649,28 @@
           "name": "Editar contacto",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"companyId\": {{companyId}},\n  \"firstName\": \"María\",\n  \"lastName\": \"Gómez\",\n  \"document\": \"30111222\",\n  \"position\": \"Gerente de compras\",\n  \"email\": \"maria.gomez@eventosdelsur.com\",\n  \"phone\": \"+54 11 4111-1111\",\n  \"status\": \"CLIENTE\",\n  \"salesRepId\": null,\n  \"originId\": null,\n  \"notes\": \"Ascendió a gerente\"\n}"
+              "raw": "{\n  \"companyId\": {{companyId}},\n  \"firstName\": \"María\",\n  \"lastName\": \"Gómez\",\n  \"document\": \"30111222\",\n  \"position\": \"Gerente de compras\",\n  \"email\": \"maria.gomez@eventosdelsur.com\",\n  \"phone\": \"+54 11 4111-1111\",\n  \"status\": \"CLIENTE\",\n  \"salesRepId\": null,\n  \"originId\": {{originId}},\n  \"notes\": \"Ascendió a gerente\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/contacts/{{contactId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["contacts", "{{contactId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contacts",
+                "{{contactId}}"
+              ]
             }
-          }
+          },
+          "event": []
         },
         {
           "name": "Detalle de contacto",
@@ -173,10 +678,16 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/contacts/{{contactId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["contacts", "{{contactId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contacts",
+                "{{contactId}}"
+              ]
             }
-          }
+          },
+          "event": []
         },
         {
           "name": "Listar contactos",
@@ -184,14 +695,25 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/contacts?page=0&size=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["contacts"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contacts"
+              ],
               "query": [
-                { "key": "page", "value": "0" },
-                { "key": "size", "value": "20" }
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
               ]
             }
-          }
+          },
+          "event": []
         }
       ]
     },
@@ -202,7 +724,33 @@
           "name": "Listar salones",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/venues", "host": ["{{baseUrl}}"], "path": ["venues"] }
+            "url": {
+              "raw": "{{baseUrl}}/venues?status=DISPONIBLE&page=0&size=20&sort=name,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "venues"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "DISPONIBLE"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "name,asc"
+                }
+              ]
+            }
           },
           "event": [
             {
@@ -211,7 +759,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "if (pm.response.code === 200) {",
-                  "    const venues = pm.response.json();",
+                  "    const venues = pm.response.json().content;",
                   "    if (venues.length > 0) pm.collectionVariables.set('venueId', venues[0].id);",
                   "}"
                 ]
@@ -225,10 +773,154 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/venues/{{venueId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["venues", "{{venueId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "venues",
+                "{{venueId}}"
+              ]
             }
-          }
+          },
+          "event": []
+        },
+        {
+          "name": "Crear oferta administrada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Salón administración Postman\",\n  \"capacity\": 60,\n  \"rate\": 25000,\n  \"address\": \"Av. de Mayo 1000\",\n  \"locality\": \"San Justo\",\n  \"description\": \"Ejemplo de oferta administrada\",\n  \"equipment\": [\n    \"Proyector\",\n    \"Audio\"\n  ],\n  \"status\": \"DISPONIBLE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/venues",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "venues"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.collectionVariables.set('managedVenueId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detalle de oferta administrada",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/venues/{{managedVenueId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "venues",
+                "{{managedVenueId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar oferta administrada",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Salón administración Postman\",\n  \"capacity\": 60,\n  \"rate\": 25000,\n  \"address\": \"Av. de Mayo 1000\",\n  \"locality\": \"San Justo\",\n  \"description\": \"Descripción actualizada\",\n  \"equipment\": [\n    \"Proyector\",\n    \"Audio\"\n  ],\n  \"status\": \"DISPONIBLE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/venues/{{managedVenueId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "venues",
+                "{{managedVenueId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Baja lógica de oferta administrada",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Salón administración Postman\",\n  \"capacity\": 60,\n  \"rate\": 25000,\n  \"address\": \"Av. de Mayo 1000\",\n  \"locality\": \"San Justo\",\n  \"description\": \"Ejemplo de oferta administrada\",\n  \"equipment\": [\n    \"Proyector\",\n    \"Audio\"\n  ],\n  \"status\": \"INACTIVO\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/venues/{{managedVenueId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "venues",
+                "{{managedVenueId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -239,8 +931,155 @@
           "name": "Listar servicios adicionales",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/event-services", "host": ["{{baseUrl}}"], "path": ["event-services"] }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/event-services",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "event-services"
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Crear oferta administrada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Servicio administración Postman\",\n  \"description\": \"Ejemplo de servicio adicional\",\n  \"price\": 1500,\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/event-services",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "event-services"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.collectionVariables.set('managedServiceId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detalle de oferta administrada",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/event-services/{{managedServiceId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "event-services",
+                "{{managedServiceId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar oferta administrada",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Servicio administración Postman\",\n  \"description\": \"Descripción actualizada\",\n  \"price\": 1500,\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/event-services/{{managedServiceId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "event-services",
+                "{{managedServiceId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Baja lógica de oferta administrada",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Servicio administración Postman\",\n  \"description\": \"Ejemplo de servicio adicional\",\n  \"price\": 1500,\n  \"active\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/event-services/{{managedServiceId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "event-services",
+                "{{managedServiceId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -251,7 +1090,15 @@
           "name": "Listar etapas del embudo",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/stages", "host": ["{{baseUrl}}"], "path": ["stages"] }
+            "url": {
+              "raw": "{{baseUrl}}/stages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stages"
+              ]
+            }
           },
           "event": [
             {
@@ -263,7 +1110,111 @@
                   "    const stages = pm.response.json();",
                   "    const open = stages.find(s => s.kind === 'OPEN');",
                   "    if (open) pm.collectionVariables.set('stageId', open.id);",
-                  "}"
+                  "}",
+                  "if (pm.response.json().length) pm.collectionVariables.set(\"pipelineId\", pm.response.json()[0].pipelineId);",
+                  "const next = pm.response.json().filter(s => s.active && s.kind === 'OPEN'); pm.collectionVariables.set('alternateOpenStageId', next[next.length-1].id);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Referencias de oportunidades",
+      "item": [
+        {
+          "name": "Resolver tipo de evento activo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/event-types?active=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "event-types"
+              ],
+              "query": [
+                {
+                  "key": "active",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('eventTypeId', pm.response.json().content[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Resolver responsable activo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/assignable",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "assignable"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('salesRepId', pm.response.json()[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear etapa abierta de avance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"pipelineId\":{{pipelineId}},\"name\":\"Visita Postman {{$timestamp}}\",\"kind\":\"OPEN\",\"active\":true}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/stages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stages"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('alternateOpenStageId', pm.response.json().id);"
                 ]
               }
             }
@@ -278,12 +1229,25 @@
           "name": "Crear oportunidad",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Evento de fin de año - Eventos del Sur\",\n  \"companyId\": {{companyId}},\n  \"contactId\": null,\n  \"salesRepId\": 1,\n  \"venueId\": {{venueId}},\n  \"stageId\": {{stageId}},\n  \"eventTypeId\": 1,\n  \"estimatedValue\": 500000.00,\n  \"probability\": 60,\n  \"eventStart\": \"2026-12-20T20:00:00Z\",\n  \"eventEnd\": \"2026-12-21T02:00:00Z\",\n  \"attendeeCount\": 40,\n  \"estimatedCloseDate\": \"2026-11-15\",\n  \"originId\": null,\n  \"serviceIds\": [1],\n  \"notes\": \"Primer contacto muy interesado\"\n}"
+              "raw": "{\n  \"pipelineId\": {{pipelineId}},\n  \"title\": \"Evento de fin de año - Eventos del Sur\",\n  \"companyId\": {{companyId}},\n  \"contactId\": null,\n  \"salesRepId\": {{salesRepId}},\n  \"venueId\": {{venueId}},\n  \"stageId\": {{stageId}},\n  \"eventTypeId\": {{eventTypeId}},\n  \"estimatedValue\": 500000.00,\n  \"probability\": 60,\n  \"eventStart\": \"2026-12-20T20:00:00Z\",\n  \"eventEnd\": \"2026-12-21T02:00:00Z\",\n  \"attendeeCount\": 40,\n  \"estimatedCloseDate\": \"2026-11-15\",\n  \"originId\": null,\n  \"serviceIds\": [],\n  \"notes\": \"Primer contacto muy interesado\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/opportunities", "host": ["{{baseUrl}}"], "path": ["opportunities"] }
+            "url": {
+              "raw": "{{baseUrl}}/opportunities",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities"
+              ]
+            }
           },
           "event": [
             {
@@ -296,6 +1260,15 @@
                   "}"
                 ]
               }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code < 300) pm.collectionVariables.set('opportunityVersion', pm.response.json().version);"
+                ]
+              }
             }
           ]
         },
@@ -303,17 +1276,38 @@
           "name": "Editar oportunidad",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Evento de fin de año - Eventos del Sur (actualizado)\",\n  \"companyId\": {{companyId}},\n  \"contactId\": null,\n  \"venueId\": {{venueId}},\n  \"eventTypeId\": 1,\n  \"estimatedValue\": 650000.00,\n  \"probability\": 75,\n  \"eventStart\": \"2026-12-20T20:00:00Z\",\n  \"eventEnd\": \"2026-12-21T02:00:00Z\",\n  \"attendeeCount\": 45,\n  \"estimatedCloseDate\": \"2026-11-15\",\n  \"originId\": null,\n  \"serviceIds\": [1],\n  \"notes\": \"Ajustado tras la visita al salón\"\n}"
+              "raw": "{\n  \"version\": {{opportunityVersion}},\n  \"title\": \"Evento de fin de año - Eventos del Sur (actualizado)\",\n  \"companyId\": {{companyId}},\n  \"contactId\": null,\n  \"venueId\": {{venueId}},\n  \"eventTypeId\": {{eventTypeId}},\n  \"estimatedValue\": 650000.00,\n  \"probability\": 75,\n  \"eventStart\": \"2026-12-20T20:00:00Z\",\n  \"eventEnd\": \"2026-12-21T02:00:00Z\",\n  \"attendeeCount\": 45,\n  \"estimatedCloseDate\": \"2026-11-15\",\n  \"originId\": null,\n  \"serviceIds\": [],\n  \"notes\": \"Ajustado tras la visita al salón\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/opportunities/{{opportunityId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["opportunities", "{{opportunityId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{opportunityId}}"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code < 300) pm.collectionVariables.set('opportunityVersion', pm.response.json().version);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Detalle de oportunidad",
@@ -321,10 +1315,26 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/opportunities/{{opportunityId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["opportunities", "{{opportunityId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{opportunityId}}"
+              ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code < 300) pm.collectionVariables.set('opportunityVersion', pm.response.json().version);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Listar oportunidades",
@@ -332,14 +1342,25 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/opportunities?page=0&size=20",
-              "host": ["{{baseUrl}}"],
-              "path": ["opportunities"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities"
+              ],
               "query": [
-                { "key": "page", "value": "0" },
-                { "key": "size", "value": "20" }
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
               ]
             }
-          }
+          },
+          "event": []
         },
         {
           "name": "Tablero por etapa",
@@ -347,27 +1368,55 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/opportunities/board",
-              "host": ["{{baseUrl}}"],
-              "path": ["opportunities", "board"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "board"
+              ]
             }
-          }
+          },
+          "event": []
         },
         {
           "name": "Cambiar de etapa",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"stageId\": {{stageId}},\n  \"note\": \"Avanza tras la visita al salón\"\n}"
+              "raw": "{\n  \"version\": {{opportunityVersion}},\n  \"stageId\": {{alternateOpenStageId}},\n  \"note\": \"Avanza tras la visita al salón\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/opportunities/{{opportunityId}}/stage",
-              "host": ["{{baseUrl}}"],
-              "path": ["opportunities", "{{opportunityId}}", "stage"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{opportunityId}}",
+                "stage"
+              ]
             },
             "description": "OJO: {{stageId}} se completa con la PRIMERA etapa abierta al correr 'Listar etapas del embudo'. Para probar un cambio real, correr ese request de nuevo y pegar manualmente el id de una etapa distinta a la actual de la oportunidad."
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code < 300) pm.collectionVariables.set('opportunityVersion', pm.response.json().version);"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -376,29 +1425,1825 @@
       "item": [
         {
           "name": "Listar orígenes",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/origins", "host": ["{{baseUrl}}"], "path": ["origins"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/origins?page=0&size=20&sort=name,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "origins"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "name,asc"
+                }
+              ]
+            }
+          },
+          "event": []
         },
         {
           "name": "Listar tipos de actividad",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/activity-types", "host": ["{{baseUrl}}"], "path": ["activity-types"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/activity-types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "activity-types"
+              ]
+            }
+          },
+          "event": []
         },
         {
           "name": "Listar motivos de pérdida",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/loss-reasons", "host": ["{{baseUrl}}"], "path": ["loss-reasons"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/loss-reasons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loss-reasons"
+              ]
+            }
+          },
+          "event": []
         },
         {
           "name": "Listar actividades recientes",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/activities?page=0&size=20&sort=occurredAt,desc", "host": ["{{baseUrl}}"], "path": ["activities"], "query": [{"key":"page","value":"0"},{"key":"size","value":"20"},{"key":"sort","value":"occurredAt,desc"}] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/activities?page=0&size=20&sort=occurredAt,desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "activities"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "occurredAt,desc"
+                }
+              ]
+            }
+          },
+          "event": []
         },
         {
           "name": "Actividades de oportunidad",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/opportunities/{{opportunityId}}/activities", "host": ["{{baseUrl}}"], "path": ["opportunities", "{{opportunityId}}", "activities"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/{{opportunityId}}/activities",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{opportunityId}}",
+                "activities"
+              ]
+            }
+          },
+          "event": []
         },
         {
           "name": "Historial de etapas",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/opportunities/{{opportunityId}}/stage-history", "host": ["{{baseUrl}}"], "path": ["opportunities", "{{opportunityId}}", "stage-history"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/{{opportunityId}}/stage-history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{opportunityId}}",
+                "stage-history"
+              ]
+            }
+          },
+          "event": []
         }
       ]
+    },
+    {
+      "name": "Catalog origins",
+      "item": [
+        {
+          "name": "Listar orígenes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/origins?page=0&size=20&sort=name,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "origins"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "name,asc"
+                }
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100."
+          },
+          "event": []
+        },
+        {
+          "name": "Crear orígenes",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/origins",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "origins"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Entrada Postman origins\",\n  \"active\": true\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"managedCatalogId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar orígenes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/origins/{{managedCatalogId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "origins",
+                "{{managedCatalogId}}"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100."
+          },
+          "event": []
+        },
+        {
+          "name": "Desactivar orígenes",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/origins/{{managedCatalogId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "origins",
+                "{{managedCatalogId}}"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Entrada Postman origins\",\n  \"active\": false\n}"
+            }
+          },
+          "event": []
+        }
+      ]
+    },
+    {
+      "name": "Catalog loss-reasons",
+      "item": [
+        {
+          "name": "Listar motivos de pérdida",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/loss-reasons?page=0&size=20&sort=name,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loss-reasons"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "name,asc"
+                }
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100."
+          },
+          "event": []
+        },
+        {
+          "name": "Crear motivos de pérdida",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/loss-reasons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loss-reasons"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Entrada Postman loss-reasons\",\n  \"active\": true\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"managedCatalogId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar motivos de pérdida",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/loss-reasons/{{managedCatalogId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loss-reasons",
+                "{{managedCatalogId}}"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100."
+          },
+          "event": []
+        },
+        {
+          "name": "Desactivar motivos de pérdida",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/loss-reasons/{{managedCatalogId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loss-reasons",
+                "{{managedCatalogId}}"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Entrada Postman loss-reasons\",\n  \"active\": false\n}"
+            }
+          },
+          "event": []
+        }
+      ]
+    },
+    {
+      "name": "Catalog activity-types",
+      "item": [
+        {
+          "name": "Listar tipos de actividad",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/activity-types?page=0&size=20&sort=name,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "activity-types"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "name,asc"
+                }
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100."
+          },
+          "event": []
+        },
+        {
+          "name": "Crear tipos de actividad",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/activity-types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "activity-types"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Entrada Postman activity-types\",\n  \"active\": true\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"managedCatalogId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar tipos de actividad",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/activity-types/{{managedCatalogId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "activity-types",
+                "{{managedCatalogId}}"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100."
+          },
+          "event": []
+        },
+        {
+          "name": "Desactivar tipos de actividad",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/activity-types/{{managedCatalogId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "activity-types",
+                "{{managedCatalogId}}"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Entrada Postman activity-types\",\n  \"active\": false\n}"
+            }
+          },
+          "event": []
+        }
+      ]
+    },
+    {
+      "name": "Catalog event-types",
+      "item": [
+        {
+          "name": "Listar tipos de evento",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/event-types?page=0&size=20&sort=name,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "event-types"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "name,asc"
+                }
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100."
+          },
+          "event": []
+        },
+        {
+          "name": "Crear tipos de evento",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/event-types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "event-types"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Entrada Postman event-types\",\n  \"active\": true\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"managedCatalogId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar tipos de evento",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/event-types/{{managedCatalogId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "event-types",
+                "{{managedCatalogId}}"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100."
+          },
+          "event": []
+        },
+        {
+          "name": "Desactivar tipos de evento",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/event-types/{{managedCatalogId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "event-types",
+                "{{managedCatalogId}}"
+              ]
+            },
+            "description": "ADMIN configura; los tres roles consultan. Baja lógica y paginación 20/máximo 100.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Entrada Postman event-types\",\n  \"active\": false\n}"
+            }
+          },
+          "event": []
+        }
+      ]
+    },
+    {
+      "name": "Embudos y etapas",
+      "item": [
+        {
+          "name": "Consultar predeterminado actual",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pipelines/default",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipelines",
+                "default"
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"previousPipelineId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar plantillas",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pipeline-templates",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipeline-templates"
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden."
+          },
+          "event": []
+        },
+        {
+          "name": "Listar embudos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pipelines?page=0&size=20&sort=name,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipelines"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "name,asc"
+                }
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden."
+          },
+          "event": []
+        },
+        {
+          "name": "Copiar plantilla corporativa",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/pipelines",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipelines"
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Proceso Postman {{$timestamp}}\",\"templateKey\":\"corporate-events\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"managedPipelineId\", pm.response.json().id);",
+                  "pm.collectionVariables.set(\"managedPipelineName\", pm.response.json().name);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar etapas propias",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/stages?pipelineId={{managedPipelineId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stages"
+              ],
+              "query": [
+                {
+                  "key": "pipelineId",
+                  "value": "{{managedPipelineId}}"
+                }
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const stages = pm.response.json();",
+                  "pm.collectionVariables.set(\"managedStageId\", stages[0].id);",
+                  "pm.collectionVariables.set(\"pipelineStageIds\", JSON.stringify(stages.map(s => s.id).reverse()));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Renombrar etapa",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/stages/{{managedStageId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stages",
+                "{{managedStageId}}"
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"pipelineId\":{{managedPipelineId}},\"name\":\"Consulta propia Postman\",\"kind\":\"OPEN\",\"active\":true}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Consultar etapa",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/stages/{{managedStageId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stages",
+                "{{managedStageId}}"
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden."
+          },
+          "event": []
+        },
+        {
+          "name": "Reordenar conjunto completo",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/pipelines/{{managedPipelineId}}/stages/reorder",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipelines",
+                "{{managedPipelineId}}",
+                "stages",
+                "reorder"
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"stageIds\":{{pipelineStageIds}}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Activar embudo",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/pipelines/{{managedPipelineId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipelines",
+                "{{managedPipelineId}}"
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"{{managedPipelineName}}\",\"active\":true}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Usar como predeterminado",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/pipelines/{{managedPipelineId}}/default",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipelines",
+                "{{managedPipelineId}}",
+                "default"
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden."
+          },
+          "event": []
+        },
+        {
+          "name": "Consultar tablero elegido",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/board?pipelineId={{managedPipelineId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "board"
+              ],
+              "query": [
+                {
+                  "key": "pipelineId",
+                  "value": "{{managedPipelineId}}"
+                }
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden."
+          },
+          "event": []
+        },
+        {
+          "name": "Restituir predeterminado anterior",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/pipelines/{{previousPipelineId}}/default",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipelines",
+                "{{previousPipelineId}}",
+                "default"
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden."
+          },
+          "event": []
+        },
+        {
+          "name": "Desactivar embudo",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/pipelines/{{managedPipelineId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipelines",
+                "{{managedPipelineId}}"
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"{{managedPipelineName}}\",\"active\":false}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Consultar embudo histórico",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pipelines/{{managedPipelineId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipelines",
+                "{{managedPipelineId}}"
+              ]
+            },
+            "description": "Configuración ADMIN; lectura para todos los roles. Ejecutar carpeta en orden."
+          },
+          "event": []
+        }
+      ]
+    },
+    {
+      "name": "Ciclo comercial y reservas",
+      "item": [
+        {
+          "name": "Crear embudo independiente para el ciclo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pipelines",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipelines"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ciclo Postman {{$timestamp}}\",\n  \"templateKey\": \"brief-hiring\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('pipelineId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Activar embudo del ciclo",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pipelines/{{pipelineId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pipelines",
+                "{{pipelineId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ciclo Postman {{$timestamp}}\",\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Resolver etapas del ciclo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/stages?pipelineId={{pipelineId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stages"
+              ],
+              "query": [
+                {
+                  "key": "pipelineId",
+                  "value": "{{pipelineId}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const stages = pm.response.json();",
+                  "const open = stages.filter(s => s.active && s.kind === 'OPEN');",
+                  "pm.collectionVariables.set('openStageId', open[0].id);",
+                  "pm.collectionVariables.set('alternateOpenStageId', open[open.length - 1].id);",
+                  "pm.collectionVariables.set('wonStageId', stages.find(s => s.active && s.kind === 'WON').id);",
+                  "pm.collectionVariables.set('lostStageId', stages.find(s => s.active && s.kind === 'LOST').id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cliente del ciclo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/companies?status=POTENCIAL",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "POTENCIAL"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('companyId', pm.response.json().content[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Salón del ciclo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/venues?status=DISPONIBLE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "venues"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "DISPONIBLE"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('venueId', pm.response.json().content.find(v => v.capacity >= 20).id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tipo del ciclo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/event-types?active=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "event-types"
+              ],
+              "query": [
+                {
+                  "key": "active",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('eventTypeId', pm.response.json().content[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Responsable del ciclo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/assignable",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "assignable"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('salesRepId', pm.response.json()[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Motivo del ciclo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/loss-reasons?active=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "loss-reasons"
+              ],
+              "query": [
+                {
+                  "key": "active",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('lossReasonId', pm.response.json().content[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear negociación para el ciclo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/opportunities",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Ciclo comercial Postman\",\n  \"pipelineId\": {{pipelineId}},\n  \"stageId\": {{openStageId}},\n  \"companyId\": {{companyId}},\n  \"salesRepId\": {{salesRepId}},\n  \"venueId\": {{venueId}},\n  \"eventTypeId\": {{eventTypeId}},\n  \"eventStart\": \"2034-05-01T12:00:00Z\",\n  \"eventEnd\": \"2034-05-01T16:00:00Z\",\n  \"attendeeCount\": 20\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code < 300) pm.collectionVariables.set('cycleVersion', pm.response.json().version);",
+                  "pm.collectionVariables.set('cycleOpportunityId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Asignar negociación",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/{{cycleOpportunityId}}/assign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{cycleOpportunityId}}",
+                "assign"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"salesRepId\": {{salesRepId}},\n  \"version\": {{cycleVersion}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code < 300) pm.collectionVariables.set('cycleVersion', pm.response.json().version);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Avanzar etapa abierta",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/{{cycleOpportunityId}}/stage",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{cycleOpportunityId}}",
+                "stage"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stageId\": {{alternateOpenStageId}},\n  \"note\": \"Propuesta revisada\",\n  \"version\": {{cycleVersion}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code < 300) pm.collectionVariables.set('cycleVersion', pm.response.json().version);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar disponibilidad",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/{{cycleOpportunityId}}/availability",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{cycleOpportunityId}}",
+                "availability"
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Ganar y reservar",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/{{cycleOpportunityId}}/win",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{cycleOpportunityId}}",
+                "win"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stageId\": {{wonStageId}},\n  \"finalValue\": 150000,\n  \"note\": \"Reserva confirmada\",\n  \"version\": {{cycleVersion}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code < 300) pm.collectionVariables.set('cycleVersion', pm.response.json().version);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reabrir y liberar reserva",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/{{cycleOpportunityId}}/reopen",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{cycleOpportunityId}}",
+                "reopen"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stageId\": {{openStageId}},\n  \"note\": \"Cliente solicita nueva propuesta\",\n  \"version\": {{cycleVersion}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code < 300) pm.collectionVariables.set('cycleVersion', pm.response.json().version);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Perder negociación reabierta",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/{{cycleOpportunityId}}/lose",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{cycleOpportunityId}}",
+                "lose"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stageId\": {{lostStageId}},\n  \"lossReasonId\": {{lossReasonId}},\n  \"note\": \"No acepta la nueva propuesta\",\n  \"version\": {{cycleVersion}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code < 300) pm.collectionVariables.set('cycleVersion', pm.response.json().version);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar cierres conservados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/{{cycleOpportunityId}}/stage-history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{cycleOpportunityId}}",
+                "stage-history"
+              ]
+            }
+          },
+          "event": []
+        }
+      ]
+    },
+    {
+      "name": "Registro de actividades e historial",
+      "description": "Ejecutar autenticado. Resuelve referencias activas del tenant y registra un hecho pasado; no permite edición ni borrado. Las asociaciones y el autor se resuelven en servidor.",
+      "item": [
+        {
+          "name": "Seleccionar oportunidad del tenant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/opportunities?size=20&sort=createdAt,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities"
+              ],
+              "query": [
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "createdAt,asc"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const o = pm.response.json().content.find(o => o.companyId && o.contactId);",
+                  "if (o) { pm.collectionVariables.set('activityOpportunityId', o.id); pm.collectionVariables.set('activityCompanyId', o.companyId); pm.collectionVariables.set('activityContactId', o.contactId); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Seleccionar tipo activo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/activity-types?active=true&size=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "activity-types"
+              ],
+              "query": [
+                {
+                  "key": "active",
+                  "value": "true"
+                },
+                {
+                  "key": "size",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('activityTypeId', pm.response.json().content[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registrar interacción realizada en oportunidad",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/activities",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "activities"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"typeId\": {{activityTypeId}},\n  \"opportunityId\": {{activityOpportunityId}},\n  \"occurredAt\": \"2026-01-01T12:00:00Z\",\n  \"description\": \"Llamada de seguimiento realizada\",\n  \"result\": \"Cliente informó sus necesidades\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('activityId', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Historial de la oportunidad",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/{{activityOpportunityId}}/activities?page=0&size=20&sort=occurredAt,desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{activityOpportunityId}}",
+                "activities"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "occurredAt,desc"
+                }
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Historial de la empresa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/companies/{{activityCompanyId}}/activities?page=0&size=20&sort=occurredAt,desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "companies",
+                "{{activityCompanyId}}",
+                "activities"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "occurredAt,desc"
+                }
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Historial del contacto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/contacts/{{activityContactId}}/activities?page=0&size=20&sort=occurredAt,desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contacts",
+                "{{activityContactId}}",
+                "activities"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "occurredAt,desc"
+                }
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Historial global autorizado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/activities?page=0&size=20&sort=occurredAt,desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "activities"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "occurredAt,desc"
+                }
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Página siguiente del contacto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/contacts/{{activityContactId}}/activities?page=1&size=20&sort=occurredAt,desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contacts",
+                "{{activityContactId}}",
+                "activities"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "occurredAt,desc"
+                }
+              ]
+            }
+          },
+          "event": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const url = pm.request.url.toString();",
+          "const method = pm.request.method;",
+          "const expected = /change-password|reset-password/.test(url) ? 204 : method === 'POST' && !/auth\\/login|stages\\/reorder|\\/default|\\/stage$|\\/assign$|\\/win$|\\/lose$|\\/reopen$/.test(url) ? 201 : 200;",
+          "pm.test('Respuesta HTTP esperada', () => pm.response.to.have.status(expected));"
+        ]
+      }
     }
   ]
 }

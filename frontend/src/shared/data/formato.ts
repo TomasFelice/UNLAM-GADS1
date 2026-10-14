@@ -21,7 +21,11 @@ const fechaLarga = new Intl.DateTimeFormat(LOCALE, {
   year: "numeric",
 });
 
-const horaCorta = new Intl.DateTimeFormat(LOCALE, {
+const fechaHoraNegocio = new Intl.DateTimeFormat(LOCALE, {
+  timeZone: "America/Argentina/Buenos_Aires",
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
   hour: "2-digit",
   minute: "2-digit",
 });
@@ -33,6 +37,11 @@ const aFecha = (iso: string | null | undefined) =>
   iso ? new Date(iso.length === 10 ? `${iso}T00:00:00` : iso) : null;
 
 const SIN_DATO = "—";
+
+/** Conserva centavos en los importes efectivos de cada cierre. */
+export const pesosExactos = (valor: number) => new Intl.NumberFormat(LOCALE, {
+  style: "currency", currency: "ARS", minimumFractionDigits: 2, maximumFractionDigits: 2,
+}).format(valor);
 
 export const pesos = (valor: number) => moneda.format(valor);
 
@@ -54,7 +63,7 @@ export const fechaExtendida = (iso: string | null | undefined) => {
 
 export const fechaHora = (iso: string | null | undefined) => {
   const d = aFecha(iso);
-  return d ? `${fechaCorta.format(d)}, ${horaCorta.format(d)}` : SIN_DATO;
+  return d ? fechaHoraNegocio.format(d) : SIN_DATO;
 };
 
 /** "hace 3 días", para las líneas de tiempo de actividad. */

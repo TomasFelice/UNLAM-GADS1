@@ -10,3 +10,11 @@ app:
     # Los IT históricos de E1 reutilizan la cuenta semilla entre métodos. La política
     # obligatoria se cubre en pruebas específicas de acceso, no se desactiva fuera de test.
     enforce-password-change: false
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.jdbc: INFO
+    org.hibernate.SQL: OFF
+    org.hibernate.orm.jdbc.error: OFF

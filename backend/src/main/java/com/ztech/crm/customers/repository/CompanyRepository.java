@@ -12,6 +12,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface CompanyRepository extends JpaRepository<Company, Long>, JpaSpecificationExecutor<Company> {
 
+    java.util.List<Company> findAllByTenantIdAndIdIn(Long tenantId, java.util.Set<Long> ids);
+
     Optional<Company> findByIdAndTenantId(Long id, Long tenantId);
 
     Page<Company> findAllByTenantId(Long tenantId, Pageable pageable);

@@ -1,0 +1,6 @@
+.formulario { display: flex; flex-direction: column; gap: var(--e-4); min-width: 0; border: 0; padding: 0; }
+.acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); }
+.pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-3); margin-top: var(--e-5); }
+.error { color: var(--peligro); overflow-wrap: anywhere; }
+.lista { display: flex; flex-direction: column; gap: var(--e-3); list-style: none; padding: 0; overflow-wrap: anywhere; }
+.hecho { overflow-wrap: anywhere; white-space: pre-wrap; }

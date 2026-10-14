@@ -5,4 +5,12 @@ import java.time.Instant;
 
 public record OpportunityFilter(
         String q, OpportunityStatus status, Long stageId, Long originId, Long salesRepId,
-        Long venueId, Long companyId, Long contactId, Instant eventFrom, Instant eventTo) { }
+        Long venueId, Long companyId, Long contactId, Instant eventFrom, Instant eventTo, Long pipelineId) {
+    public OpportunityFilter(String q, OpportunityStatus status, Long stageId, Long originId, Long salesRepId,
+            Long venueId, Long companyId, Long contactId, Instant eventFrom, Instant eventTo) {
+        this(q, status, stageId, originId, salesRepId, venueId, companyId, contactId, eventFrom, eventTo, null);
+    }
+    public OpportunityFilter forPipeline(Long id) {
+        return new OpportunityFilter(q, status, stageId, originId, salesRepId, venueId, companyId, contactId, eventFrom, eventTo, id);
+    }
+}

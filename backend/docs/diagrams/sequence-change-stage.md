@@ -14,7 +14,7 @@ sequenceDiagram
     participant SHR as StageHistoryRepository
     participant DB as PostgreSQL
 
-    Cliente->>OC: POST /opportunities/{id}/stage {stageId, note}
+    Cliente->>OC: POST /opportunities/{id}/stage {stageId, note, version}
     OC->>CSS: changeStage(id, request)
 
     CSS->>OR: findByIdAndTenantId(id, tenantId)
@@ -37,7 +37,7 @@ sequenceDiagram
                 OC-->>Cliente: 422
             else etapa distinta
 
-                CSS->>SS: assertOpenAndActive(stageId destino)
+                CSS->>SS: assertKindAndActive(stageId, pipelineId, OPEN)
                 SS->>DB: SELECT ... FROM stages WHERE id = ? AND tenant_id = ?
                 DB-->>SS: fila o vacío
 
@@ -45,19 +45,19 @@ sequenceDiagram
                     SS-->>CSS: NotFoundException
                     CSS-->>OC: (propaga)
                     OC-->>Cliente: 404
-                else existe pero no está OPEN/activa
+                else tipo incompatible o inactiva
                     Note over SS: Cubre también el intento de<br/>saltar directo a WON/LOST —<br/>eso son /win y /lose (Fase 7)
-                    SS-->>CSS: BusinessException (STAGE_NOT_OPEN / STAGE_INACTIVE)
+                    SS-->>CSS: ConflictException (tipo/embudo) o BusinessException (inactiva)
                     CSS-->>OC: (propaga)
-                    OC-->>Cliente: 422
+                    OC-->>Cliente: 409 o 422
                 else etapa OPEN y activa
-                    SS-->>CSS: StageResponse
+                    SS-->>CSS: StageInfo
 
                     rect rgb(240, 248, 255)
                         Note over CSS,DB: Transacción única (@Transactional)
                         CSS->>OR: opportunity.changeStage(toStageId)
                         CSS->>OR: save(opportunity)
-                        OR->>DB: UPDATE opportunities SET stage_id = ?
+                        OR->>DB: UPDATE opportunities SET stage_id, version WHERE version leída
 
                         CSS->>SHR: save(new StageHistory(tenant, opportunityId,<br/>fromStageId, toStageId, changedBy, note))
                         SHR->>DB: INSERT INTO stage_history (...)
@@ -73,10 +73,13 @@ sequenceDiagram
                         end
                     end
 
-                    CSS-->>OC: OpportunityResponse
+                    CSS-->>OC: OpportunityResponse con nueva versión
                     OC-->>Cliente: 200 OK
                 end
             end
         end
     end
 ```
+
+La versión esperada se compara antes de modificar; flush comprueba @Version.
+El destino debe pertenecer al embudo fijo. /stage sólo admite OPEN y no delega cierres.

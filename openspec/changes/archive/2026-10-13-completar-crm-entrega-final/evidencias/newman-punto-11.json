@@ -1,0 +1,14 @@
+{
+  "solicitudes": {
+    "total": 99,
+    "pending": 0,
+    "failed": 0
+  },
+  "aserciones": {
+    "total": 109,
+    "pending": 0,
+    "failed": 0
+  },
+  "fallas": [],
+  "respuestasFallidas": []
+}

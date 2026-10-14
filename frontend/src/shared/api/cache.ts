@@ -5,6 +5,7 @@ export const cacheApi = new QueryClient({
     queries: {
       staleTime: 30_000,
       retry: (intentos, error) => {
+        if (error.name === "AbortError") return false;
         const estado = (error as { problema?: { status?: number } }).problema?.status;
         return estado !== undefined && estado < 500 ? false : intentos < 2;
       },

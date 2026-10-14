@@ -24,7 +24,7 @@ public class ContactMapper {
         );
     }
 
-    public ContactDetailResponse toDetailResponse(Contact contact) {
+    public ContactDetailResponse toDetailResponse(Contact contact, String salesRepName) {
         Company company = contact.getCompany();
         return new ContactDetailResponse(
                 contact.getId(),
@@ -38,6 +38,7 @@ public class ContactMapper {
                 contact.getPhone(),
                 contact.getStatus(),
                 contact.getSalesRepId(),
+                salesRepName,
                 contact.getOriginId(),
                 contact.getNotes()
         );

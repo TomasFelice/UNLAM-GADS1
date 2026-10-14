@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { ErrorDeApi } from "../../shared/api/errores";
+import { AvisoExito } from "../../shared/components/AvisoExito";
 import { Boton } from "../../shared/components/Boton";
 import { BotonTema } from "../../shared/components/BotonTema";
 import { Campo, Entrada } from "../../shared/components/Campos";
@@ -49,7 +50,7 @@ export function PaginaIngreso() {
     try {
       const sesion = await ingresar({ email: email.trim(), password }, mantener);
       const solicitado = parametros.get("desde");
-      const destino = solicitado?.startsWith("/app") ? solicitado : "/app";
+      const destino = solicitado?.startsWith("/app") && !solicitado.startsWith("/app/cambiar-clave") ? solicitado : "/app";
       navegar(sesion.debeCambiarClave ? "/app/cambiar-clave" : destino, { replace: true });
     } catch (error) {
       setErrorGeneral(
@@ -82,7 +83,7 @@ export function PaginaIngreso() {
               <h1 className={css.titulo}>Ingresá a tu cuenta</h1>
               <p className={css.bajada}>Usá el correo de tu equipo comercial para acceder al CRM.</p>
 
-              {mensaje && <p className={css.exito} role="status">{mensaje}</p>}
+              {mensaje && <AvisoExito>{mensaje}</AvisoExito>}
               {errorGeneral && <p className={css.errorGeneral} role="alert">{errorGeneral}</p>}
 
               <form onSubmit={alEnviar} className={css.formulario} noValidate>

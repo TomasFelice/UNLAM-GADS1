@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { solicitarApi } from "../../shared/api/clienteApi";
 import { ErrorDeApi } from "../../shared/api/errores";
@@ -28,7 +27,6 @@ type DatosClave = z.infer<typeof esquema>;
 
 export function PaginaCambiarClave() {
   const { cerrar } = useSesion();
-  const navegar = useNavigate();
   const [errorGeneral, setErrorGeneral] = useState<string>();
   const {
     register,
@@ -43,11 +41,7 @@ export function PaginaCambiarClave() {
         method: "POST",
         body: { currentPassword: actual, newPassword: nueva },
       });
-      cerrar();
-      navegar("/ingresar", {
-        replace: true,
-        state: { mensaje: "Contraseña actualizada. Volvé a ingresar con tu nueva clave." },
-      });
+      cerrar({ mensaje: "Contraseña actualizada. Volvé a ingresar con tu nueva clave." });
     } catch (error) {
       setErrorGeneral(error instanceof ErrorDeApi ? error.message : "No pudimos cambiar la contraseña.");
     }

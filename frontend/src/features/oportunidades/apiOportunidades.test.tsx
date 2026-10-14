@@ -29,7 +29,7 @@ describe("mutación de etapa", () => {
     const envoltorio = ({ children }: { children: ReactNode }) => <QueryClientProvider client={cache}>{children}</QueryClientProvider>;
     const { result } = renderHook(() => useCambiarEtapa(), { wrapper: envoltorio });
 
-    result.current.mutate({ id: 7, stageId: 4 });
+    result.current.mutate({ id: 7, stageId: 4, version: 2 });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     claves.forEach((clave) => expect(cache.getQueryState(clave)?.isInvalidated).toBe(true));

@@ -7,6 +7,25 @@ Sigue los hitos de `docs/planificacion/plan-de-desarrollo.md` y la estrategia de
 vertical (migración → dominio → service → controller → tests). Cada tarea referencia el
 requisito (`requirements.md`) y la sección de diseño (`design.md`) que cubre.
 
+## Estado vigente — cierre de OpenSpec al 13/10/2026
+
+El [cambio final](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/tasks.md) está
+archivado con nueve specs sincronizadas: §1–§10 y 11.1–11.7 verificados (**71/72 tareas**). La continuación de §10 ejecutó 5 unitarias/108 IT,
+45 frontend y 21 E2E; evidencia en la [validación de §10](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/validacion-punto-10-2026-10-10.md).
+La [validación de §9](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/validacion-2026-10-10.md)
+conserva los resultados de la sesión anterior. V4 conserva cierres y V5 indexa
+actividades; §10 agrega enriquecimiento por lotes, carga por ruta y observabilidad.
+La comparación incluye 48 muestras válidas con el mismo dataset de §1.2.
+La continuación de §11 ejecutó 5 unitarias/109 IT, 45 pruebas frontend y 24 E2E,
+incluidas 576 combinaciones de rutas y Newman (99 solicitudes/109 aserciones).
+Valida instalación V1→V5 con varios tenants, artefactos y documentación; evidencia en la
+[validación de §11](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/validacion-punto-11-2026-10-10.md).
+El usuario confirmó testing integral local satisfactorio el 13/10 y autorizó
+archivar con §11.8 pendiente; ver el
+[cierre](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/cierre-2026-10-13.md).
+Las notas de septiembre siguientes son históricas; las casillas actualizadas con
+referencia a OpenSpec corresponden a verificaciones posteriores.
+
 > ## 📍 Punto de retomada (última actualización: 17/09/2026)
 >
 > **Fases 0-4 completas y estabilización post-E1 en curso.** El esquema incluye contraseña
@@ -150,9 +169,9 @@ en la práctica, sólo existe un tenant. Actualizado en `V1__initial_schema.sql`
       (5 tests) — contra Testcontainers, cubren alta, edición, detalle con contactos
       anidados, duplicados → `409`, formato inválido → `400`, no encontrado → `404`,
       empresa relacionada inexistente → `404`, paginación
-- [ ] Test de tenant: acceso cruzado por listado y por id directo → `404` — **pendiente**,
-      requiere un segundo tenant de prueba; se agrega cuando haya un caso de uso real de
-      alta de tenant para no fabricar datos de test ad-hoc
+- [x] Test de tenant: listado/ID y escrituras cruzadas en `SellerScopeIT`,
+      `CustomerManagementIT` y `CommercialFixturesIT`; dos tenants de prueba, sin
+      endpoint de alta de organizaciones — OpenSpec §3/§11.
 - [x] Demo verificable: crear empresa + contacto relacionado, consultar detalle — cubierto
       por `detailIncludesRelatedContacts`
 
@@ -194,7 +213,8 @@ sólo `BUILD SUCCESS`.**
       tests), alta sin ninguno → `422` — `OpportunityControllerIT` (6 tests), de paso
       ejercita `GET /venues` y `GET /stages` contra el seed real
 - [x] Test: etapa inicial no abierta → `422`; salón/etapa/empresa inexistentes → `404`
-- [ ] Test de tenant — mismo pendiente que Fase 2, misma razón
+- [x] Test de tenant: listado, ID, tablero y acciones en `OpportunityLifecycleIT`,
+      `OpportunityCreationIT` y `SellerScopeIT` — OpenSpec §8/§11.
 - [x] Demo verificable: seleccionar salón y etapa precargados, crear oportunidad —
       cubierto por `createsOpportunityWithCompanyAndFetchesDetail`
 
@@ -260,9 +280,8 @@ existe hoy — se completan/actualizan de nuevo antes de la entrega final (Fase 
       (sin `activities`, que todavía no existe)
 - [x] `backend/docs/diagrams/sequence-login.md`
 - [x] `backend/docs/diagrams/sequence-change-stage.md`
-- [ ] `sequence-win-lose-opportunity.md` / `sequence-concurrent-reservation.md` — a
-      propósito NO se hicieron todavía: documentarían un flujo que no existe en el
-      código hasta la Fase 7/8; se agregan cuando esas funcionalidades se implementen
+- [x] `sequence-win-lose-opportunity.md` / `sequence-concurrent-reservation.md` —
+      incorporados con los flujos reales en OpenSpec §8, revisados en §11.
 - [x] `backend/docs/postman/zTech-CRM.postman_collection.json` — los endpoints de E1
       (Auth, Companies, Contacts, Venues, EventServices, Stages, Opportunities incluido
       cambio de etapa y tablero), con auto-seteo de `accessToken`/`companyId`/etc.
@@ -385,7 +404,8 @@ funcionando y testeable — verificado por los dos caminos, no asumido.
 
 - [x] Cerrar DP-01, DP-02, DP-03 (resto), DP-04, DP-08, DP-10 con el usuario
 - [ ] Corregir defectos detectados en la demo de E1
-- [x] BE-CUS-08: baja lógica por cambio de estado; falta ampliar el test histórico
+- [x] BE-CUS-08: baja lógica por cambio de estado; históricos y relaciones ampliados
+      en `CustomerManagementIT` y `ActivityRegistrationIT` — OpenSpec §3/§9/§11.
 - [x] BE-SEC-06: alcance del `SELLER` según DP-02. Listados e ids directos de empresas,
       contactos, oportunidades y tablero respetan asignación; los clientes relacionados
       por una oportunidad propia son de sólo lectura. `CustomerVisibilityPort` invierte
@@ -401,21 +421,31 @@ funcionando y testeable — verificado por los dos caminos, no asumido.
 - [x] BE-SEC-05: autorización por métodos activada y aplicada al módulo de usuarios
 - [x] BE-ACC-05: cambio obligatorio de contraseña y revocación por `auth_version`,
       cubierto por `PasswordChangeIT`
-- [ ] BE-OFF-02/04: ABM completo de `Venue` y `EventService`
-- [ ] BE-CAT-02/03/04/05: ABM de los cuatro catálogos configurables
-- [ ] Tests negativos de rol para cada endpoint administrativo nuevo
+- [x] BE-OFF-02/04: ABM de `Venue` y `EventService`, baja lógica ADMIN y consulta
+      comercial paginada. `OfferingAdministrationIT` comprueba validaciones,
+      permisos/tenant, asociaciones anteriores y capacidad de reservas ganadas.
+      El cierre ganado de §8 revalida disponibilidad/capacidad.
+- [x] BE-CAT-03/04/05/06: ABM de tipos de actividad, orígenes, motivos de pérdida
+      y tipos de evento; HTTP ADMIN, detalle/listados comerciales paginados,
+      unicidad por tenant y baja lógica. Apply OpenSpec §5 (09/10/2026).
+- [x] BE-CAT-02/07: ABM ADMIN de embudos y etapas propias, predeterminado único,
+      plantillas independientes y reordenamiento completo atómico. PipelineAdministrationIT
+      cubre uso histórico, tres roles/dos tenants y configuraciones concurrentes.
+      PipelineMigrationIT prueba V1→V3, instalación vacía, rollback y reejecución.
+- [x] Tests negativos HTTP de rol/tenant en `UserAdministrationIT`,
+      `OfferingAdministrationIT`, `CatalogAdministrationIT` y `PipelineAdministrationIT`.
 
 ## Fase 7 — Flujo comercial EF (hacia 25/10)
 
 - [x] Entidad `Activity` (`activities/domain/`) — design §3.11
-- [ ] `ActivityController`/`Service`: BE-ACT-01
-- [x] Lectura paginada de actividades y endpoints cronológicos por empresa/contacto/oportunidad (BE-ACT-02). El alta BE-ACT-01 sigue pendiente.
+- [x] `ActivityController`/`Service`: BE-ACT-01 — POST append-only, asociaciones derivadas, tenant/actor y alcance; OpenSpec §9 (10/10/2026).
+- [x] Lectura paginada de actividades y endpoints cronológicos por empresa/contacto/oportunidad (BE-ACT-02), con orden estable, páginas navegables y autores inactivos — OpenSpec §9.
 - [x] `GET /api/v1/opportunities/{id}/stage-history`: BE-ACT-03; el alta de oportunidad registra su etapa inicial.
-- [ ] `WinOpportunityService`, `LoseOpportunityService` — design §9.2 (BE-OPP-07/08)
-- [ ] BE-OPP-09: bloqueo de edición sobre oportunidad cerrada + caso de uso de reapertura
+- [x] `OpportunityLifecycleService`: ganar/perder con snapshots V4 — design §9.2 (BE-OPP-07/08), apply §8.
+- [x] BE-OPP-09: bloqueo de edición sobre oportunidad cerrada + caso de uso de reapertura
       (según resolución de DP-01)
-- [ ] BE-OPP-04: asignar/reasignar responsable
-- [ ] Tests de las 15 reglas de negocio de la consigna aplicadas a este flujo
+- [x] BE-OPP-04: asignar/reasignar responsable
+- [x] Tests de las 15 reglas: matriz por caso y ejecuciones propias en OpenSpec §11.2.
 
 ## Fase 8 — Especialización completa (hacia 04/11)
 
@@ -424,18 +454,19 @@ funcionando y testeable — verificado por los dos caminos, no asumido.
 - [x] Validación histórica `MigrationV3IT`: backfill V2→V3 sin pérdida de datos.
       Reemplazada por `MigrationV1IT` tras el reinicio de la base del 17/09.
 - [x] BE-OPP-10: validación de capacidad del salón; advertencia UI separada para >50
-- [ ] BE-OPP-11: validación de aplicación + traducción de violación GiST a `409` — design §9.3
-- [ ] Test de concurrencia con Testcontainers: dos confirmaciones simultáneas, una sola
+- [x] BE-OPP-11: validación de aplicación + traducción de violación GiST a `409` — design §9.3
+- [x] Test de concurrencia con Testcontainers: dos confirmaciones simultáneas, una sola
       tiene éxito
-- [ ] `@Version` (optimistic locking) en `Opportunity` activo y probado
+- [x] `@Version` (optimistic locking) en `Opportunity` activo y probado
 
 ## Fase 9 — Candidato final (hacia 09/11)
 
 - [x] BE-CUS-09, BE-OPP-12: filtros y búsqueda con `Specification` — design §8
 - [x] Paginación consistente, máximo 100 y orden validado en listados comerciales
-- [ ] Revisión de accesibilidad básica de las respuestas de error (mensajes usables)
-- [ ] Observabilidad: logs con `requestId`/`userId`/`tenantId`, sin datos sensibles
-- [ ] Regresión completa de los 17 casos de uso mínimos de la consigna
+- [x] Revisión de mensajes de error en español y ProblemDetail uniforme — §10.6, ObservabilityIT (10/10/2026)
+- [x] Observabilidad: logs con `requestId`/`userId`/`tenantId`, sin datos sensibles — §10.6, captura real de Logback (10/10/2026)
+- [x] Regresión de los 16 casos de uso obligatorios — OpenSpec §11.2; el caso 17
+      (IA opcional) queda explícitamente fuera.
 - [x] `backend/docs/openapi.yaml` actualizado y cliente TypeScript regenerado
 
 ## Fase 10 — Documentación y artefactos de entrega (BE-DOC-02..07)
@@ -443,32 +474,37 @@ funcionando y testeable — verificado por los dos caminos, no asumido.
 Se ejecuta con la implementación ya terminada y estable. Detalle completo del contenido
 de cada artefacto en `design.md` §12.
 
-- [ ] `backend/.env.example` con todas las variables de entorno usadas, sin valores reales
-- [ ] `backend/docker-compose.yml`: levanta la imagen del `Dockerfile` contra Supabase
-      vía `.env` — design §12.5
-- [ ] `backend/docs/docker.md`: build, run, variables obligatorias, nota sobre
+- [x] `backend/.env.example` con variables de aplicación, sin secretos — §11.6.
+- [x] `backend/docker-compose.yml`: imagen del `Dockerfile`, configuración vía `.env`.
+      Build/arranque local con PostgreSQL efímero verificados en §11.6; no revalida
+      la conexión remota a Supabase — design §12.5.
+- [x] `backend/docs/docker.md`: build, run, variables obligatorias, nota sobre
       Testcontainers — design §12.5
-- [ ] `backend/docs/openapi.yaml`: export estático desde `/v3/api-docs.yaml`, verificado
+- [x] `backend/docs/openapi.yaml`: export estático desde `/v3/api-docs.yaml`, verificado
       contra el Swagger UI en runtime — design §12.2
-- [ ] `backend/docs/diagrams/component-diagram.md` (Mermaid) — design §12.3
-- [ ] `backend/docs/diagrams/sequence-login.md` (Mermaid) — design §12.3
-- [ ] `backend/docs/diagrams/sequence-change-stage.md` (Mermaid) — design §12.3
-- [ ] `backend/docs/diagrams/sequence-win-lose-opportunity.md` (Mermaid) — design §12.3
-- [ ] `backend/docs/diagrams/sequence-concurrent-reservation.md` (Mermaid) — design §12.3
-- [ ] `backend/docs/postman/zTech-CRM.postman_collection.json`: todos los endpoints,
+- [x] `backend/docs/diagrams/component-diagram.md` (Mermaid) — design §12.3
+- [x] `backend/docs/diagrams/sequence-login.md` (Mermaid) — design §12.3
+- [x] `backend/docs/diagrams/sequence-change-stage.md` (Mermaid) — design §12.3
+- [x] `backend/docs/diagrams/sequence-win-lose-opportunity.md` (Mermaid) — design §12.3
+- [x] `backend/docs/diagrams/sequence-concurrent-reservation.md` (Mermaid) — design §12.3
+- [x] `backend/docs/postman/zTech-CRM.postman_collection.json`: todos los endpoints,
       organizados por módulo, con auto-seteo de `{{accessToken}}` tras login — design §12.4
-- [ ] `backend/docs/postman/zTech-CRM-Local.postman_environment.json` — design §12.4
+- [x] `backend/docs/postman/zTech-CRM-Local.postman_environment.json` — design §12.4
 - [ ] Prueba manual: importar la colección + environment en Postman limpio y ejecutar el
-      recorrido completo (login → alta → cambio de etapa → cierre) sin tocar nada a mano
-- [ ] `backend/README.md` completo según la estructura de design §12.6
+      recorrido completo (login → alta → cambio de etapa → cierre) sin tocar nada a mano.
+      La importación/ejecución automática con Newman pasó en §11.6; no se afirma
+      haber usado la interfaz de Postman manualmente.
+- [x] `backend/README.md` completo según la estructura de design §12.6
 - [ ] Revisión cruzada: todo lo que el README promete (comandos, endpoints, credenciales)
-      funciona ejecutado desde cero en una máquina limpia
+      funciona ejecutado desde cero en una máquina limpia. §11 verificó una carpeta
+      limpia y contenedores efímeros en esta máquina; el ensayo remoto queda a cargo
+      del usuario, sin completar esta verificación más amplia por inferencia.
 
 ## ✅ Entrega final — 12/11
 
 - [ ] Demostración integral end-to-end sobre el ambiente desplegado
-- [ ] Documentación (`docs/`, `AGENTS.md`, `CLAUDE.md`, `backend/docs/`,
-      `backend/README.md`) al día con lo implementado
+- [x] Documentación (`docs/`, `AGENTS.md`, `CLAUDE.md`, `backend/docs/`,
+      `backend/README.md`) al día con lo implementado — OpenSpec §11.7, 10/10/2026.
 - [ ] Tag de versión en git
 
 ---

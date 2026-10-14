@@ -14,10 +14,11 @@ export const clavesEmpresas = {
   detalle: (id: number) => ["empresas", "detalle", id] as const,
 };
 
-export function useEmpresas(pagina = 0, filtros: FiltrosEmpresas = {}) {
+export function useEmpresas(pagina = 0, filtros: FiltrosEmpresas = {}, habilitado = true) {
   const parametros = new URLSearchParams({ page: String(pagina), size: "20", sort: "businessName,asc" });
   Object.entries(filtros).forEach(([clave, valor]) => { if (valor) parametros.set(clave, valor); });
   return useQuery({
+    enabled: habilitado,
     queryKey: clavesEmpresas.lista(pagina, filtros),
     queryFn: ({ signal }) =>
       solicitarApi<PaginaEmpresas>(`/companies?${parametros}`, { signal }),
@@ -28,7 +29,7 @@ export function useEmpresa(id?: number) {
   return useQuery({
     queryKey: clavesEmpresas.detalle(id ?? 0),
     queryFn: ({ signal }) => solicitarApi<EmpresaDetalle>(`/companies/${id}`, { signal }),
-    enabled: id !== undefined,
+    enabled: Number.isSafeInteger(id) && id! > 0,
   });
 }
 
@@ -41,7 +42,7 @@ export function useGuardarEmpresa(id?: number) {
         body: solicitud,
       }),
     onSuccess: async (empresa) => {
-      await cache.invalidateQueries({ queryKey: clavesEmpresas.todas });
+      await Promise.all(["empresas", "contactos", "oportunidades", "actividades"].map(clave => cache.invalidateQueries({ queryKey: [clave] })));
       if (empresa.id) {
         await cache.invalidateQueries({ queryKey: clavesEmpresas.detalle(empresa.id) });
       }

@@ -4,6 +4,27 @@
  */
 
 export interface paths {
+    "/api/v1/venues/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detalle de un salón */
+        get: operations["getById"];
+        /**
+         * Edita un salón o cambia su estado
+         * @description Sólo ADMIN; la baja es lógica y conserva referencias comerciales.
+         */
+        put: operations["update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/users/{id}": {
         parameters: {
             query?: never;
@@ -12,9 +33,66 @@ export interface paths {
             cookie?: never;
         };
         /** Obtiene un usuario del tenant (sólo ADMIN) */
-        get: operations["getById"];
+        get: operations["getById_1"];
         /** Actualiza perfil, rol y estado (sólo ADMIN) */
-        put: operations["update"];
+        put: operations["update_1"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/stages/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Consulta una etapa, incluso inactiva */
+        get: operations["detail"];
+        /** Edita o desactiva una etapa conservando su embudo e historia (ADMIN) */
+        put: operations["update_2"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/pipelines/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detalle de un embudo, incluso inactivo */
+        get: operations["detail_1"];
+        /** Renombra, activa o desactiva un embudo (ADMIN) */
+        put: operations["update_3"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/origins/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Consulta una entrada, incluso inactiva */
+        get: operations["detail_2"];
+        /**
+         * Edita, activa o da de baja lógica un origen
+         * @description Sólo ADMIN. Conserva ID y referencias históricas; no existe borrado físico.
+         */
+        put: operations["update_4"];
         post?: never;
         delete?: never;
         options?: never;
@@ -30,9 +108,72 @@ export interface paths {
             cookie?: never;
         };
         /** Detalle de una oportunidad, con cliente, salón y etapa resueltos (BE-OPP-03) */
-        get: operations["getById_1"];
+        get: operations["getById_2"];
         /** Edita una oportunidad abierta (no cambia etapa, responsable ni estado) */
-        put: operations["update_1"];
+        put: operations["update_5"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/loss-reasons/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Consulta una entrada, incluso inactiva */
+        get: operations["detail_3"];
+        /**
+         * Edita, activa o da de baja lógica un motivo de pérdida
+         * @description Sólo ADMIN. Conserva ID y referencias históricas; no existe borrado físico.
+         */
+        put: operations["update_6"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/event-types/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Consulta una entrada, incluso inactiva */
+        get: operations["detail_4"];
+        /**
+         * Edita, activa o da de baja lógica un tipo de evento
+         * @description Sólo ADMIN. Conserva ID y referencias históricas; no existe borrado físico.
+         */
+        put: operations["update_7"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/event-services/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detalle de un servicio adicional */
+        get: operations["getById_3"];
+        /**
+         * Edita un servicio o cambia su actividad
+         * @description Sólo ADMIN; la baja es lógica y conserva referencias comerciales.
+         */
+        put: operations["update_8"];
         post?: never;
         delete?: never;
         options?: never;
@@ -49,11 +190,11 @@ export interface paths {
         };
         /**
          * Detalle de un contacto
-         * @description Para SELLER exige asignación directa o una oportunidad propia relacionada.
+         * @description Para SELLER exige asignación directa o una oportunidad propia relacionada. Incluye salesRepName aun si el responsable está inactivo.
          */
-        get: operations["getById_2"];
+        get: operations["getById_4"];
         /** Edita un contacto */
-        put: operations["update_2"];
+        put: operations["update_9"];
         post?: never;
         delete?: never;
         options?: never;
@@ -70,12 +211,54 @@ export interface paths {
         };
         /**
          * Detalle de una empresa, con sus contactos (BE-CUS-03)
-         * @description Para SELLER exige asignación directa o una oportunidad propia; los contactos anidados también se filtran por ese alcance.
+         * @description Para SELLER exige asignación directa o una oportunidad propia; los contactos anidados también se filtran por ese alcance. Incluye salesRepName aun si el responsable está inactivo.
          */
-        get: operations["getById_3"];
+        get: operations["getById_5"];
         /** Edita una empresa */
-        put: operations["update_3"];
+        put: operations["update_10"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/activity-types/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Consulta una entrada, incluso inactiva */
+        get: operations["detail_5"];
+        /**
+         * Edita, activa o da de baja lógica un tipo de actividad
+         * @description Sólo ADMIN. Conserva ID y referencias históricas; no existe borrado físico.
+         */
+        put: operations["update_11"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/venues": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista salones del tenant con búsqueda, estado y paginación */
+        get: operations["list"];
+        put?: never;
+        /**
+         * Crea un salón
+         * @description Sólo ADMIN; tenant y actor se resuelven de la sesión.
+         */
+        post: operations["create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -90,10 +273,10 @@ export interface paths {
             cookie?: never;
         };
         /** Lista usuarios del tenant (sólo ADMIN) */
-        get: operations["list"];
+        get: operations["list_1"];
         put?: never;
         /** Crea un usuario con contraseña temporal (sólo ADMIN) */
-        post: operations["create"];
+        post: operations["create_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -117,6 +300,100 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/stages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista etapas del embudo elegido o predeterminado, por posición */
+        get: operations["list_2"];
+        put?: never;
+        /** Crea una etapa al final de su embudo (ADMIN) */
+        post: operations["create_2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/pipelines": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Consulta embudos activos e históricos, paginados */
+        get: operations["list_3"];
+        put?: never;
+        /** Crea un embudo inactivo, vacío o copiando una plantilla */
+        post: operations["create_3"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/pipelines/{id}/stages/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Aplica el orden completo de etapas de forma atómica (ADMIN) */
+        post: operations["reorder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/pipelines/{id}/default": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reemplaza el predeterminado de forma atómica (ADMIN) */
+        post: operations["makeDefault"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/origins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lista entradas con búsqueda, actividad y paginación
+         * @description Tamaño 20, máximo 100. Orden por id, name o active.
+         */
+        get: operations["list_4"];
+        put?: never;
+        /**
+         * Crea un origen
+         * @description Sólo ADMIN. Nombre único por catálogo y tenant.
+         */
+        post: operations["create_4"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/opportunities": {
         parameters: {
             query?: never;
@@ -128,10 +405,27 @@ export interface paths {
          * Lista oportunidades visibles, paginado
          * @description SELLER ve sólo sus oportunidades; ADMIN y SALES_MANAGER ven todas las del tenant.
          */
-        get: operations["list_1"];
+        get: operations["list_5"];
         put?: never;
         /** Crea una oportunidad */
-        post: operations["create_1"];
+        post: operations["create_5"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/opportunities/{id}/win": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Gana una oportunidad abierta y reserva el salón */
+        post: operations["win"];
         delete?: never;
         options?: never;
         head?: never;
@@ -155,6 +449,126 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/opportunities/{id}/reopen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reabre y conserva cierres anteriores (ADMIN o responsable comercial) */
+        post: operations["reopen"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/opportunities/{id}/lose": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pierde una oportunidad abierta sin reservar */
+        post: operations["lose"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/opportunities/{id}/assign": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reasigna una oportunidad abierta (ADMIN o responsable comercial) */
+        post: operations["assign"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/loss-reasons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lista entradas con búsqueda, actividad y paginación
+         * @description Tamaño 20, máximo 100. Orden por id, name o active.
+         */
+        get: operations["list_6"];
+        put?: never;
+        /**
+         * Crea un motivo de pérdida
+         * @description Sólo ADMIN. Nombre único por catálogo y tenant.
+         */
+        post: operations["create_6"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/event-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lista entradas con búsqueda, actividad y paginación
+         * @description Tamaño 20, máximo 100. Orden por id, name o active.
+         */
+        get: operations["list_7"];
+        put?: never;
+        /**
+         * Crea un tipo de evento
+         * @description Sólo ADMIN. Nombre único por catálogo y tenant.
+         */
+        post: operations["create_7"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/event-services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista servicios del tenant con búsqueda, actividad y paginación */
+        get: operations["list_8"];
+        put?: never;
+        /**
+         * Crea un servicio adicional
+         * @description Sólo ADMIN; tenant y actor se resuelven de la sesión.
+         */
+        post: operations["create_8"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/contacts": {
         parameters: {
             query?: never;
@@ -166,10 +580,10 @@ export interface paths {
          * Lista contactos visibles, paginado
          * @description ADMIN y SALES_MANAGER ven el tenant completo. SELLER ve asignaciones directas y contactos relacionados con oportunidades propias.
          */
-        get: operations["list_2"];
+        get: operations["list_9"];
         put?: never;
         /** Crea un contacto */
-        post: operations["create_2"];
+        post: operations["create_9"];
         delete?: never;
         options?: never;
         head?: never;
@@ -187,10 +601,10 @@ export interface paths {
          * Lista empresas visibles, paginado
          * @description ADMIN y SALES_MANAGER ven el tenant completo. SELLER ve asignaciones directas y empresas relacionadas con oportunidades propias.
          */
-        get: operations["list_3"];
+        get: operations["list_10"];
         put?: never;
         /** Crea una empresa */
-        post: operations["create_3"];
+        post: operations["create_10"];
         delete?: never;
         options?: never;
         head?: never;
@@ -231,34 +645,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/venues": {
+    "/api/v1/activity-types": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Lista los salones del tenant */
-        get: operations["list_4"];
+        /**
+         * Lista entradas con búsqueda, actividad y paginación
+         * @description Tamaño 20, máximo 100. Orden por id, name o active.
+         */
+        get: operations["list_11"];
         put?: never;
-        post?: never;
+        /**
+         * Crea un tipo de actividad
+         * @description Sólo ADMIN. Nombre único por catálogo y tenant.
+         */
+        post: operations["create_11"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/v1/venues/{id}": {
+    "/api/v1/activities": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Detalle de un salón */
-        get: operations["getById_4"];
+        /** Lista actividades visibles, ordenadas y paginadas */
+        get: operations["list_12"];
         put?: never;
-        post?: never;
+        /** Registra una interacción ya realizada, con autor y tenant de la sesión */
+        post: operations["create_12"];
         delete?: never;
         options?: never;
         head?: never;
@@ -282,15 +704,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/stages": {
+    "/api/v1/pipelines/default": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Lista las etapas del tenant, ordenadas por posición */
-        get: operations["list_5"];
+        /** Consulta el embudo predeterminado */
+        get: operations["defaultPipeline"];
         put?: never;
         post?: never;
         delete?: never;
@@ -299,15 +721,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/origins": {
+    "/api/v1/pipeline-templates": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Lista orígenes comerciales */
-        get: operations["list_6"];
+        /** Previsualiza las plantillas de embudo disponibles */
+        get: operations["list_13"];
         put?: never;
         post?: never;
         delete?: never;
@@ -325,6 +747,23 @@ export interface paths {
         };
         /** Lista el historial append-only de etapas en orden cronológico */
         get: operations["stageHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/opportunities/{id}/availability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Consulta disponibilidad actual del salón para la oportunidad; ganar vuelve a validarla */
+        get: operations["availability"];
         put?: never;
         post?: never;
         delete?: never;
@@ -370,74 +809,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/loss-reasons": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lista motivos de pérdida */
-        get: operations["list_7"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/event-types": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lista los tipos de evento del tenant */
-        get: operations["list_8"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/event-services": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lista los servicios adicionales del tenant */
-        get: operations["list_9"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/event-services/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Detalle de un servicio adicional */
-        get: operations["getById_5"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/contacts/{id}/activities": {
         parameters: {
             query?: never;
@@ -472,44 +843,37 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/activity-types": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lista tipos de actividad */
-        get: operations["list_10"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/activities": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lista actividades visibles, ordenadas y paginadas */
-        get: operations["list_11"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        VenueRequest: {
+            name: string;
+            /** Format: int32 */
+            capacity: number;
+            /** @description Tarifa opcional en ARS. */
+            rate?: number;
+            address?: string;
+            locality?: string;
+            description?: string;
+            equipment?: string[];
+            /** @enum {string} */
+            status: "DISPONIBLE" | "MANTENIMIENTO" | "INACTIVO";
+        };
+        VenueResponse: {
+            /** Format: int64 */
+            id?: number;
+            name?: string;
+            /** Format: int32 */
+            capacity?: number;
+            rate?: number;
+            address?: string;
+            locality?: string;
+            description?: string;
+            equipment?: string[];
+            /** @enum {string} */
+            status?: "DISPONIBLE" | "MANTENIMIENTO" | "INACTIVO";
+        };
         UpdateUserRequest: {
             /** Format: email */
             email: string;
@@ -529,6 +893,47 @@ export interface components {
             role?: "ADMIN" | "SELLER" | "SALES_MANAGER";
             active?: boolean;
             mustChangePassword?: boolean;
+        };
+        StageRequest: {
+            /** Format: int64 */
+            pipelineId: number;
+            name: string;
+            /** @enum {string} */
+            kind: "OPEN" | "WON" | "LOST";
+            active: boolean;
+        };
+        StageResponse: {
+            /** Format: int64 */
+            id?: number;
+            /** Format: int64 */
+            pipelineId?: number;
+            name?: string;
+            /** Format: int32 */
+            position?: number;
+            /** @enum {string} */
+            kind?: "OPEN" | "WON" | "LOST";
+            active?: boolean;
+        };
+        CatalogEntryRequest: {
+            name: string;
+            active: boolean;
+        };
+        PipelineResponse: {
+            /** Format: int64 */
+            id?: number;
+            name?: string;
+            active?: boolean;
+            defaultPipeline?: boolean;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        OriginResponse: {
+            /** Format: int64 */
+            id?: number;
+            name?: string;
+            active?: boolean;
         };
         UpdateOpportunityRequest: {
             title: string;
@@ -553,8 +958,16 @@ export interface components {
             estimatedCloseDate?: string;
             /** Format: int64 */
             originId?: number;
+            /** @description Servicios asociados. Omitido o null conserva los actuales; [] los quita. Sólo nuevas asociaciones requieren servicio activo. */
             serviceIds?: number[];
             notes?: string;
+            /**
+             * Format: int64
+             * @description Embudo comercial. En alta, omitido usa el predeterminado; en edición no puede cambiar.
+             */
+            pipelineId?: number;
+            /** Format: int64 */
+            version: number;
         };
         OpportunityResponse: {
             /** Format: int64 */
@@ -587,6 +1000,37 @@ export interface components {
             salesRepName?: string;
             venueName?: string;
             stageName?: string;
+            /** Format: int64 */
+            pipelineId?: number;
+            /** Format: int64 */
+            version?: number;
+        };
+        LossReasonResponse: {
+            /** Format: int64 */
+            id?: number;
+            name?: string;
+            active?: boolean;
+        };
+        EventTypeResponse: {
+            /** Format: int64 */
+            id?: number;
+            name?: string;
+            active?: boolean;
+        };
+        EventServiceRequest: {
+            name: string;
+            description?: string;
+            /** @description Precio opcional en ARS. */
+            price?: number;
+            active: boolean;
+        };
+        EventServiceResponse: {
+            /** Format: int64 */
+            id?: number;
+            name?: string;
+            description?: string;
+            price?: number;
+            active?: boolean;
         };
         ContactRequest: {
             /**
@@ -648,8 +1092,8 @@ export interface components {
             /** @example Eventos del Sur */
             businessName: string;
             /**
-             * @description Opcional. Formato: 11 dígitos, con o sin guiones.
-             * @example 30-71234567-9
+             * @description Opcional. 11 dígitos con verificador válido, con o sin guiones; se almacena sin guiones.
+             * @example 30-71234567-1
              */
             cuit?: string;
             /** @example Turismo y eventos */
@@ -695,6 +1139,13 @@ export interface components {
             status?: "POTENCIAL" | "CLIENTE" | "INACTIVO" | "NO_CONTACTAR";
             /** Format: int64 */
             salesRepId?: number;
+            salesRepName?: string;
+        };
+        ActivityTypeResponse: {
+            /** Format: int64 */
+            id?: number;
+            name?: string;
+            active?: boolean;
         };
         CreateUserRequest: {
             /** Format: email */
@@ -707,6 +1158,13 @@ export interface components {
         };
         ResetPasswordRequest: {
             temporaryPassword?: string;
+        };
+        CreatePipelineRequest: {
+            name: string;
+            templateKey?: string;
+        };
+        ReorderStagesRequest: {
+            stageIds: number[];
         };
         CreateOpportunityRequest: {
             /** @example Evento de fin de año - Empresa X */
@@ -750,6 +1208,19 @@ export interface components {
             originId?: number;
             serviceIds?: number[];
             notes?: string;
+            /**
+             * Format: int64
+             * @description Embudo comercial. En alta, omitido usa el predeterminado; en edición no puede cambiar.
+             */
+            pipelineId?: number;
+        };
+        WinOpportunityRequest: {
+            /** Format: int64 */
+            stageId: number;
+            finalValue: number;
+            note?: string;
+            /** Format: int64 */
+            version: number;
         };
         ChangeStageRequest: {
             /**
@@ -759,6 +1230,30 @@ export interface components {
             stageId: number;
             /** @description Observación opcional sobre el cambio */
             note?: string;
+            /** Format: int64 */
+            version: number;
+        };
+        ReopenOpportunityRequest: {
+            /** Format: int64 */
+            stageId: number;
+            note: string;
+            /** Format: int64 */
+            version: number;
+        };
+        LoseOpportunityRequest: {
+            /** Format: int64 */
+            stageId: number;
+            /** Format: int64 */
+            lossReasonId: number;
+            note?: string;
+            /** Format: int64 */
+            version: number;
+        };
+        AssignOpportunityRequest: {
+            /** Format: int64 */
+            salesRepId: number;
+            /** Format: int64 */
+            version: number;
         };
         LoginRequest: {
             /**
@@ -804,19 +1299,60 @@ export interface components {
             currentPassword: string;
             newPassword?: string;
         };
-        VenueResponse: {
+        CreateActivityRequest: {
+            /** Format: int64 */
+            typeId: number;
+            /** Format: date-time */
+            occurredAt: string;
+            /** Format: int64 */
+            companyId?: number;
+            /** Format: int64 */
+            contactId?: number;
+            /** Format: int64 */
+            opportunityId?: number;
+            description: string;
+            result: string;
+        };
+        ActivityAuthorResponse: {
+            /** Format: int64 */
+            id?: number;
+            firstName?: string;
+            lastName?: string;
+        };
+        ActivityResponse: {
+            /** Format: int64 */
+            id?: number;
+            type?: components["schemas"]["ActivityTypeSummaryResponse"];
+            /** Format: date-time */
+            occurredAt?: string;
+            /** Format: int64 */
+            companyId?: number;
+            /** Format: int64 */
+            contactId?: number;
+            /** Format: int64 */
+            opportunityId?: number;
+            description?: string;
+            result?: string;
+            author?: components["schemas"]["ActivityAuthorResponse"];
+            /** Format: date-time */
+            createdAt?: string;
+        };
+        ActivityTypeSummaryResponse: {
             /** Format: int64 */
             id?: number;
             name?: string;
+            active?: boolean;
+        };
+        PageResponseVenueResponse: {
+            content?: components["schemas"]["VenueResponse"][];
             /** Format: int32 */
-            capacity?: number;
-            rate?: number;
-            address?: string;
-            locality?: string;
-            description?: string;
-            equipment?: string[];
-            /** @enum {string} */
-            status?: "DISPONIBLE" | "MANTENIMIENTO" | "INACTIVO";
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
         };
         PageResponseUserResponse: {
             content?: components["schemas"]["UserResponse"][];
@@ -829,21 +1365,36 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
-        StageResponse: {
-            /** Format: int64 */
-            id?: number;
-            name?: string;
+        PageResponsePipelineResponse: {
+            content?: components["schemas"]["PipelineResponse"][];
             /** Format: int32 */
-            position?: number;
-            /** @enum {string} */
-            kind?: "OPEN" | "WON" | "LOST";
-            active?: boolean;
-        };
-        OriginResponse: {
+            page?: number;
+            /** Format: int32 */
+            size?: number;
             /** Format: int64 */
-            id?: number;
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+        };
+        PipelineTemplateResponse: {
+            key?: string;
             name?: string;
-            active?: boolean;
+            stages?: components["schemas"]["TemplateStage"][];
+        };
+        TemplateStage: {
+            name?: string;
+            kind?: string;
+        };
+        PageResponseOriginResponse: {
+            content?: components["schemas"]["OriginResponse"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
         };
         PageResponseOpportunityResponse: {
             content?: components["schemas"]["OpportunityResponse"][];
@@ -885,8 +1436,8 @@ export interface components {
             contact?: components["schemas"]["ContactSummaryResponse"];
             /** Format: int64 */
             salesRepId?: number;
-            venue?: components["schemas"]["VenueResponse"];
-            stage?: components["schemas"]["StageResponse"];
+            venue?: components["schemas"]["OpportunityVenueResponse"];
+            stage?: components["schemas"]["OpportunityStageResponse"];
             /** Format: int64 */
             eventTypeId?: number;
             /** @enum {string} */
@@ -911,16 +1462,53 @@ export interface components {
             lossReasonId?: number;
             serviceIds?: number[];
             notes?: string;
+            /** Format: int64 */
+            pipelineId?: number;
+            /** Format: int64 */
+            version?: number;
+        };
+        OpportunityStageResponse: {
+            /** Format: int64 */
+            id?: number;
+            /** Format: int64 */
+            pipelineId?: number;
+            name?: string;
+            /** Format: int32 */
+            position?: number;
+            kind?: string;
+            active?: boolean;
+        };
+        OpportunityVenueResponse: {
+            /** Format: int64 */
+            id?: number;
+            name?: string;
+            /** Format: int32 */
+            capacity?: number;
+            rate?: number;
+            address?: string;
+            locality?: string;
+            description?: string;
+            equipment?: string[];
+            status?: string;
         };
         StageHistoryResponse: {
             /** Format: int64 */
             id?: number;
-            fromStage?: components["schemas"]["StageResponse"];
-            toStage?: components["schemas"]["StageResponse"];
+            fromStage?: components["schemas"]["OpportunityStageResponse"];
+            toStage?: components["schemas"]["OpportunityStageResponse"];
             /** Format: date-time */
             changedAt?: string;
             author?: components["schemas"]["UserSummaryResponse"];
             note?: string;
+            eventType?: string;
+            snapshotComplete?: boolean;
+            destinationStatus?: string;
+            finalValue?: number;
+            /** Format: date-time */
+            closedAt?: string;
+            /** Format: int64 */
+            lossReasonId?: number;
+            lossReasonName?: string;
         };
         UserSummaryResponse: {
             /** Format: int64 */
@@ -928,29 +1516,11 @@ export interface components {
             firstName?: string;
             lastName?: string;
         };
-        ActivityResponse: {
-            /** Format: int64 */
-            id?: number;
-            type?: components["schemas"]["ActivityTypeResponse"];
-            /** Format: date-time */
-            occurredAt?: string;
-            /** Format: int64 */
-            companyId?: number;
-            /** Format: int64 */
-            contactId?: number;
-            /** Format: int64 */
-            opportunityId?: number;
-            description?: string;
-            result?: string;
-            author?: components["schemas"]["UserSummaryResponse"];
-            /** Format: date-time */
-            createdAt?: string;
-        };
-        ActivityTypeResponse: {
-            /** Format: int64 */
-            id?: number;
-            name?: string;
-            active?: boolean;
+        VenueAvailabilityResponse: {
+            available?: boolean;
+            venueAvailable?: boolean;
+            capacitySufficient?: boolean;
+            rangeFree?: boolean;
         };
         PageResponseActivityResponse: {
             content?: components["schemas"]["ActivityResponse"][];
@@ -964,33 +1534,56 @@ export interface components {
             totalPages?: number;
         };
         OpportunityBoardResponse: {
+            pipeline?: components["schemas"]["OpportunityPipelineResponse"];
             columns?: components["schemas"]["StageColumn"][];
+        };
+        OpportunityPipelineResponse: {
+            /** Format: int64 */
+            id?: number;
+            name?: string;
+            active?: boolean;
+            defaultPipeline?: boolean;
         };
         StageColumn: {
             /** Format: int64 */
             stageId?: number;
             stageName?: string;
+            kind?: string;
+            active?: boolean;
             opportunities?: components["schemas"]["OpportunityResponse"][];
         };
-        LossReasonResponse: {
+        PageResponseLossReasonResponse: {
+            content?: components["schemas"]["LossReasonResponse"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
             /** Format: int64 */
-            id?: number;
-            name?: string;
-            active?: boolean;
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
         };
-        EventTypeResponse: {
+        PageResponseEventTypeResponse: {
+            content?: components["schemas"]["EventTypeResponse"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
             /** Format: int64 */
-            id?: number;
-            name?: string;
-            active?: boolean;
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
         };
-        EventServiceResponse: {
+        PageResponseEventServiceResponse: {
+            content?: components["schemas"]["EventServiceResponse"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
             /** Format: int64 */
-            id?: number;
-            name?: string;
-            description?: string;
-            price?: number;
-            active?: boolean;
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
         };
         PageResponseContactResponse: {
             content?: components["schemas"]["ContactResponse"][];
@@ -1017,6 +1610,7 @@ export interface components {
             status?: "POTENCIAL" | "CLIENTE" | "INACTIVO" | "NO_CONTACTAR";
             /** Format: int64 */
             salesRepId?: number;
+            salesRepName?: string;
             /** Format: int64 */
             originId?: number;
             notes?: string;
@@ -1048,10 +1642,21 @@ export interface components {
             status?: "POTENCIAL" | "CLIENTE" | "INACTIVO" | "NO_CONTACTAR";
             /** Format: int64 */
             salesRepId?: number;
+            salesRepName?: string;
             /** Format: int64 */
             originId?: number;
             notes?: string;
-            contacts?: components["schemas"]["ContactSummaryResponse"][];
+        };
+        PageResponseActivityTypeResponse: {
+            content?: components["schemas"]["ActivityTypeResponse"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
         };
     };
     responses: never;
@@ -1063,6 +1668,99 @@ export interface components {
 export type $defs = Record<string, never>;
 export interface operations {
     getById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VenueResponse"];
+                };
+            };
+            /** @description No existe un salón con ese id */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VenueResponse"];
+                };
+            };
+        };
+    };
+    update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VenueRequest"];
+            };
+        };
+        responses: {
+            /** @description Salón actualizado */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VenueResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VenueResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VenueResponse"];
+                };
+            };
+            /** @description No se encontró el salón en la organización */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VenueResponse"];
+                };
+            };
+            /** @description La reducción de capacidad invalidaría una reserva confirmada */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VenueResponse"];
+                };
+            };
+        };
+    };
+    getById_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1102,7 +1800,7 @@ export interface operations {
             };
         };
     };
-    update: {
+    update_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1128,7 +1826,340 @@ export interface operations {
             };
         };
     };
-    getById_1: {
+    detail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Datos o filtros inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Sesión requerida */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Sólo ADMIN puede configurar */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Referencia inexistente o de otro tenant */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Configuración incompatible o nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+        };
+    };
+    update_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StageRequest"];
+            };
+        };
+        responses: {
+            /** @description Datos o filtros inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Sesión requerida */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Sólo ADMIN puede configurar */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Referencia inexistente o de otro tenant */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Configuración incompatible o nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+        };
+    };
+    detail_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Datos o filtros inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Sesión requerida */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Sólo ADMIN puede configurar */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Referencia inexistente o de otro tenant */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Configuración incompatible o nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+        };
+    };
+    update_3: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogEntryRequest"];
+            };
+        };
+        responses: {
+            /** @description Datos o filtros inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Sesión requerida */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Sólo ADMIN puede configurar */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Referencia inexistente o de otro tenant */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Configuración incompatible o nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+        };
+    };
+    detail_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Entrada del tenant */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OriginResponse"];
+                };
+            };
+            /** @description Entrada no encontrada en la organización */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OriginResponse"];
+                };
+            };
+        };
+    };
+    update_4: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogEntryRequest"];
+            };
+        };
+        responses: {
+            /** @description Entrada actualizada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OriginResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OriginResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OriginResponse"];
+                };
+            };
+            /** @description Entrada no encontrada en la organización */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OriginResponse"];
+                };
+            };
+            /** @description Nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OriginResponse"];
+                };
+            };
+        };
+    };
+    getById_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -1159,7 +2190,7 @@ export interface operations {
             };
         };
     };
-    update_1: {
+    update_5: {
         parameters: {
             query?: never;
             header?: never;
@@ -1192,7 +2223,7 @@ export interface operations {
                     "*/*": components["schemas"]["OpportunityResponse"];
                 };
             };
-            /** @description La oportunidad está cerrada */
+            /** @description La oportunidad está cerrada o la etapa es incompatible con su embudo/tipo */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -1203,7 +2234,277 @@ export interface operations {
             };
         };
     };
-    getById_2: {
+    detail_3: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Entrada del tenant */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LossReasonResponse"];
+                };
+            };
+            /** @description Entrada no encontrada en la organización */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LossReasonResponse"];
+                };
+            };
+        };
+    };
+    update_6: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogEntryRequest"];
+            };
+        };
+        responses: {
+            /** @description Entrada actualizada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LossReasonResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LossReasonResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LossReasonResponse"];
+                };
+            };
+            /** @description Entrada no encontrada en la organización */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LossReasonResponse"];
+                };
+            };
+            /** @description Nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LossReasonResponse"];
+                };
+            };
+        };
+    };
+    detail_4: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Entrada del tenant */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventTypeResponse"];
+                };
+            };
+            /** @description Entrada no encontrada en la organización */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventTypeResponse"];
+                };
+            };
+        };
+    };
+    update_7: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogEntryRequest"];
+            };
+        };
+        responses: {
+            /** @description Entrada actualizada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventTypeResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventTypeResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventTypeResponse"];
+                };
+            };
+            /** @description Entrada no encontrada en la organización */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventTypeResponse"];
+                };
+            };
+            /** @description Nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventTypeResponse"];
+                };
+            };
+        };
+    };
+    getById_3: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventServiceResponse"];
+                };
+            };
+            /** @description No existe un servicio con ese id */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventServiceResponse"];
+                };
+            };
+        };
+    };
+    update_8: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventServiceRequest"];
+            };
+        };
+        responses: {
+            /** @description Servicio actualizado */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventServiceResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventServiceResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventServiceResponse"];
+                };
+            };
+            /** @description No se encontró el servicio en la organización */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventServiceResponse"];
+                };
+            };
+        };
+    };
+    getById_4: {
         parameters: {
             query?: never;
             header?: never;
@@ -1234,7 +2535,7 @@ export interface operations {
             };
         };
     };
-    update_2: {
+    update_9: {
         parameters: {
             query?: never;
             header?: never;
@@ -1258,7 +2559,7 @@ export interface operations {
                     "*/*": components["schemas"]["ContactResponse"];
                 };
             };
-            /** @description No existe un contacto con ese id, o la empresa relacionada no existe */
+            /** @description Contacto o empresa fuera de alcance, o responsable/origen ajeno a la organización */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -1276,9 +2577,18 @@ export interface operations {
                     "*/*": components["schemas"]["ContactResponse"];
                 };
             };
+            /** @description El responsable o el nuevo origen no está activo; se permite conservar el origen inactivo anterior */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ContactResponse"];
+                };
+            };
         };
     };
-    getById_3: {
+    getById_5: {
         parameters: {
             query?: never;
             header?: never;
@@ -1309,7 +2619,7 @@ export interface operations {
             };
         };
     };
-    update_3: {
+    update_10: {
         parameters: {
             query?: never;
             header?: never;
@@ -1333,7 +2643,7 @@ export interface operations {
                     "*/*": components["schemas"]["CompanyResponse"];
                 };
             };
-            /** @description No existe una empresa con ese id */
+            /** @description Empresa fuera de alcance, o responsable/origen ajeno a la organización */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -1351,9 +2661,179 @@ export interface operations {
                     "*/*": components["schemas"]["CompanyResponse"];
                 };
             };
+            /** @description El responsable o el nuevo origen no está activo; se permite conservar el origen inactivo anterior */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CompanyResponse"];
+                };
+            };
+        };
+    };
+    detail_5: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Entrada del tenant */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityTypeResponse"];
+                };
+            };
+            /** @description Entrada no encontrada en la organización */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityTypeResponse"];
+                };
+            };
+        };
+    };
+    update_11: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogEntryRequest"];
+            };
+        };
+        responses: {
+            /** @description Entrada actualizada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityTypeResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityTypeResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityTypeResponse"];
+                };
+            };
+            /** @description Entrada no encontrada en la organización */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityTypeResponse"];
+                };
+            };
+            /** @description Nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityTypeResponse"];
+                };
+            };
         };
     };
     list: {
+        parameters: {
+            query?: {
+                q?: string;
+                status?: "DISPONIBLE" | "MANTENIMIENTO" | "INACTIVO";
+                page?: number;
+                size?: number;
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseVenueResponse"];
+                };
+            };
+        };
+    };
+    create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VenueRequest"];
+            };
+        };
+        responses: {
+            /** @description Salón creado */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VenueResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VenueResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VenueResponse"];
+                };
+            };
+        };
+    };
+    list_1: {
         parameters: {
             query?: {
                 q?: string;
@@ -1389,7 +2869,7 @@ export interface operations {
             };
         };
     };
-    create: {
+    create_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -1437,9 +2917,474 @@ export interface operations {
             };
         };
     };
-    list_1: {
+    list_2: {
         parameters: {
             query?: {
+                pipelineId?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Datos o filtros inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"][];
+                };
+            };
+            /** @description Sesión requerida */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"][];
+                };
+            };
+            /** @description Sólo ADMIN puede configurar */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"][];
+                };
+            };
+            /** @description Referencia inexistente o de otro tenant */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"][];
+                };
+            };
+            /** @description Configuración incompatible o nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"][];
+                };
+            };
+        };
+    };
+    create_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StageRequest"];
+            };
+        };
+        responses: {
+            /** @description Creado */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Datos o filtros inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Sesión requerida */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Sólo ADMIN puede configurar */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Referencia inexistente o de otro tenant */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+            /** @description Configuración incompatible o nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"];
+                };
+            };
+        };
+    };
+    list_3: {
+        parameters: {
+            query?: {
+                q?: string;
+                active?: boolean;
+                page?: number;
+                size?: number;
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Datos o filtros inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponsePipelineResponse"];
+                };
+            };
+            /** @description Sesión requerida */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponsePipelineResponse"];
+                };
+            };
+            /** @description Sólo ADMIN puede configurar */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponsePipelineResponse"];
+                };
+            };
+            /** @description Referencia inexistente o de otro tenant */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponsePipelineResponse"];
+                };
+            };
+            /** @description Configuración incompatible o nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponsePipelineResponse"];
+                };
+            };
+        };
+    };
+    create_3: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePipelineRequest"];
+            };
+        };
+        responses: {
+            /** @description Creado */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Datos o filtros inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Sesión requerida */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Sólo ADMIN puede configurar */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Referencia inexistente o de otro tenant */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Configuración incompatible o nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+        };
+    };
+    reorder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderStagesRequest"];
+            };
+        };
+        responses: {
+            /** @description Datos o filtros inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"][];
+                };
+            };
+            /** @description Sesión requerida */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"][];
+                };
+            };
+            /** @description Sólo ADMIN puede configurar */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"][];
+                };
+            };
+            /** @description Referencia inexistente o de otro tenant */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"][];
+                };
+            };
+            /** @description Configuración incompatible o nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"][];
+                };
+            };
+            /** @description El orden debe incluir el conjunto completo de etapas, sin duplicados */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StageResponse"][];
+                };
+            };
+        };
+    };
+    makeDefault: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Datos o filtros inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Sesión requerida */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Sólo ADMIN puede configurar */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Referencia inexistente o de otro tenant */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Configuración incompatible o nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+        };
+    };
+    list_4: {
+        parameters: {
+            query?: {
+                q?: string;
+                active?: boolean;
+                page?: number;
+                size?: number;
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseOriginResponse"];
+                };
+            };
+        };
+    };
+    create_4: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogEntryRequest"];
+            };
+        };
+        responses: {
+            /** @description Entrada creada */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OriginResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OriginResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OriginResponse"];
+                };
+            };
+            /** @description Nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OriginResponse"];
+                };
+            };
+        };
+    };
+    list_5: {
+        parameters: {
+            query?: {
+                pipelineId?: number;
                 q?: string;
                 status?: "ABIERTA" | "GANADA" | "PERDIDA";
                 stageId?: number;
@@ -1471,7 +3416,7 @@ export interface operations {
             };
         };
     };
-    create_1: {
+    create_5: {
         parameters: {
             query?: never;
             header?: never;
@@ -1511,7 +3456,87 @@ export interface operations {
                     "*/*": components["schemas"]["OpportunityResponse"];
                 };
             };
-            /** @description Falta empresa/contacto, o la etapa inicial no está abierta */
+            /** @description Embudo inactivo o etapa de otro embudo */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Falta cliente, capacidad excedida o referencia inactiva/no abierta */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+        };
+    };
+    win: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WinOpportunityRequest"];
+            };
+        };
+        responses: {
+            /** @description Oportunidad actualizada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Datos obligatorios o versión inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Rol insuficiente */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Referencia inexistente o fuera de alcance */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Estado, etapa, reserva o versión en conflicto; recargar antes de reintentar */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Referencia inactiva, capacidad excedida o salón no disponible */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -1555,7 +3580,7 @@ export interface operations {
                     "*/*": components["schemas"]["OpportunityResponse"];
                 };
             };
-            /** @description La oportunidad está cerrada */
+            /** @description La oportunidad está cerrada o la etapa es incompatible con su embudo/tipo */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -1564,7 +3589,7 @@ export interface operations {
                     "*/*": components["schemas"]["OpportunityResponse"];
                 };
             };
-            /** @description Misma etapa, o etapa destino no abierta (usar /win o /lose) */
+            /** @description La etapa es igual a la actual */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -1575,7 +3600,442 @@ export interface operations {
             };
         };
     };
-    list_2: {
+    reopen: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReopenOpportunityRequest"];
+            };
+        };
+        responses: {
+            /** @description Oportunidad actualizada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Datos obligatorios o versión inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Rol insuficiente */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Referencia inexistente o fuera de alcance */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Estado, etapa, reserva o versión en conflicto; recargar antes de reintentar */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Referencia inactiva, capacidad excedida o salón no disponible */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+        };
+    };
+    lose: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoseOpportunityRequest"];
+            };
+        };
+        responses: {
+            /** @description Oportunidad actualizada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Datos obligatorios o versión inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Rol insuficiente */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Referencia inexistente o fuera de alcance */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Estado, etapa, reserva o versión en conflicto; recargar antes de reintentar */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Referencia inactiva, capacidad excedida o salón no disponible */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+        };
+    };
+    assign: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssignOpportunityRequest"];
+            };
+        };
+        responses: {
+            /** @description Oportunidad actualizada */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Datos obligatorios o versión inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Rol insuficiente */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Referencia inexistente o fuera de alcance */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Estado, etapa, reserva o versión en conflicto; recargar antes de reintentar */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+            /** @description Referencia inactiva, capacidad excedida o salón no disponible */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+        };
+    };
+    list_6: {
+        parameters: {
+            query?: {
+                q?: string;
+                active?: boolean;
+                page?: number;
+                size?: number;
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseLossReasonResponse"];
+                };
+            };
+        };
+    };
+    create_6: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogEntryRequest"];
+            };
+        };
+        responses: {
+            /** @description Entrada creada */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LossReasonResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LossReasonResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LossReasonResponse"];
+                };
+            };
+            /** @description Nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LossReasonResponse"];
+                };
+            };
+        };
+    };
+    list_7: {
+        parameters: {
+            query?: {
+                q?: string;
+                active?: boolean;
+                page?: number;
+                size?: number;
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseEventTypeResponse"];
+                };
+            };
+        };
+    };
+    create_7: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogEntryRequest"];
+            };
+        };
+        responses: {
+            /** @description Entrada creada */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventTypeResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventTypeResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventTypeResponse"];
+                };
+            };
+            /** @description Nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventTypeResponse"];
+                };
+            };
+        };
+    };
+    list_8: {
+        parameters: {
+            query?: {
+                q?: string;
+                active?: boolean;
+                page?: number;
+                size?: number;
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseEventServiceResponse"];
+                };
+            };
+        };
+    };
+    create_8: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventServiceRequest"];
+            };
+        };
+        responses: {
+            /** @description Servicio creado */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventServiceResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventServiceResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["EventServiceResponse"];
+                };
+            };
+        };
+    };
+    list_9: {
         parameters: {
             query?: {
                 q?: string;
@@ -1604,7 +4064,7 @@ export interface operations {
             };
         };
     };
-    create_2: {
+    create_9: {
         parameters: {
             query?: never;
             header?: never;
@@ -1635,7 +4095,7 @@ export interface operations {
                     "*/*": components["schemas"]["ContactResponse"];
                 };
             };
-            /** @description La empresa relacionada no existe */
+            /** @description La empresa, el responsable o el origen no existe o está fuera de alcance */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -1653,9 +4113,18 @@ export interface operations {
                     "*/*": components["schemas"]["ContactResponse"];
                 };
             };
+            /** @description El responsable o el nuevo origen no está activo */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ContactResponse"];
+                };
+            };
         };
     };
-    list_3: {
+    list_10: {
         parameters: {
             query?: {
                 q?: string;
@@ -1683,7 +4152,7 @@ export interface operations {
             };
         };
     };
-    create_3: {
+    create_10: {
         parameters: {
             query?: never;
             header?: never;
@@ -1714,8 +4183,26 @@ export interface operations {
                     "*/*": components["schemas"]["CompanyResponse"];
                 };
             };
+            /** @description El responsable u origen no existe en la organización */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CompanyResponse"];
+                };
+            };
             /** @description Ya existe una empresa con ese CUIT */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CompanyResponse"];
+                };
+            };
+            /** @description El responsable o el nuevo origen no está activo */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1796,9 +4283,15 @@ export interface operations {
             };
         };
     };
-    list_4: {
+    list_11: {
         parameters: {
-            query?: never;
+            query?: {
+                q?: string;
+                active?: boolean;
+                page?: number;
+                size?: number;
+                sort?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1811,18 +4304,71 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["VenueResponse"][];
+                    "*/*": components["schemas"]["PageResponseActivityTypeResponse"];
                 };
             };
         };
     };
-    getById_4: {
+    create_11: {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: number;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogEntryRequest"];
             };
+        };
+        responses: {
+            /** @description Entrada creada */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityTypeResponse"];
+                };
+            };
+            /** @description Datos inválidos */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityTypeResponse"];
+                };
+            };
+            /** @description Requiere ADMIN */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityTypeResponse"];
+                };
+            };
+            /** @description Nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityTypeResponse"];
+                };
+            };
+        };
+    };
+    list_12: {
+        parameters: {
+            query?: {
+                page?: number;
+                size?: number;
+                sort?: string;
+            };
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -1833,16 +4379,58 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["VenueResponse"];
+                    "*/*": components["schemas"]["PageResponseActivityResponse"];
                 };
             };
-            /** @description No existe un salón con ese id */
+        };
+    };
+    create_12: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateActivityRequest"];
+            };
+        };
+        responses: {
+            /** @description Actividad registrada */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityResponse"];
+                };
+            };
+            /** @description Faltan datos o la fecha es futura */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityResponse"];
+                };
+            };
+            /** @description Referencia inexistente o fuera de alcance */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["VenueResponse"];
+                    "*/*": components["schemas"]["ActivityResponse"];
+                };
+            };
+            /** @description Asociaciones contradictorias, falta cliente o tipo inactivo */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityResponse"];
                 };
             };
         };
@@ -1867,7 +4455,7 @@ export interface operations {
             };
         };
     };
-    list_5: {
+    defaultPipeline: {
         parameters: {
             query?: never;
             header?: never;
@@ -1876,18 +4464,54 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description OK */
-            200: {
+            /** @description Datos o filtros inválidos */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["StageResponse"][];
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Sesión requerida */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Sólo ADMIN puede configurar */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Referencia inexistente o de otro tenant */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
+                };
+            };
+            /** @description Configuración incompatible o nombre duplicado */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PipelineResponse"];
                 };
             };
         };
     };
-    list_6: {
+    list_13: {
         parameters: {
             query?: never;
             header?: never;
@@ -1902,7 +4526,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["OriginResponse"][];
+                    "*/*": components["schemas"]["PipelineTemplateResponse"][];
                 };
             };
         };
@@ -1925,6 +4549,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["StageHistoryResponse"][];
+                };
+            };
+        };
+    };
+    availability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VenueAvailabilityResponse"];
                 };
             };
         };
@@ -1958,6 +4604,7 @@ export interface operations {
     board: {
         parameters: {
             query?: {
+                pipelineId?: number;
                 q?: string;
                 status?: "ABIERTA" | "GANADA" | "PERDIDA";
                 stageId?: number;
@@ -1982,97 +4629,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["OpportunityBoardResponse"];
-                };
-            };
-        };
-    };
-    list_7: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["LossReasonResponse"][];
-                };
-            };
-        };
-    };
-    list_8: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["EventTypeResponse"][];
-                };
-            };
-        };
-    };
-    list_9: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["EventServiceResponse"][];
-                };
-            };
-        };
-    };
-    getById_5: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["EventServiceResponse"];
-                };
-            };
-            /** @description No existe un servicio con ese id */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["EventServiceResponse"];
                 };
             };
         };
@@ -2114,50 +4670,6 @@ export interface operations {
             path: {
                 id: number;
             };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["PageResponseActivityResponse"];
-                };
-            };
-        };
-    };
-    list_10: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ActivityTypeResponse"][];
-                };
-            };
-        };
-    };
-    list_11: {
-        parameters: {
-            query?: {
-                page?: number;
-                size?: number;
-                sort?: string;
-            };
-            header?: never;
-            path?: never;
             cookie?: never;
         };
         requestBody?: never;

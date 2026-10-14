@@ -10,6 +10,7 @@ import com.ztech.crm.customers.dto.request.ContactRequest;
 import com.ztech.crm.customers.dto.response.CompanyResponse;
 import com.ztech.crm.customers.dto.response.ContactDetailResponse;
 import com.ztech.crm.customers.dto.response.ContactResponse;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,6 +133,27 @@ class ContactControllerIT {
         assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(updateResponse.getBody().companyId()).isNull();
         assertThat(updateResponse.getBody().status()).isEqualTo(PartyStatus.CLIENTE);
+    }
+
+    @Test
+    void normalizesBlankOptionalsAndRejectsNonBlankInvalidEmail() {
+        var blank = Map.of("firstName", "Sin", "lastName", "Opcionales", "status", "POTENCIAL",
+                "email", " \t ", "document", " \t ", "phone", " \t ", "position", " \t ", "notes", " \t ");
+        var response = restTemplate.exchange("/api/v1/contacts", HttpMethod.POST,
+                new HttpEntity<>(blank, authHeaders), ContactResponse.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        var detail = restTemplate.exchange("/api/v1/contacts/" + response.getBody().id(), HttpMethod.GET,
+                new HttpEntity<>(authHeaders), ContactDetailResponse.class).getBody();
+        assertThat(detail.email()).isNull();
+        assertThat(detail.document()).isNull();
+        assertThat(detail.phone()).isNull();
+        assertThat(detail.position()).isNull();
+        assertThat(detail.notes()).isNull();
+        var invalid = Map.of("firstName", "Correo", "lastName", "Inválido", "status", "POTENCIAL", "email", "sin-arroba");
+        var rejected = restTemplate.exchange("/api/v1/contacts", HttpMethod.POST,
+                new HttpEntity<>(invalid, authHeaders), String.class);
+        assertThat(rejected.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(rejected.getBody()).contains("email", "VALIDATION_ERROR");
     }
 
     private Long createCompany(String name) {

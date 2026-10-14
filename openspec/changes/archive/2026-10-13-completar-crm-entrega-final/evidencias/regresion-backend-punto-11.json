@@ -1,0 +1,219 @@
+{
+  "fecha": "2026-10-10",
+  "entorno": "Windows, JDK 25, PostgreSQL 16 Testcontainers",
+  "comando": "./mvnw.cmd verify",
+  "suites": [
+    {
+      "clase": "com.ztech.crm.opportunities.service.ChangeStageServiceTest",
+      "pruebas": 5,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 2.865
+    },
+    {
+      "clase": "com.ztech.crm.access.AuthControllerIT",
+      "pruebas": 6,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 27.744
+    },
+    {
+      "clase": "com.ztech.crm.access.PasswordChangeIT",
+      "pruebas": 2,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 12.284
+    },
+    {
+      "clase": "com.ztech.crm.access.UserAdministrationIT",
+      "pruebas": 3,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 13.799
+    },
+    {
+      "clase": "com.ztech.crm.access.UserControllerIT",
+      "pruebas": 1,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 10.532
+    },
+    {
+      "clase": "com.ztech.crm.activities.ActivityRegistrationIT",
+      "pruebas": 7,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 16.063
+    },
+    {
+      "clase": "com.ztech.crm.activities.CommercialReadIT",
+      "pruebas": 5,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 11.181
+    },
+    {
+      "clase": "com.ztech.crm.catalogs.CatalogAdministrationIT",
+      "pruebas": 15,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 19.659
+    },
+    {
+      "clase": "com.ztech.crm.catalogs.PipelineAdministrationIT",
+      "pruebas": 6,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 16.218
+    },
+    {
+      "clase": "com.ztech.crm.customers.CompanyControllerIT",
+      "pruebas": 10,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 12.338
+    },
+    {
+      "clase": "com.ztech.crm.customers.ContactControllerIT",
+      "pruebas": 6,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 10.699
+    },
+    {
+      "clase": "com.ztech.crm.customers.CustomerManagementIT",
+      "pruebas": 3,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 12.015
+    },
+    {
+      "clase": "com.ztech.crm.customers.SellerScopeIT",
+      "pruebas": 2,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 12.728
+    },
+    {
+      "clase": "com.ztech.crm.documentation.OpenApiExportIT",
+      "pruebas": 1,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 11.649
+    },
+    {
+      "clase": "com.ztech.crm.migration.CuitMigrationIT",
+      "pruebas": 3,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 11.846
+    },
+    {
+      "clase": "com.ztech.crm.migration.HistorySnapshotMigrationIT",
+      "pruebas": 1,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 6.446
+    },
+    {
+      "clase": "com.ztech.crm.migration.MigrationV1IT",
+      "pruebas": 1,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 6.298
+    },
+    {
+      "clase": "com.ztech.crm.migration.PipelineMigrationIT",
+      "pruebas": 3,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 9.396
+    },
+    {
+      "clase": "com.ztech.crm.offerings.OfferingAdministrationIT",
+      "pruebas": 6,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 11.696
+    },
+    {
+      "clase": "com.ztech.crm.opportunities.OpportunityBoardAndStageIT",
+      "pruebas": 5,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 9.532
+    },
+    {
+      "clase": "com.ztech.crm.opportunities.OpportunityControllerIT",
+      "pruebas": 6,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 9.329
+    },
+    {
+      "clase": "com.ztech.crm.opportunities.OpportunityCreationIT",
+      "pruebas": 3,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 12.829
+    },
+    {
+      "clase": "com.ztech.crm.opportunities.OpportunityLifecycleIT",
+      "pruebas": 11,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 23.416
+    },
+    {
+      "clase": "com.ztech.crm.opportunities.OpportunityLoadIT",
+      "pruebas": 1,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 17.116
+    },
+    {
+      "clase": "com.ztech.crm.shared.ObservabilityIT",
+      "pruebas": 1,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 12.751
+    },
+    {
+      "clase": "com.ztech.crm.support.CommercialFixturesIT",
+      "pruebas": 1,
+      "fallos": 0,
+      "errores": 0,
+      "omitidas": 0,
+      "segundos": 11.726
+    }
+  ],
+  "totalPruebas": 114,
+  "fallos": 0,
+  "errores": 0,
+  "omitidas": 0
+}

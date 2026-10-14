@@ -10,6 +10,7 @@ import com.ztech.crm.customers.domain.enums.PartyStatus;
 import com.ztech.crm.customers.dto.request.CompanyRequest;
 import com.ztech.crm.customers.dto.response.CompanyResponse;
 import com.ztech.crm.offerings.dto.response.VenueResponse;
+import com.ztech.crm.shared.dto.PageResponse;
 import com.ztech.crm.opportunities.domain.enums.OpportunityStatus;
 import com.ztech.crm.opportunities.dto.request.CreateOpportunityRequest;
 import com.ztech.crm.opportunities.dto.request.UpdateOpportunityRequest;
@@ -85,10 +86,10 @@ class OpportunityControllerIT {
         openStageId = stages.stream().filter(s -> s.kind() == StageKind.OPEN).findFirst().orElseThrow().id();
         wonStageId = stages.stream().filter(s -> s.kind() == StageKind.WON).findFirst().orElseThrow().id();
 
-        List<VenueResponse> venues = restTemplate.exchange("/api/v1/venues", HttpMethod.GET,
-                new HttpEntity<>(authHeaders), new ParameterizedTypeReference<List<VenueResponse>>() {
+        PageResponse<VenueResponse> venues = restTemplate.exchange("/api/v1/venues", HttpMethod.GET,
+                new HttpEntity<>(authHeaders), new ParameterizedTypeReference<PageResponse<VenueResponse>>() {
                 }).getBody();
-        venueId = venues.get(0).id();
+        venueId = venues.content().get(0).id();
     }
 
     @Test

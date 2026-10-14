@@ -65,6 +65,7 @@
 
 .control {
   width: 100%;
+  min-width: 0;
   min-height: 38px;
   padding: 0 var(--e-3);
   background: var(--papel);
@@ -106,6 +107,7 @@
 
 .envoltorioSelector {
   position: relative;
+  min-width: 0;
   display: flex;
 }
 

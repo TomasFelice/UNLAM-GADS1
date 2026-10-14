@@ -140,6 +140,13 @@ inmutabilidad sigue siendo la regla para versiones aplicadas.
 
 ## DP-06 — Catálogos y transiciones del embudo comercial (resuelta)
 
+Ampliación aceptada el 09/10/2026: [ADR-006](adr/ADR-006-multiples-embudos.md)
+registra varios embudos por tenant con etapas propias. Las siete etapas siguientes
+se conservan como embudo corporativo inicial; los nuevos embudos se configuran o
+copian de plantillas independientes. V3, ABM ADMIN y consumidores comerciales
+están implementados en el cambio `completar-crm-entrega-final` §6. Los cierres y la
+reapertura conservan sus criterios aprobados; su implementación sigue en §8.
+
 - Estado: Aceptada
 - Fecha: 12/09/2026
 - Participantes: Nehuen Ascoitia

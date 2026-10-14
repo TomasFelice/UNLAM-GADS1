@@ -2,14 +2,17 @@ package com.ztech.crm.opportunities.service;
 
 import com.ztech.crm.access.domain.Role;
 import com.ztech.crm.access.service.UserService;
-import com.ztech.crm.catalogs.dto.response.StageResponse;
+import com.ztech.crm.catalogs.service.StageInfo;
+import com.ztech.crm.catalogs.service.PipelineService;
+import com.ztech.crm.opportunities.dto.response.OpportunityPipelineResponse;
 import com.ztech.crm.catalogs.service.EventTypeService;
+import com.ztech.crm.catalogs.service.OriginService;
 import com.ztech.crm.catalogs.service.StageService;
 import com.ztech.crm.customers.dto.response.CompanySummaryResponse;
 import com.ztech.crm.customers.dto.response.ContactSummaryResponse;
 import com.ztech.crm.customers.service.CompanyService;
 import com.ztech.crm.customers.service.ContactService;
-import com.ztech.crm.offerings.dto.response.VenueResponse;
+import com.ztech.crm.offerings.service.VenueInfo;
 import com.ztech.crm.offerings.service.EventServiceService;
 import com.ztech.crm.offerings.service.VenueService;
 import com.ztech.crm.opportunities.domain.Opportunity;
@@ -50,7 +53,9 @@ public class OpportunityService {
     private final ContactService contactService;
     private final VenueService venueService;
     private final StageService stageService;
+    private final PipelineService pipelineService;
     private final EventTypeService eventTypeService;
+    private final OriginService originService;
     private final EventServiceService eventServiceService;
     private final UserService userService;
     private final StageHistoryRepository stageHistoryRepository;
@@ -58,8 +63,8 @@ public class OpportunityService {
     public OpportunityService(OpportunityRepository opportunityRepository,
                               OpportunityAccessService opportunityAccessService, OpportunityMapper opportunityMapper,
                               CompanyService companyService, ContactService contactService,
-                              VenueService venueService, StageService stageService,
-                              EventTypeService eventTypeService, EventServiceService eventServiceService,
+                              VenueService venueService, StageService stageService, PipelineService pipelineService,
+                              EventTypeService eventTypeService, OriginService originService, EventServiceService eventServiceService,
                               UserService userService, StageHistoryRepository stageHistoryRepository) {
         this.opportunityRepository = opportunityRepository;
         this.opportunityAccessService = opportunityAccessService;
@@ -68,7 +73,9 @@ public class OpportunityService {
         this.contactService = contactService;
         this.venueService = venueService;
         this.stageService = stageService;
+        this.pipelineService = pipelineService;
         this.eventTypeService = eventTypeService;
+        this.originService = originService;
         this.eventServiceService = eventServiceService;
         this.userService = userService;
         this.stageHistoryRepository = stageHistoryRepository;
@@ -77,17 +84,20 @@ public class OpportunityService {
     @Transactional
     public OpportunityResponse create(CreateOpportunityRequest request) {
         PartyResolution parties = resolveParties(request.companyId(), request.contactId());
-        VenueResponse venue = venueService.getActiveOrThrow(request.venueId());
-        stageService.assertOpenAndActive(request.stageId());
-        eventTypeService.getActiveOrThrow(request.eventTypeId());
+        VenueInfo venue = venueService.getForAssociation(request.venueId(), null);
+        var pipeline = pipelineService.assertActive(request.pipelineId() == null ? pipelineService.getDefault().id() : request.pipelineId());
+        stageService.assertOpenAndActive(request.stageId(), pipeline.id());
+        eventTypeService.assertSelectable(request.eventTypeId(), null);
+        originService.assertSelectable(request.originId(), null);
         assertEventRange(request.eventStart(), request.eventEnd());
         assertCapacity(venue, request.attendeeCount());
-        Set<Long> serviceIds = validateServices(request.serviceIds());
+        Set<Long> serviceIds = validateServices(request.serviceIds(), Set.of());
         Long salesRepId = resolveSalesRep(request.salesRepId(), parties);
 
         Opportunity opportunity = new Opportunity(TenantContext.currentTenantId(), request.title(),
                 parties.companyId(), request.contactId(), salesRepId, request.venueId(), request.stageId(),
                 request.eventTypeId(), request.eventStart(), request.eventEnd(), request.attendeeCount());
+        opportunity.initializePipeline(pipeline.id());
         opportunity.updateDetails(request.title(), parties.companyId(), request.contactId(), request.venueId(),
                 request.eventTypeId(), request.estimatedValue(), request.probability(), request.eventStart(),
                 request.eventEnd(), request.attendeeCount(), request.estimatedCloseDate(), request.originId(),
@@ -102,18 +112,24 @@ public class OpportunityService {
     public OpportunityResponse update(Long id, UpdateOpportunityRequest request) {
         Opportunity opportunity = opportunityAccessService.getReadableOrThrow(id);
         assertOpenOrThrow(opportunity);
+        OpportunityVersion.assertExpected(opportunity, request.version());
+        if (request.pipelineId() != null && !request.pipelineId().equals(opportunity.getPipelineId())) {
+            throw new ConflictException("OPPORTUNITY_PIPELINE_IMMUTABLE", "No se puede cambiar el embudo de una oportunidad existente.");
+        }
         PartyResolution parties = resolveParties(request.companyId(), request.contactId());
-        VenueResponse venue = venueService.getActiveOrThrow(request.venueId());
-        eventTypeService.getActiveOrThrow(request.eventTypeId());
+        VenueInfo venue = venueService.getForAssociation(request.venueId(), opportunity.getVenueId());
+        eventTypeService.assertSelectable(request.eventTypeId(), opportunity.getEventTypeId());
+        originService.assertSelectable(request.originId(), opportunity.getOriginId());
         assertEventRange(request.eventStart(), request.eventEnd());
         assertCapacity(venue, request.attendeeCount());
-        Set<Long> serviceIds = validateServices(request.serviceIds());
+        Set<Long> serviceIds = validateServices(request.serviceIds() == null ? opportunity.getEventServiceIds()
+                : request.serviceIds(), opportunity.getEventServiceIds());
 
         opportunity.updateDetails(request.title(), parties.companyId(), request.contactId(), request.venueId(),
                 request.eventTypeId(), request.estimatedValue(), request.probability(), request.eventStart(),
                 request.eventEnd(), request.attendeeCount(), request.estimatedCloseDate(), request.originId(),
                 request.notes(), serviceIds);
-        return toEnrichedResponse(opportunityRepository.save(opportunity));
+        return toEnrichedResponse(opportunityRepository.saveAndFlush(opportunity));
     }
 
     @Transactional(readOnly = true)
@@ -123,42 +139,59 @@ public class OpportunityService {
                 ? null : companyService.getSummary(opportunity.getCompanyId());
         ContactSummaryResponse contact = opportunity.getContactId() == null
                 ? null : contactService.getSummary(opportunity.getContactId());
-        VenueResponse venue = venueService.getDetail(opportunity.getVenueId());
-        StageResponse stage = stageService.getSummary(opportunity.getStageId());
+        VenueInfo venue = venueService.getInfo(opportunity.getVenueId());
+        StageInfo stage = stageService.getSummary(opportunity.getStageId());
         return opportunityMapper.toDetailResponse(opportunity, company, contact, venue, stage);
     }
 
     @Transactional(readOnly = true)
     public PageResponse<OpportunityResponse> list(OpportunityFilter filter, Pageable pageable) {
-        Page<Opportunity> page = opportunityAccessService.findReadable(filter, pageable);
-        return PageResponse.from(page, this::toEnrichedResponse);
+        if (filter != null && filter.pipelineId() != null) pipelineService.getInfo(filter.pipelineId());
+        var order = pageable.getSort();
+        if (order.getOrderFor("id") == null) order = order.and(org.springframework.data.domain.Sort.by("id"));
+        Page<Opportunity> page = opportunityAccessService.findReadable(filter, org.springframework.data.domain.PageRequest.of(
+                pageable.getPageNumber(), pageable.getPageSize(), order));
+        return new PageResponse<>(enrich(page.getContent()), page.getNumber(), page.getSize(),
+                page.getTotalElements(), page.getTotalPages());
     }
 
     @Transactional(readOnly = true)
     public OpportunityBoardResponse getBoard(OpportunityFilter filter) {
-        Map<Long, List<OpportunityResponse>> byStage = opportunityAccessService.findAllReadable(filter).stream()
-                .map(this::toEnrichedResponse)
+        var pipeline = filter == null || filter.pipelineId() == null ? pipelineService.getDefault() : pipelineService.getInfo(filter.pipelineId());
+        var effective = filter == null ? new OpportunityFilter(null, null, null, null, null, null, null, null, null, null, pipeline.id()) : filter.forPipeline(pipeline.id());
+        Map<Long, List<OpportunityResponse>> byStage = enrich(opportunityAccessService.findAllReadable(effective)).stream()
                 .collect(Collectors.groupingBy(OpportunityResponse::stageId));
-        List<OpportunityBoardResponse.StageColumn> columns = stageService.list().stream()
+        List<OpportunityBoardResponse.StageColumn> columns = stageService.listInfo(pipeline.id()).stream()
                 .map(stage -> new OpportunityBoardResponse.StageColumn(
-                        stage.id(), stage.name(), byStage.getOrDefault(stage.id(), List.of())))
+                        stage.id(), stage.name(), stage.kind(), stage.active(), byStage.getOrDefault(stage.id(), List.of())))
                 .toList();
-        return new OpportunityBoardResponse(columns);
+        return new OpportunityBoardResponse(new OpportunityPipelineResponse(pipeline.id(), pipeline.name(), pipeline.active(), pipeline.defaultPipeline()), columns);
     }
 
     private OpportunityResponse toEnrichedResponse(Opportunity opportunity) {
-        String companyName = opportunity.getCompanyId() == null ? null
-                : companyService.getSummary(opportunity.getCompanyId()).businessName();
-        String contactName = null;
-        if (opportunity.getContactId() != null) {
-            ContactSummaryResponse contact = contactService.getSummary(opportunity.getContactId());
-            contactName = contact.firstName() + " " + contact.lastName();
-        }
-        var user = userService.getSummary(opportunity.getSalesRepId());
-        String salesRepName = user.firstName() + " " + user.lastName();
-        String venueName = venueService.getDetail(opportunity.getVenueId()).name();
-        String stageName = stageService.getSummary(opportunity.getStageId()).name();
-        return opportunityMapper.toResponse(opportunity, companyName, contactName, salesRepName, venueName, stageName);
+        return enrich(List.of(opportunity)).getFirst();
+    }
+
+    private List<OpportunityResponse> enrich(List<Opportunity> opportunities) {
+        if (opportunities.isEmpty()) return List.of();
+        var companies = companyService.getNames(ids(opportunities, Opportunity::getCompanyId));
+        var contacts = contactService.getNames(ids(opportunities, Opportunity::getContactId));
+        var users = userService.getIdentities(ids(opportunities, Opportunity::getSalesRepId));
+        var venues = venueService.getNames(ids(opportunities, Opportunity::getVenueId));
+        var stages = stageService.getNames(ids(opportunities, Opportunity::getStageId));
+        var services = opportunityRepository.findServiceLinks(TenantContext.currentTenantId(), ids(opportunities, Opportunity::getId))
+                .stream().collect(Collectors.groupingBy(
+                        com.ztech.crm.opportunities.repository.OpportunityRepository.ServiceLink::getOpportunityId,
+                        Collectors.mapping(com.ztech.crm.opportunities.repository.OpportunityRepository.ServiceLink::getServiceId, Collectors.toSet())));
+        return opportunities.stream().map(value -> opportunityMapper.toResponse(value,
+                value.getCompanyId() == null ? null : companies.get(value.getCompanyId()),
+                value.getContactId() == null ? null : contacts.get(value.getContactId()),
+                users.get(value.getSalesRepId()).fullName(), venues.get(value.getVenueId()), stages.get(value.getStageId()),
+                services.getOrDefault(value.getId(), Set.of()))).toList();
+    }
+
+    private Set<Long> ids(List<Opportunity> values, java.util.function.Function<Opportunity, Long> reference) {
+        return values.stream().map(reference).filter(java.util.Objects::nonNull).collect(Collectors.toSet());
     }
 
     private PartyResolution resolveParties(Long requestedCompanyId, Long contactId) {
@@ -190,9 +223,9 @@ public class OpportunityService {
         return resolved;
     }
 
-    private Set<Long> validateServices(Set<Long> serviceIds) {
+    private Set<Long> validateServices(Set<Long> serviceIds, Set<Long> previousIds) {
         Set<Long> uniqueIds = serviceIds == null ? Set.of() : new LinkedHashSet<>(serviceIds);
-        uniqueIds.forEach(eventServiceService::getActiveOrThrow);
+        uniqueIds.forEach(id -> eventServiceService.assertSelectable(id, previousIds.contains(id)));
         return uniqueIds;
     }
 
@@ -202,7 +235,7 @@ public class OpportunityService {
         }
     }
 
-    private void assertCapacity(VenueResponse venue, Integer attendeeCount) {
+    private void assertCapacity(VenueInfo venue, Integer attendeeCount) {
         if (attendeeCount > venue.capacity()) {
             throw new BusinessException("VENUE_CAPACITY_EXCEEDED",
                     "La cantidad de asistentes supera la capacidad del salón.");

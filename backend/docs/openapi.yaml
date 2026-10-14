@@ -4,44 +4,124 @@ info:
   description: API del CRM de salones de eventos corporativos — UNLaM GADS1.
   version: v1
 servers:
-- url: http://localhost:53103
+- url: http://localhost:64464
   description: Generated server url
 security:
 - bearerAuth: []
 tags:
-- name: Origins
-  description: Orígenes comerciales del tenant
-- name: Loss reasons
-  description: Motivos de pérdida del tenant
+- name: LossReasons
+  description: Administración de motivo de pérdida; lecturas comerciales por tenant
+- name: EventServices
+  description: Servicios adicionales (BE-OFF-03/04)
 - name: EventTypes
-  description: Tipos configurables de evento
+  description: Administración de tipo de evento; lecturas comerciales por tenant
 - name: Venues
-  description: Salones (BE-OFF-01)
-- name: Stages
-  description: "Etapas del embudo comercial (BE-CAT-01, DP-06)"
-- name: Activity types
-  description: Tipos de actividad del tenant
+  description: Salones (BE-OFF-01/02)
+- name: Activities
+  description: Registro append-only e historial comercial autorizado
 - name: Opportunities
   description: Gestión de oportunidades (BE-OPP-01..03/05/06)
-- name: Activities
-  description: Lectura tenant-aware del historial comercial
+- name: Stages
+  description: Etapas propias de un embudo. Sólo ADMIN configura (BE-CAT-02)
 - name: Users
   description: Administración de usuarios y responsables
 - name: Auth
   description: Autenticación (BE-SEC-01)
-- name: EventServices
-  description: Servicios adicionales (BE-OFF-03)
+- name: PipelineTemplates
+  description: Plantillas inmutables de la aplicación; cada copia usa IDs propios
 - name: Contacts
   description: Gestión de contactos (BE-CUS-04..07)
+- name: ActivityTypes
+  description: Administración de tipo de actividad; lecturas comerciales por tenant
 - name: Companies
   description: Gestión de empresas (BE-CUS-01..03)
+- name: Origins
+  description: Administración de origen; lecturas comerciales por tenant
+- name: Pipelines
+  description: Embudos configurables por tenant (ADR-006). Sólo ADMIN escribe.
 paths:
+  /api/v1/venues/{id}:
+    get:
+      tags:
+      - Venues
+      summary: Detalle de un salón
+      operationId: getById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VenueResponse"
+        "404":
+          description: No existe un salón con ese id
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VenueResponse"
+    put:
+      tags:
+      - Venues
+      summary: Edita un salón o cambia su estado
+      description: Sólo ADMIN; la baja es lógica y conserva referencias comerciales.
+      operationId: update
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VenueRequest"
+        required: true
+      responses:
+        "200":
+          description: Salón actualizado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VenueResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VenueResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VenueResponse"
+        "404":
+          description: No se encontró el salón en la organización
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VenueResponse"
+        "409":
+          description: La reducción de capacidad invalidaría una reserva confirmada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VenueResponse"
   /api/v1/users/{id}:
     get:
       tags:
       - Users
       summary: Obtiene un usuario del tenant (sólo ADMIN)
-      operationId: getById
+      operationId: getById_1
       parameters:
       - name: id
         in: path
@@ -72,7 +152,7 @@ paths:
       tags:
       - Users
       summary: "Actualiza perfil, rol y estado (sólo ADMIN)"
-      operationId: update
+      operationId: update_1
       parameters:
       - name: id
         in: path
@@ -93,12 +173,275 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/UserResponse"
+  /api/v1/stages/{id}:
+    get:
+      tags:
+      - Stages
+      summary: "Consulta una etapa, incluso inactiva"
+      operationId: detail
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Datos o filtros inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "401":
+          description: Sesión requerida
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "403":
+          description: Sólo ADMIN puede configurar
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "404":
+          description: Referencia inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "409":
+          description: Configuración incompatible o nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+    put:
+      tags:
+      - Stages
+      summary: Edita o desactiva una etapa conservando su embudo e historia (ADMIN)
+      operationId: update_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StageRequest"
+        required: true
+      responses:
+        "400":
+          description: Datos o filtros inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "401":
+          description: Sesión requerida
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "403":
+          description: Sólo ADMIN puede configurar
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "404":
+          description: Referencia inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "409":
+          description: Configuración incompatible o nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+  /api/v1/pipelines/{id}:
+    get:
+      tags:
+      - Pipelines
+      summary: "Detalle de un embudo, incluso inactivo"
+      operationId: detail_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Datos o filtros inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "401":
+          description: Sesión requerida
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "403":
+          description: Sólo ADMIN puede configurar
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "404":
+          description: Referencia inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "409":
+          description: Configuración incompatible o nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+    put:
+      tags:
+      - Pipelines
+      summary: "Renombra, activa o desactiva un embudo (ADMIN)"
+      operationId: update_3
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatalogEntryRequest"
+        required: true
+      responses:
+        "400":
+          description: Datos o filtros inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "401":
+          description: Sesión requerida
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "403":
+          description: Sólo ADMIN puede configurar
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "404":
+          description: Referencia inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "409":
+          description: Configuración incompatible o nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+  /api/v1/origins/{id}:
+    get:
+      tags:
+      - Origins
+      summary: "Consulta una entrada, incluso inactiva"
+      operationId: detail_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Entrada del tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OriginResponse"
+        "404":
+          description: Entrada no encontrada en la organización
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OriginResponse"
+    put:
+      tags:
+      - Origins
+      summary: "Edita, activa o da de baja lógica un origen"
+      description: Sólo ADMIN. Conserva ID y referencias históricas; no existe borrado
+        físico.
+      operationId: update_4
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatalogEntryRequest"
+        required: true
+      responses:
+        "200":
+          description: Entrada actualizada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OriginResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OriginResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OriginResponse"
+        "404":
+          description: Entrada no encontrada en la organización
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OriginResponse"
+        "409":
+          description: Nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OriginResponse"
   /api/v1/opportunities/{id}:
     get:
       tags:
       - Opportunities
       summary: "Detalle de una oportunidad, con cliente, salón y etapa resueltos (BE-OPP-03)"
-      operationId: getById_1
+      operationId: getById_2
       parameters:
       - name: id
         in: path
@@ -123,7 +466,7 @@ paths:
       tags:
       - Opportunities
       summary: "Edita una oportunidad abierta (no cambia etapa, responsable ni estado)"
-      operationId: update_1
+      operationId: update_5
       parameters:
       - name: id
         in: path
@@ -151,18 +494,244 @@ paths:
               schema:
                 $ref: "#/components/schemas/OpportunityResponse"
         "409":
-          description: La oportunidad está cerrada
+          description: La oportunidad está cerrada o la etapa es incompatible con
+            su embudo/tipo
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/OpportunityResponse"
+  /api/v1/loss-reasons/{id}:
+    get:
+      tags:
+      - LossReasons
+      summary: "Consulta una entrada, incluso inactiva"
+      operationId: detail_3
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Entrada del tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LossReasonResponse"
+        "404":
+          description: Entrada no encontrada en la organización
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LossReasonResponse"
+    put:
+      tags:
+      - LossReasons
+      summary: "Edita, activa o da de baja lógica un motivo de pérdida"
+      description: Sólo ADMIN. Conserva ID y referencias históricas; no existe borrado
+        físico.
+      operationId: update_6
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatalogEntryRequest"
+        required: true
+      responses:
+        "200":
+          description: Entrada actualizada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LossReasonResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LossReasonResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LossReasonResponse"
+        "404":
+          description: Entrada no encontrada en la organización
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LossReasonResponse"
+        "409":
+          description: Nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LossReasonResponse"
+  /api/v1/event-types/{id}:
+    get:
+      tags:
+      - EventTypes
+      summary: "Consulta una entrada, incluso inactiva"
+      operationId: detail_4
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Entrada del tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventTypeResponse"
+        "404":
+          description: Entrada no encontrada en la organización
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventTypeResponse"
+    put:
+      tags:
+      - EventTypes
+      summary: "Edita, activa o da de baja lógica un tipo de evento"
+      description: Sólo ADMIN. Conserva ID y referencias históricas; no existe borrado
+        físico.
+      operationId: update_7
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatalogEntryRequest"
+        required: true
+      responses:
+        "200":
+          description: Entrada actualizada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventTypeResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventTypeResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventTypeResponse"
+        "404":
+          description: Entrada no encontrada en la organización
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventTypeResponse"
+        "409":
+          description: Nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventTypeResponse"
+  /api/v1/event-services/{id}:
+    get:
+      tags:
+      - EventServices
+      summary: Detalle de un servicio adicional
+      operationId: getById_3
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventServiceResponse"
+        "404":
+          description: No existe un servicio con ese id
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventServiceResponse"
+    put:
+      tags:
+      - EventServices
+      summary: Edita un servicio o cambia su actividad
+      description: Sólo ADMIN; la baja es lógica y conserva referencias comerciales.
+      operationId: update_8
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventServiceRequest"
+        required: true
+      responses:
+        "200":
+          description: Servicio actualizado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventServiceResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventServiceResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventServiceResponse"
+        "404":
+          description: No se encontró el servicio en la organización
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventServiceResponse"
   /api/v1/contacts/{id}:
     get:
       tags:
       - Contacts
       summary: Detalle de un contacto
       description: Para SELLER exige asignación directa o una oportunidad propia relacionada.
-      operationId: getById_2
+        Incluye salesRepName aun si el responsable está inactivo.
+      operationId: getById_4
       parameters:
       - name: id
         in: path
@@ -187,7 +756,7 @@ paths:
       tags:
       - Contacts
       summary: Edita un contacto
-      operationId: update_2
+      operationId: update_9
       parameters:
       - name: id
         in: path
@@ -209,8 +778,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ContactResponse"
         "404":
-          description: "No existe un contacto con ese id, o la empresa relacionada\
-            \ no existe"
+          description: "Contacto o empresa fuera de alcance, o responsable/origen\
+            \ ajeno a la organización"
           content:
             '*/*':
               schema:
@@ -221,14 +790,22 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/ContactResponse"
+        "422":
+          description: El responsable o el nuevo origen no está activo; se permite
+            conservar el origen inactivo anterior
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ContactResponse"
   /api/v1/companies/{id}:
     get:
       tags:
       - Companies
       summary: "Detalle de una empresa, con sus contactos (BE-CUS-03)"
       description: Para SELLER exige asignación directa o una oportunidad propia;
-        los contactos anidados también se filtran por ese alcance.
-      operationId: getById_3
+        los contactos anidados también se filtran por ese alcance. Incluye salesRepName
+        aun si el responsable está inactivo.
+      operationId: getById_5
       parameters:
       - name: id
         in: path
@@ -253,7 +830,7 @@ paths:
       tags:
       - Companies
       summary: Edita una empresa
-      operationId: update_3
+      operationId: update_10
       parameters:
       - name: id
         in: path
@@ -275,7 +852,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/CompanyResponse"
         "404":
-          description: No existe una empresa con ese id
+          description: "Empresa fuera de alcance, o responsable/origen ajeno a la\
+            \ organización"
           content:
             '*/*':
               schema:
@@ -286,12 +864,175 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/CompanyResponse"
+        "422":
+          description: El responsable o el nuevo origen no está activo; se permite
+            conservar el origen inactivo anterior
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CompanyResponse"
+  /api/v1/activity-types/{id}:
+    get:
+      tags:
+      - ActivityTypes
+      summary: "Consulta una entrada, incluso inactiva"
+      operationId: detail_5
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Entrada del tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityTypeResponse"
+        "404":
+          description: Entrada no encontrada en la organización
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityTypeResponse"
+    put:
+      tags:
+      - ActivityTypes
+      summary: "Edita, activa o da de baja lógica un tipo de actividad"
+      description: Sólo ADMIN. Conserva ID y referencias históricas; no existe borrado
+        físico.
+      operationId: update_11
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatalogEntryRequest"
+        required: true
+      responses:
+        "200":
+          description: Entrada actualizada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityTypeResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityTypeResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityTypeResponse"
+        "404":
+          description: Entrada no encontrada en la organización
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityTypeResponse"
+        "409":
+          description: Nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityTypeResponse"
+  /api/v1/venues:
+    get:
+      tags:
+      - Venues
+      summary: "Lista salones del tenant con búsqueda, estado y paginación"
+      operationId: list
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - DISPONIBLE
+          - MANTENIMIENTO
+          - INACTIVO
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "name,asc"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseVenueResponse"
+    post:
+      tags:
+      - Venues
+      summary: Crea un salón
+      description: Sólo ADMIN; tenant y actor se resuelven de la sesión.
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VenueRequest"
+        required: true
+      responses:
+        "201":
+          description: Salón creado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VenueResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VenueResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VenueResponse"
   /api/v1/users:
     get:
       tags:
       - Users
       summary: Lista usuarios del tenant (sólo ADMIN)
-      operationId: list
+      operationId: list_1
       parameters:
       - name: q
         in: query
@@ -349,7 +1090,7 @@ paths:
       tags:
       - Users
       summary: Crea un usuario con contraseña temporal (sólo ADMIN)
-      operationId: create
+      operationId: create_1
       requestBody:
         content:
           application/json:
@@ -385,6 +1126,419 @@ paths:
       responses:
         "200":
           description: OK
+  /api/v1/stages:
+    get:
+      tags:
+      - Stages
+      summary: "Lista etapas del embudo elegido o predeterminado, por posición"
+      operationId: list_2
+      parameters:
+      - name: pipelineId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Datos o filtros inválidos
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageResponse"
+        "401":
+          description: Sesión requerida
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageResponse"
+        "403":
+          description: Sólo ADMIN puede configurar
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageResponse"
+        "404":
+          description: Referencia inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageResponse"
+        "409":
+          description: Configuración incompatible o nombre duplicado
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageResponse"
+    post:
+      tags:
+      - Stages
+      summary: Crea una etapa al final de su embudo (ADMIN)
+      operationId: create_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StageRequest"
+        required: true
+      responses:
+        "400":
+          description: Datos o filtros inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "401":
+          description: Sesión requerida
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "403":
+          description: Sólo ADMIN puede configurar
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "404":
+          description: Referencia inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "409":
+          description: Configuración incompatible o nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+        "201":
+          description: Creado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/StageResponse"
+  /api/v1/pipelines:
+    get:
+      tags:
+      - Pipelines
+      summary: "Consulta embudos activos e históricos, paginados"
+      operationId: list_3
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: active
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "name,asc"
+      responses:
+        "400":
+          description: Datos o filtros inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponsePipelineResponse"
+        "401":
+          description: Sesión requerida
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponsePipelineResponse"
+        "403":
+          description: Sólo ADMIN puede configurar
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponsePipelineResponse"
+        "404":
+          description: Referencia inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponsePipelineResponse"
+        "409":
+          description: Configuración incompatible o nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponsePipelineResponse"
+    post:
+      tags:
+      - Pipelines
+      summary: "Crea un embudo inactivo, vacío o copiando una plantilla"
+      operationId: create_3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePipelineRequest"
+        required: true
+      responses:
+        "400":
+          description: Datos o filtros inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "401":
+          description: Sesión requerida
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "403":
+          description: Sólo ADMIN puede configurar
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "404":
+          description: Referencia inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "409":
+          description: Configuración incompatible o nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "201":
+          description: Creado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+  /api/v1/pipelines/{id}/stages/reorder:
+    post:
+      tags:
+      - Pipelines
+      summary: Aplica el orden completo de etapas de forma atómica (ADMIN)
+      operationId: reorder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReorderStagesRequest"
+        required: true
+      responses:
+        "400":
+          description: Datos o filtros inválidos
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageResponse"
+        "401":
+          description: Sesión requerida
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageResponse"
+        "403":
+          description: Sólo ADMIN puede configurar
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageResponse"
+        "404":
+          description: Referencia inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageResponse"
+        "409":
+          description: Configuración incompatible o nombre duplicado
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageResponse"
+        "422":
+          description: "El orden debe incluir el conjunto completo de etapas, sin\
+            \ duplicados"
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageResponse"
+  /api/v1/pipelines/{id}/default:
+    post:
+      tags:
+      - Pipelines
+      summary: Reemplaza el predeterminado de forma atómica (ADMIN)
+      operationId: makeDefault
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Datos o filtros inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "401":
+          description: Sesión requerida
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "403":
+          description: Sólo ADMIN puede configurar
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "404":
+          description: Referencia inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "409":
+          description: Configuración incompatible o nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+  /api/v1/origins:
+    get:
+      tags:
+      - Origins
+      summary: "Lista entradas con búsqueda, actividad y paginación"
+      description: "Tamaño 20, máximo 100. Orden por id, name o active."
+      operationId: list_4
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: active
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "name,asc"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseOriginResponse"
+    post:
+      tags:
+      - Origins
+      summary: Crea un origen
+      description: Sólo ADMIN. Nombre único por catálogo y tenant.
+      operationId: create_4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatalogEntryRequest"
+        required: true
+      responses:
+        "201":
+          description: Entrada creada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OriginResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OriginResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OriginResponse"
+        "409":
+          description: Nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OriginResponse"
   /api/v1/opportunities:
     get:
       tags:
@@ -392,8 +1546,14 @@ paths:
       summary: "Lista oportunidades visibles, paginado"
       description: SELLER ve sólo sus oportunidades; ADMIN y SALES_MANAGER ven todas
         las del tenant.
-      operationId: list_1
+      operationId: list_5
       parameters:
+      - name: pipelineId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
       - name: q
         in: query
         required: false
@@ -487,7 +1647,7 @@ paths:
       tags:
       - Opportunities
       summary: Crea una oportunidad
-      operationId: create_1
+      operationId: create_5
       requestBody:
         content:
           application/json:
@@ -515,7 +1675,71 @@ paths:
               schema:
                 $ref: "#/components/schemas/OpportunityResponse"
         "422":
-          description: "Falta empresa/contacto, o la etapa inicial no está abierta"
+          description: "Falta cliente, capacidad excedida o referencia inactiva/no\
+            \ abierta"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "409":
+          description: Embudo inactivo o etapa de otro embudo
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+  /api/v1/opportunities/{id}/win:
+    post:
+      tags:
+      - Opportunities
+      summary: Gana una oportunidad abierta y reserva el salón
+      operationId: win
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WinOpportunityRequest"
+        required: true
+      responses:
+        "200":
+          description: Oportunidad actualizada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "400":
+          description: Datos obligatorios o versión inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "403":
+          description: Rol insuficiente
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "404":
+          description: Referencia inexistente o fuera de alcance
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "409":
+          description: "Estado, etapa, reserva o versión en conflicto; recargar antes\
+            \ de reintentar"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "422":
+          description: "Referencia inactiva, capacidad excedida o salón no disponible"
           content:
             '*/*':
               schema:
@@ -554,17 +1778,428 @@ paths:
               schema:
                 $ref: "#/components/schemas/OpportunityResponse"
         "409":
-          description: La oportunidad está cerrada
+          description: La oportunidad está cerrada o la etapa es incompatible con
+            su embudo/tipo
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/OpportunityResponse"
         "422":
-          description: "Misma etapa, o etapa destino no abierta (usar /win o /lose)"
+          description: La etapa es igual a la actual
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/OpportunityResponse"
+  /api/v1/opportunities/{id}/reopen:
+    post:
+      tags:
+      - Opportunities
+      summary: Reabre y conserva cierres anteriores (ADMIN o responsable comercial)
+      operationId: reopen
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReopenOpportunityRequest"
+        required: true
+      responses:
+        "200":
+          description: Oportunidad actualizada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "400":
+          description: Datos obligatorios o versión inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "403":
+          description: Rol insuficiente
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "404":
+          description: Referencia inexistente o fuera de alcance
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "409":
+          description: "Estado, etapa, reserva o versión en conflicto; recargar antes\
+            \ de reintentar"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "422":
+          description: "Referencia inactiva, capacidad excedida o salón no disponible"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+  /api/v1/opportunities/{id}/lose:
+    post:
+      tags:
+      - Opportunities
+      summary: Pierde una oportunidad abierta sin reservar
+      operationId: lose
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoseOpportunityRequest"
+        required: true
+      responses:
+        "200":
+          description: Oportunidad actualizada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "400":
+          description: Datos obligatorios o versión inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "403":
+          description: Rol insuficiente
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "404":
+          description: Referencia inexistente o fuera de alcance
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "409":
+          description: "Estado, etapa, reserva o versión en conflicto; recargar antes\
+            \ de reintentar"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "422":
+          description: "Referencia inactiva, capacidad excedida o salón no disponible"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+  /api/v1/opportunities/{id}/assign:
+    post:
+      tags:
+      - Opportunities
+      summary: Reasigna una oportunidad abierta (ADMIN o responsable comercial)
+      operationId: assign
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssignOpportunityRequest"
+        required: true
+      responses:
+        "200":
+          description: Oportunidad actualizada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "400":
+          description: Datos obligatorios o versión inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "403":
+          description: Rol insuficiente
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "404":
+          description: Referencia inexistente o fuera de alcance
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "409":
+          description: "Estado, etapa, reserva o versión en conflicto; recargar antes\
+            \ de reintentar"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+        "422":
+          description: "Referencia inactiva, capacidad excedida o salón no disponible"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OpportunityResponse"
+  /api/v1/loss-reasons:
+    get:
+      tags:
+      - LossReasons
+      summary: "Lista entradas con búsqueda, actividad y paginación"
+      description: "Tamaño 20, máximo 100. Orden por id, name o active."
+      operationId: list_6
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: active
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "name,asc"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseLossReasonResponse"
+    post:
+      tags:
+      - LossReasons
+      summary: Crea un motivo de pérdida
+      description: Sólo ADMIN. Nombre único por catálogo y tenant.
+      operationId: create_6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatalogEntryRequest"
+        required: true
+      responses:
+        "201":
+          description: Entrada creada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LossReasonResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LossReasonResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LossReasonResponse"
+        "409":
+          description: Nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LossReasonResponse"
+  /api/v1/event-types:
+    get:
+      tags:
+      - EventTypes
+      summary: "Lista entradas con búsqueda, actividad y paginación"
+      description: "Tamaño 20, máximo 100. Orden por id, name o active."
+      operationId: list_7
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: active
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "name,asc"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseEventTypeResponse"
+    post:
+      tags:
+      - EventTypes
+      summary: Crea un tipo de evento
+      description: Sólo ADMIN. Nombre único por catálogo y tenant.
+      operationId: create_7
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatalogEntryRequest"
+        required: true
+      responses:
+        "201":
+          description: Entrada creada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventTypeResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventTypeResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventTypeResponse"
+        "409":
+          description: Nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventTypeResponse"
+  /api/v1/event-services:
+    get:
+      tags:
+      - EventServices
+      summary: "Lista servicios del tenant con búsqueda, actividad y paginación"
+      operationId: list_8
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: active
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "name,asc"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseEventServiceResponse"
+    post:
+      tags:
+      - EventServices
+      summary: Crea un servicio adicional
+      description: Sólo ADMIN; tenant y actor se resuelven de la sesión.
+      operationId: create_8
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventServiceRequest"
+        required: true
+      responses:
+        "201":
+          description: Servicio creado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventServiceResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventServiceResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EventServiceResponse"
   /api/v1/contacts:
     get:
       tags:
@@ -572,7 +2207,7 @@ paths:
       summary: "Lista contactos visibles, paginado"
       description: ADMIN y SALES_MANAGER ven el tenant completo. SELLER ve asignaciones
         directas y contactos relacionados con oportunidades propias.
-      operationId: list_2
+      operationId: list_9
       parameters:
       - name: q
         in: query
@@ -638,7 +2273,7 @@ paths:
       tags:
       - Contacts
       summary: Crea un contacto
-      operationId: create_2
+      operationId: create_9
       requestBody:
         content:
           application/json:
@@ -659,13 +2294,20 @@ paths:
               schema:
                 $ref: "#/components/schemas/ContactResponse"
         "404":
-          description: La empresa relacionada no existe
+          description: "La empresa, el responsable o el origen no existe o está fuera\
+            \ de alcance"
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/ContactResponse"
         "409":
           description: Ya existe un contacto con ese documento
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ContactResponse"
+        "422":
+          description: El responsable o el nuevo origen no está activo
           content:
             '*/*':
               schema:
@@ -677,7 +2319,7 @@ paths:
       summary: "Lista empresas visibles, paginado"
       description: ADMIN y SALES_MANAGER ven el tenant completo. SELLER ve asignaciones
         directas y empresas relacionadas con oportunidades propias.
-      operationId: list_3
+      operationId: list_10
       parameters:
       - name: q
         in: query
@@ -737,7 +2379,7 @@ paths:
       tags:
       - Companies
       summary: Crea una empresa
-      operationId: create_3
+      operationId: create_10
       requestBody:
         content:
           application/json:
@@ -757,8 +2399,20 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/CompanyResponse"
+        "404":
+          description: El responsable u origen no existe en la organización
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CompanyResponse"
         "409":
           description: Ya existe una empresa con ese CUIT
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CompanyResponse"
+        "422":
+          description: El responsable o el nuevo origen no está activo
           content:
             '*/*':
               schema:
@@ -812,47 +2466,159 @@ paths:
           description: Contraseña actualizada
         "422":
           description: La contraseña actual es incorrecta o no cambió
-  /api/v1/venues:
+  /api/v1/activity-types:
     get:
       tags:
-      - Venues
-      summary: Lista los salones del tenant
-      operationId: list_4
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/VenueResponse"
-  /api/v1/venues/{id}:
-    get:
-      tags:
-      - Venues
-      summary: Detalle de un salón
-      operationId: getById_4
+      - ActivityTypes
+      summary: "Lista entradas con búsqueda, actividad y paginación"
+      description: "Tamaño 20, máximo 100. Orden por id, name o active."
+      operationId: list_11
       parameters:
-      - name: id
-        in: path
-        required: true
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: active
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        required: false
         schema:
           type: integer
-          format: int64
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "name,asc"
       responses:
         "200":
           description: OK
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/VenueResponse"
-        "404":
-          description: No existe un salón con ese id
+                $ref: "#/components/schemas/PageResponseActivityTypeResponse"
+    post:
+      tags:
+      - ActivityTypes
+      summary: Crea un tipo de actividad
+      description: Sólo ADMIN. Nombre único por catálogo y tenant.
+      operationId: create_11
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatalogEntryRequest"
+        required: true
+      responses:
+        "201":
+          description: Entrada creada
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/VenueResponse"
+                $ref: "#/components/schemas/ActivityTypeResponse"
+        "400":
+          description: Datos inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityTypeResponse"
+        "403":
+          description: Requiere ADMIN
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityTypeResponse"
+        "409":
+          description: Nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityTypeResponse"
+  /api/v1/activities:
+    get:
+      tags:
+      - Activities
+      summary: "Lista actividades visibles, ordenadas y paginadas"
+      operationId: list_12
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          default: "occurredAt,desc"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageResponseActivityResponse"
+    post:
+      tags:
+      - Activities
+      summary: "Registra una interacción ya realizada, con autor y tenant de la sesió\
+        n"
+      operationId: create_12
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateActivityRequest"
+        required: true
+      responses:
+        "201":
+          description: Actividad registrada
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityResponse"
+        "400":
+          description: Faltan datos o la fecha es futura
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityResponse"
+        "404":
+          description: Referencia inexistente o fuera de alcance
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityResponse"
+        "422":
+          description: "Asociaciones contradictorias, falta cliente o tipo inactivo"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ActivityResponse"
   /api/v1/users/assignable:
     get:
       tags:
@@ -868,12 +2634,49 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/UserResponse"
-  /api/v1/stages:
+  /api/v1/pipelines/default:
     get:
       tags:
-      - Stages
-      summary: "Lista las etapas del tenant, ordenadas por posición"
-      operationId: list_5
+      - Pipelines
+      summary: Consulta el embudo predeterminado
+      operationId: defaultPipeline
+      responses:
+        "400":
+          description: Datos o filtros inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "401":
+          description: Sesión requerida
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "403":
+          description: Sólo ADMIN puede configurar
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "404":
+          description: Referencia inexistente o de otro tenant
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+        "409":
+          description: Configuración incompatible o nombre duplicado
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PipelineResponse"
+  /api/v1/pipeline-templates:
+    get:
+      tags:
+      - PipelineTemplates
+      summary: Previsualiza las plantillas de embudo disponibles
+      operationId: list_13
       responses:
         "200":
           description: OK
@@ -882,22 +2685,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/StageResponse"
-  /api/v1/origins:
-    get:
-      tags:
-      - Origins
-      summary: Lista orígenes comerciales
-      operationId: list_6
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/OriginResponse"
+                  $ref: "#/components/schemas/PipelineTemplateResponse"
   /api/v1/opportunities/{id}/stage-history:
     get:
       tags:
@@ -920,6 +2708,27 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/StageHistoryResponse"
+  /api/v1/opportunities/{id}/availability:
+    get:
+      tags:
+      - Opportunities
+      summary: Consulta disponibilidad actual del salón para la oportunidad; ganar
+        vuelve a validarla
+      operationId: availability
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VenueAvailabilityResponse"
   /api/v1/opportunities/{id}/activities:
     get:
       tags:
@@ -970,6 +2779,12 @@ paths:
         las del tenant.
       operationId: board
       parameters:
+      - name: pipelineId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
       - name: q
         in: query
         required: false
@@ -1039,77 +2854,6 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/OpportunityBoardResponse"
-  /api/v1/loss-reasons:
-    get:
-      tags:
-      - Loss reasons
-      summary: Lista motivos de pérdida
-      operationId: list_7
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/LossReasonResponse"
-  /api/v1/event-types:
-    get:
-      tags:
-      - EventTypes
-      summary: Lista los tipos de evento del tenant
-      operationId: list_8
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/EventTypeResponse"
-  /api/v1/event-services:
-    get:
-      tags:
-      - EventServices
-      summary: Lista los servicios adicionales del tenant
-      operationId: list_9
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/EventServiceResponse"
-  /api/v1/event-services/{id}:
-    get:
-      tags:
-      - EventServices
-      summary: Detalle de un servicio adicional
-      operationId: getById_5
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/EventServiceResponse"
-        "404":
-          description: No existe un servicio con ese id
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/EventServiceResponse"
   /api/v1/contacts/{id}/activities:
     get:
       tags:
@@ -1190,57 +2934,72 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/PageResponseActivityResponse"
-  /api/v1/activity-types:
-    get:
-      tags:
-      - Activity types
-      summary: Lista tipos de actividad
-      operationId: list_10
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ActivityTypeResponse"
-  /api/v1/activities:
-    get:
-      tags:
-      - Activities
-      summary: "Lista actividades visibles, ordenadas y paginadas"
-      operationId: list_11
-      parameters:
-      - name: page
-        in: query
-        required: false
-        schema:
-          type: integer
-          format: int32
-          default: 0
-      - name: size
-        in: query
-        required: false
-        schema:
-          type: integer
-          format: int32
-          default: 20
-      - name: sort
-        in: query
-        required: false
-        schema:
-          type: string
-          default: "occurredAt,desc"
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/PageResponseActivityResponse"
 components:
   schemas:
+    VenueRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        capacity:
+          type: integer
+          format: int32
+          exclusiveMinimum: 0
+        rate:
+          type: number
+          description: Tarifa opcional en ARS.
+          minimum: 0
+        address:
+          type: string
+        locality:
+          type: string
+        description:
+          type: string
+        equipment:
+          type: array
+          items:
+            type: string
+            minLength: 1
+        status:
+          type: string
+          enum:
+          - DISPONIBLE
+          - MANTENIMIENTO
+          - INACTIVO
+      required:
+      - capacity
+      - name
+      - status
+    VenueResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        capacity:
+          type: integer
+          format: int32
+        rate:
+          type: number
+        address:
+          type: string
+        locality:
+          type: string
+        description:
+          type: string
+        equipment:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum:
+          - DISPONIBLE
+          - MANTENIMIENTO
+          - INACTIVO
     UpdateUserRequest:
       type: object
       properties:
@@ -1289,6 +3048,89 @@ components:
           type: boolean
         mustChangePassword:
           type: boolean
+    StageRequest:
+      type: object
+      properties:
+        pipelineId:
+          type: integer
+          format: int64
+        name:
+          type: string
+          minLength: 1
+        kind:
+          type: string
+          enum:
+          - OPEN
+          - WON
+          - LOST
+        active:
+          type: boolean
+      required:
+      - active
+      - kind
+      - name
+      - pipelineId
+    StageResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        pipelineId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        position:
+          type: integer
+          format: int32
+        kind:
+          type: string
+          enum:
+          - OPEN
+          - WON
+          - LOST
+        active:
+          type: boolean
+    CatalogEntryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        active:
+          type: boolean
+      required:
+      - active
+      - name
+    PipelineResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        active:
+          type: boolean
+        defaultPipeline:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    OriginResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        active:
+          type: boolean
     UpdateOpportunityRequest:
       type: object
       properties:
@@ -1332,12 +3174,23 @@ components:
           format: int64
         serviceIds:
           type: array
+          description: "Servicios asociados. Omitido o null conserva los actuales;\
+            \ [] los quita. Sólo nuevas asociaciones requieren servicio activo."
           items:
             type: integer
             format: int64
           uniqueItems: true
         notes:
           type: string
+        pipelineId:
+          type: integer
+          format: int64
+          description: "Embudo comercial. En alta, omitido usa el predeterminado;\
+            \ en edición no puede cambiar."
+        version:
+          type: integer
+          format: int64
+          minimum: 0
       required:
       - attendeeCount
       - eventEnd
@@ -1345,6 +3198,7 @@ components:
       - eventTypeId
       - title
       - venueId
+      - version
     OpportunityResponse:
       type: object
       properties:
@@ -1404,6 +3258,63 @@ components:
           type: string
         stageName:
           type: string
+        pipelineId:
+          type: integer
+          format: int64
+        version:
+          type: integer
+          format: int64
+    LossReasonResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        active:
+          type: boolean
+    EventTypeResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        active:
+          type: boolean
+    EventServiceRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        price:
+          type: number
+          description: Precio opcional en ARS.
+          minimum: 0
+        active:
+          type: boolean
+      required:
+      - active
+      - name
+    EventServiceResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        active:
+          type: boolean
     ContactRequest:
       type: object
       properties:
@@ -1495,8 +3406,9 @@ components:
           minLength: 1
         cuit:
           type: string
-          description: "Opcional. Formato: 11 dígitos, con o sin guiones."
-          example: 30-71234567-9
+          description: "Opcional. 11 dígitos con verificador válido, con o sin guiones;\
+            \ se almacena sin guiones."
+          example: 30-71234567-1
         industry:
           type: string
           example: Turismo y eventos
@@ -1568,6 +3480,18 @@ components:
         salesRepId:
           type: integer
           format: int64
+        salesRepName:
+          type: string
+    ActivityTypeResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        active:
+          type: boolean
     CreateUserRequest:
       type: object
       properties:
@@ -1599,6 +3523,26 @@ components:
       properties:
         temporaryPassword:
           type: string
+    CreatePipelineRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        templateKey:
+          type: string
+      required:
+      - name
+    ReorderStagesRequest:
+      type: object
+      properties:
+        stageIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+      required:
+      - stageIds
     CreateOpportunityRequest:
       type: object
       properties:
@@ -1661,6 +3605,11 @@ components:
           uniqueItems: true
         notes:
           type: string
+        pipelineId:
+          type: integer
+          format: int64
+          description: "Embudo comercial. En alta, omitido usa el predeterminado;\
+            \ en edición no puede cambiar."
       required:
       - attendeeCount
       - eventEnd
@@ -1669,6 +3618,25 @@ components:
       - stageId
       - title
       - venueId
+    WinOpportunityRequest:
+      type: object
+      properties:
+        stageId:
+          type: integer
+          format: int64
+        finalValue:
+          type: number
+          minimum: 0.00
+        note:
+          type: string
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+      required:
+      - finalValue
+      - stageId
+      - version
     ChangeStageRequest:
       type: object
       properties:
@@ -1679,8 +3647,62 @@ components:
         note:
           type: string
           description: Observación opcional sobre el cambio
+        version:
+          type: integer
+          format: int64
+          minimum: 0
       required:
       - stageId
+      - version
+    ReopenOpportunityRequest:
+      type: object
+      properties:
+        stageId:
+          type: integer
+          format: int64
+        note:
+          type: string
+          minLength: 1
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+      required:
+      - note
+      - stageId
+      - version
+    LoseOpportunityRequest:
+      type: object
+      properties:
+        stageId:
+          type: integer
+          format: int64
+        lossReasonId:
+          type: integer
+          format: int64
+        note:
+          type: string
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+      required:
+      - lossReasonId
+      - stageId
+      - version
+    AssignOpportunityRequest:
+      type: object
+      properties:
+        salesRepId:
+          type: integer
+          format: int64
+        version:
+          type: integer
+          format: int64
+          minimum: 0
+      required:
+      - salesRepId
+      - version
     LoginRequest:
       type: object
       properties:
@@ -1745,7 +3767,75 @@ components:
           type: string
       required:
       - currentPassword
-    VenueResponse:
+    CreateActivityRequest:
+      type: object
+      properties:
+        typeId:
+          type: integer
+          format: int64
+        occurredAt:
+          type: string
+          format: date-time
+        companyId:
+          type: integer
+          format: int64
+        contactId:
+          type: integer
+          format: int64
+        opportunityId:
+          type: integer
+          format: int64
+        description:
+          type: string
+          minLength: 1
+        result:
+          type: string
+          minLength: 1
+      required:
+      - description
+      - occurredAt
+      - result
+      - typeId
+    ActivityAuthorResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+    ActivityResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        type:
+          $ref: "#/components/schemas/ActivityTypeSummaryResponse"
+        occurredAt:
+          type: string
+          format: date-time
+        companyId:
+          type: integer
+          format: int64
+        contactId:
+          type: integer
+          format: int64
+        opportunityId:
+          type: integer
+          format: int64
+        description:
+          type: string
+        result:
+          type: string
+        author:
+          $ref: "#/components/schemas/ActivityAuthorResponse"
+        createdAt:
+          type: string
+          format: date-time
+    ActivityTypeSummaryResponse:
       type: object
       properties:
         id:
@@ -1753,27 +3843,27 @@ components:
           format: int64
         name:
           type: string
-        capacity:
-          type: integer
-          format: int32
-        rate:
-          type: number
-        address:
-          type: string
-        locality:
-          type: string
-        description:
-          type: string
-        equipment:
+        active:
+          type: boolean
+    PageResponseVenueResponse:
+      type: object
+      properties:
+        content:
           type: array
           items:
-            type: string
-        status:
-          type: string
-          enum:
-          - DISPONIBLE
-          - MANTENIMIENTO
-          - INACTIVO
+            $ref: "#/components/schemas/VenueResponse"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
     PageResponseUserResponse:
       type: object
       properties:
@@ -1793,35 +3883,62 @@ components:
         totalPages:
           type: integer
           format: int32
-    StageResponse:
+    PageResponsePipelineResponse:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        position:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/PipelineResponse"
+        page:
           type: integer
           format: int32
-        kind:
-          type: string
-          enum:
-          - OPEN
-          - WON
-          - LOST
-        active:
-          type: boolean
-    OriginResponse:
-      type: object
-      properties:
-        id:
+        size:
+          type: integer
+          format: int32
+        totalElements:
           type: integer
           format: int64
+        totalPages:
+          type: integer
+          format: int32
+    PipelineTemplateResponse:
+      type: object
+      properties:
+        key:
+          type: string
         name:
           type: string
-        active:
-          type: boolean
+        stages:
+          type: array
+          items:
+            $ref: "#/components/schemas/TemplateStage"
+    TemplateStage:
+      type: object
+      properties:
+        name:
+          type: string
+        kind:
+          type: string
+    PageResponseOriginResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/OriginResponse"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
     PageResponseOpportunityResponse:
       type: object
       properties:
@@ -1895,9 +4012,9 @@ components:
           type: integer
           format: int64
         venue:
-          $ref: "#/components/schemas/VenueResponse"
+          $ref: "#/components/schemas/OpportunityVenueResponse"
         stage:
-          $ref: "#/components/schemas/StageResponse"
+          $ref: "#/components/schemas/OpportunityStageResponse"
         eventTypeId:
           type: integer
           format: int64
@@ -1943,6 +4060,55 @@ components:
           uniqueItems: true
         notes:
           type: string
+        pipelineId:
+          type: integer
+          format: int64
+        version:
+          type: integer
+          format: int64
+    OpportunityStageResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        pipelineId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        position:
+          type: integer
+          format: int32
+        kind:
+          type: string
+        active:
+          type: boolean
+    OpportunityVenueResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        capacity:
+          type: integer
+          format: int32
+        rate:
+          type: number
+        address:
+          type: string
+        locality:
+          type: string
+        description:
+          type: string
+        equipment:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
     StageHistoryResponse:
       type: object
       properties:
@@ -1950,15 +4116,31 @@ components:
           type: integer
           format: int64
         fromStage:
-          $ref: "#/components/schemas/StageResponse"
+          $ref: "#/components/schemas/OpportunityStageResponse"
         toStage:
-          $ref: "#/components/schemas/StageResponse"
+          $ref: "#/components/schemas/OpportunityStageResponse"
         changedAt:
           type: string
           format: date-time
         author:
           $ref: "#/components/schemas/UserSummaryResponse"
         note:
+          type: string
+        eventType:
+          type: string
+        snapshotComplete:
+          type: boolean
+        destinationStatus:
+          type: string
+        finalValue:
+          type: number
+        closedAt:
+          type: string
+          format: date-time
+        lossReasonId:
+          type: integer
+          format: int64
+        lossReasonName:
           type: string
     UserSummaryResponse:
       type: object
@@ -1970,44 +4152,16 @@ components:
           type: string
         lastName:
           type: string
-    ActivityResponse:
+    VenueAvailabilityResponse:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-        type:
-          $ref: "#/components/schemas/ActivityTypeResponse"
-        occurredAt:
-          type: string
-          format: date-time
-        companyId:
-          type: integer
-          format: int64
-        contactId:
-          type: integer
-          format: int64
-        opportunityId:
-          type: integer
-          format: int64
-        description:
-          type: string
-        result:
-          type: string
-        author:
-          $ref: "#/components/schemas/UserSummaryResponse"
-        createdAt:
-          type: string
-          format: date-time
-    ActivityTypeResponse:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        active:
+        available:
+          type: boolean
+        venueAvailable:
+          type: boolean
+        capacitySufficient:
+          type: boolean
+        rangeFree:
           type: boolean
     PageResponseActivityResponse:
       type: object
@@ -2031,10 +4185,24 @@ components:
     OpportunityBoardResponse:
       type: object
       properties:
+        pipeline:
+          $ref: "#/components/schemas/OpportunityPipelineResponse"
         columns:
           type: array
           items:
             $ref: "#/components/schemas/StageColumn"
+    OpportunityPipelineResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        active:
+          type: boolean
+        defaultPipeline:
+          type: boolean
     StageColumn:
       type: object
       properties:
@@ -2043,44 +4211,71 @@ components:
           format: int64
         stageName:
           type: string
+        kind:
+          type: string
+        active:
+          type: boolean
         opportunities:
           type: array
           items:
             $ref: "#/components/schemas/OpportunityResponse"
-    LossReasonResponse:
+    PageResponseLossReasonResponse:
       type: object
       properties:
-        id:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/LossReasonResponse"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
           type: integer
           format: int64
-        name:
-          type: string
-        active:
-          type: boolean
-    EventTypeResponse:
+        totalPages:
+          type: integer
+          format: int32
+    PageResponseEventTypeResponse:
       type: object
       properties:
-        id:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventTypeResponse"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
           type: integer
           format: int64
-        name:
-          type: string
-        active:
-          type: boolean
-    EventServiceResponse:
+        totalPages:
+          type: integer
+          format: int32
+    PageResponseEventServiceResponse:
       type: object
       properties:
-        id:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventServiceResponse"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
           type: integer
           format: int64
-        name:
-          type: string
-        description:
-          type: string
-        price:
-          type: number
-        active:
-          type: boolean
+        totalPages:
+          type: integer
+          format: int32
     PageResponseContactResponse:
       type: object
       properties:
@@ -2130,6 +4325,8 @@ components:
         salesRepId:
           type: integer
           format: int64
+        salesRepName:
+          type: string
         originId:
           type: integer
           format: int64
@@ -2188,15 +4385,32 @@ components:
         salesRepId:
           type: integer
           format: int64
+        salesRepName:
+          type: string
         originId:
           type: integer
           format: int64
         notes:
           type: string
-        contacts:
+    PageResponseActivityTypeResponse:
+      type: object
+      properties:
+        content:
           type: array
           items:
-            $ref: "#/components/schemas/ContactSummaryResponse"
+            $ref: "#/components/schemas/ActivityTypeResponse"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
   securitySchemes:
     bearerAuth:
       type: http

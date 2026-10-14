@@ -62,8 +62,18 @@ public record CreateOpportunityRequest(
 
         Set<Long> serviceIds,
 
-        String notes
+        String notes,
+
+        @Schema(description = "Embudo comercial. En alta, omitido usa el predeterminado; en edición no puede cambiar.")
+        Long pipelineId
 ) {
+    public CreateOpportunityRequest(String title, Long companyId, Long contactId, Long salesRepId, Long venueId,
+            Long stageId, Long eventTypeId, BigDecimal estimatedValue, Integer probability, Instant eventStart,
+            Instant eventEnd, Integer attendeeCount, LocalDate estimatedCloseDate, Long originId, Set<Long> serviceIds, String notes) {
+        this(title, companyId, contactId, salesRepId, venueId, stageId, eventTypeId, estimatedValue, probability,
+                eventStart, eventEnd, attendeeCount, estimatedCloseDate, originId, serviceIds, notes, null);
+    }
+
     public CreateOpportunityRequest(String title, Long companyId, Long contactId, Long salesRepId,
                                     Long venueId, Long stageId, BigDecimal estimatedValue,
                                     Integer probability, Instant eventDate, Integer attendeeCount,

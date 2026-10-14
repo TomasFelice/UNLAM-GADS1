@@ -1,5 +1,22 @@
 # Plan de desarrollo — Maqueta de frontend (Entrega 1, 24/09)
 
+Este plan conserva el alcance histórico de la maqueta. La aplicación actual consume
+la API y tiene autenticación; el estado vigente y los comandos están en
+[README frontend](../../frontend/README.md). No interpretar las exclusiones históricas
+siguientes como restricciones de la entrega final.
+
+## Rutas incorporadas para EF — 09/10/2026
+
+| Ruta | Pantalla | Acceso |
+|---|---|---|
+| `/app/usuarios` | Listado, búsqueda, filtros y paginación | `ADMIN` |
+| `/app/usuarios/nuevo` | Alta con contraseña temporal | `ADMIN` |
+| `/app/usuarios/:id` | Perfil y restablecimiento de clave | `ADMIN` |
+| `/app/usuarios/:id/editar` | Datos, rol y baja lógica | `ADMIN` |
+
+Guardas de sesión, cambio obligatorio y rol se aplican en ese orden. Las rutas usan
+`Seo noIndexar` y el backend existente de usuarios; no habilitan registro público.
+
 ## Objetivo
 
 Construir la **maqueta visual navegable** del frontend de zTech CRM: todas las pantallas del alcance de Entrega 1 más el sitio institucional público, con diseño, contenido y navegación definitivos, **sin backend, sin base de datos y sin lógica de negocio real**.
@@ -134,3 +151,35 @@ npm run dev      # http://localhost:5173
 npm run build    # verificación de tipos y build de producción
 npm run preview  # sirve el build
 ```
+
+### Catálogos comerciales — apply 09/10/2026
+
+Se agrega `/app/configuracion` sólo ADMIN: orígenes, motivos de pérdida y tipos de
+actividad/evento con listado, alta, detalle y edición/baja lógica. Listados con
+búsqueda/estado/página en URL; selectores y nombres comerciales por ID usan el
+contrato paginado, conservando referencias históricas. Embudos y etapas siguen
+pendientes en OpenSpec §6.
+
+## Implementación de embudos — 09/10/2026
+
+OpenSpec §6 incorpora configuración ADMIN de embudos y etapas, plantillas corporativa
+/breve, predeterminado visible y orden completo. Tablero y filtros guardan selección
+en URL; alta elige embudo activo y etapa propia; edición conserva el embudo. Se
+consultan procesos inactivos e historia sin decidir cierres por nombre de columna.
+La evidencia del apply distingue este corte de cierres/registro todavía pendientes.
+
+## Alta contextual y selección — 09/10/2026
+
+OpenSpec §7 amplía el enlace existente desde contacto y agrega el de empresa. La
+selección se obtiene por detalle autorizado y se busca/pagina en servidor; el contacto
+corporativo deriva empresa. Alta breve conserva opcionales expandibles y cancelación
+sin escritura. Formulario español, errores accesibles, zona de negocio y advertencia
+>50 con capacidad validada por servidor. Cierres y registro siguen en §8/§9.
+
+## Ciclo de oportunidades — 09/10/2026
+
+OpenSpec §8 habilita acciones específicas en el detalle: asignación elevada,
+ganar/perder por alcance y reapertura elevada. Validación, estado pendiente, botones
+separados y recuperación por recarga ante 409 conservando valores de edición/acción.
+Disponibilidad previa, valor final exacto, fecha/motivo del cierre e historia de ciclos
+sucesivos. El alta de actividades continúa pendiente de §9.

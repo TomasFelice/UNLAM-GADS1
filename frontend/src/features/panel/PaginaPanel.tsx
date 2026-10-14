@@ -1,2 +1,40 @@
-import { CabeceraPagina } from "../../shared/components/CabeceraPagina";import { EstadoVacio } from "../../shared/components/EstadoVacio";import { ListaDatos } from "../../shared/components/ListaDatos";import { Tarjeta,TarjetaCabecera,TarjetaCuerpo } from "../../shared/components/Tarjeta";import { pesos } from "../../shared/data/formato";import { Seo } from "../../shared/seo/Seo";import pantalla from "../../shared/styles/pantalla.module.css";import { LineaDeActividades } from "../actividades/LineaDeActividades";import { useActividades } from "../actividades/apiActividades";import { FichaOportunidad } from "../oportunidades/FichaOportunidad";import { useEmbudo,useOportunidades } from "../oportunidades/apiOportunidades";import css from "./PaginaPanel.module.css";
-export function PaginaPanel(){const embudo=useEmbudo();const recientes=useOportunidades(0);const actividades=useActividades(undefined,8);if(embudo.isPending||recientes.isPending)return <EstadoVacio icono="panel" titulo="Cargando panel…" descripcion="Calculando el estado actual del embudo."/>;if(embudo.isError||recientes.isError)return <EstadoVacio icono="alerta" titulo="No pudimos cargar el panel" descripcion={(embudo.error||recientes.error)?.message??"Error de consulta."}/>;const oportunidades=(embudo.data.columns??[]).flatMap(c=>c.opportunities??[]);const abiertas=oportunidades.filter(o=>o.status==="ABIERTA");const valor=abiertas.reduce((total,o)=>total+(o.estimatedValue??0),0);return <><Seo titulo="Panel" descripcion="Resumen comercial." noIndexar/><CabeceraPagina titulo="Panel comercial" descripcion="Métricas calculadas con datos actuales de la API."/><div className={pantalla.pila}><Tarjeta><TarjetaCabecera titulo="Resumen"/><TarjetaCuerpo><ListaDatos datos={[{etiqueta:"Oportunidades visibles",valor:recientes.data.totalElements??0},{etiqueta:"Oportunidades abiertas",valor:abiertas.length},{etiqueta:"Cartera estimada",valor:pesos(valor)},{etiqueta:"Actividades recientes",valor:actividades.data?.totalElements??0}]}/></TarjetaCuerpo></Tarjeta><div className={css.dosColumnas}><Tarjeta aSangre><TarjetaCabecera titulo="Oportunidades recientes"/><ul className={css.listaFichas}>{(recientes.data.content??[]).slice(0,5).map(o=><li key={o.id}><FichaOportunidad oportunidad={o}/></li>)}</ul></Tarjeta><Tarjeta><TarjetaCabecera titulo="Actividad reciente"/><TarjetaCuerpo><LineaDeActividades actividades={actividades.data?.content??[]} cargando={actividades.isPending} error={actividades.isError?actividades.error.message:undefined}/></TarjetaCuerpo></Tarjeta></div></div></>}
+import { Boton, BotonEnlace } from "../../shared/components/Boton";
+import { CabeceraPagina } from "../../shared/components/CabeceraPagina";
+import { EstadoVacio } from "../../shared/components/EstadoVacio";
+import { Tarjeta, TarjetaCabecera, TarjetaCuerpo } from "../../shared/components/Tarjeta";
+import { Seo } from "../../shared/seo/Seo";
+import pantalla from "../../shared/styles/pantalla.module.css";
+import { LineaDeActividades } from "../actividades/LineaDeActividades";
+import { useActividades } from "../actividades/apiActividades";
+import { FichaOportunidad } from "../oportunidades/FichaOportunidad";
+import { useOportunidadesRecientes } from "../oportunidades/apiOportunidades";
+import css from "./PaginaPanel.module.css";
+
+export function PaginaPanel() {
+  const recientes = useOportunidadesRecientes();
+  const actividades = useActividades(undefined, 8);
+  return <>
+    <Seo titulo="Panel" descripcion="Actividad comercial reciente." noIndexar />
+    <CabeceraPagina titulo="Panel comercial" descripcion="Retomá tus negociaciones y consultá las últimas interacciones."
+      acciones={<><BotonEnlace a="/app/oportunidades/nueva" icono="mas">Nueva oportunidad</BotonEnlace><BotonEnlace a="/app/embudo" variante="secundario">Ver embudo</BotonEnlace></>} />
+    <div className={pantalla.pila}>
+      <div className={css.dosColumnas}>
+        <section aria-label="Oportunidades recientes">
+          <Tarjeta aSangre><TarjetaCabecera titulo="Oportunidades recientes" />
+            {recientes.isPending ? <EstadoVacio icono="oportunidades" titulo="Cargando oportunidades…" descripcion="Buscando las últimas negociaciones." />
+              : recientes.isError ? <EstadoVacio icono="alerta" titulo="No pudimos cargar las oportunidades" descripcion={recientes.error.message}
+                accion={<Boton variante="secundario" onClick={() => void recientes.refetch()}>Reintentar oportunidades</Boton>} />
+              : recientes.data.content?.length ? <ul className={css.listaFichas}>{recientes.data.content.map(o => <li key={o.id}><FichaOportunidad oportunidad={o} /></li>)}</ul>
+              : <EstadoVacio icono="oportunidades" titulo="Todavía no hay oportunidades" descripcion="Creá una negociación para comenzar." />}
+          </Tarjeta>
+        </section>
+        <section aria-label="Actividad reciente">
+          <Tarjeta><TarjetaCabecera titulo="Actividad reciente" /><TarjetaCuerpo>
+            <LineaDeActividades actividades={actividades.data?.content ?? []} cargando={actividades.isPending} error={actividades.isError ? actividades.error.message : undefined} />
+            {actividades.isError && <Boton variante="secundario" onClick={() => void actividades.refetch()}>Reintentar actividades</Boton>}
+          </TarjetaCuerpo></Tarjeta>
+        </section>
+      </div>
+    </div>
+  </>;
+}

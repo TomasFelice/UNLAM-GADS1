@@ -10,6 +10,7 @@ import com.ztech.crm.customers.domain.enums.PartyStatus;
 import com.ztech.crm.customers.dto.request.CompanyRequest;
 import com.ztech.crm.customers.dto.response.CompanyResponse;
 import com.ztech.crm.offerings.dto.response.VenueResponse;
+import com.ztech.crm.shared.dto.PageResponse;
 import com.ztech.crm.opportunities.dto.request.ChangeStageRequest;
 import com.ztech.crm.opportunities.dto.request.CreateOpportunityRequest;
 import com.ztech.crm.opportunities.dto.response.OpportunityBoardResponse;
@@ -82,10 +83,10 @@ class OpportunityBoardAndStageIT {
         secondOpenStageId = openStages.get(1).id();
         wonStageId = stages.stream().filter(s -> s.kind() == StageKind.WON).findFirst().orElseThrow().id();
 
-        List<VenueResponse> venues = restTemplate.exchange("/api/v1/venues", HttpMethod.GET,
-                new HttpEntity<>(authHeaders), new ParameterizedTypeReference<List<VenueResponse>>() {
+        PageResponse<VenueResponse> venues = restTemplate.exchange("/api/v1/venues", HttpMethod.GET,
+                new HttpEntity<>(authHeaders), new ParameterizedTypeReference<PageResponse<VenueResponse>>() {
                 }).getBody();
-        venueId = venues.get(0).id();
+        venueId = venues.content().get(0).id();
     }
 
     @Test
@@ -134,7 +135,7 @@ class OpportunityBoardAndStageIT {
                 "/api/v1/opportunities/" + opportunityId + "/stage", HttpMethod.POST,
                 new HttpEntity<>(new ChangeStageRequest(wonStageId, null), authHeaders), String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_CONTENT);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 
     @Test

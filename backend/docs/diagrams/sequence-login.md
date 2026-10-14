@@ -60,7 +60,8 @@ sequenceDiagram
     Filter->>JS: parseToken(token)
     alt token inválido o vencido
         JS-->>Filter: InvalidTokenException
-        Note over Filter: La captura ExceptionTranslationFilter\n(no llega a GlobalExceptionHandler)\ny RestAuthenticationEntryPoint\ndevuelve 401.
+        Filter-->>Cliente: 401 UNAUTHENTICATED (ProblemDetail)
+        Note over Filter: El filtro captura InvalidTokenException\ny usa RestAuthenticationEntryPoint.writeProblem.
     else token válido
         JS-->>Filter: AuthenticatedUser reconstruido desde claims
         Filter->>UR: findByIdAndTenantId(userId, tenantId)

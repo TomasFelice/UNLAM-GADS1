@@ -23,6 +23,13 @@ public class Activity {
     @Column(name = "created_by", nullable = false, updatable = false) private Long createdBy;
     @Column(name = "created_at", nullable = false, updatable = false) private Instant createdAt;
     protected Activity() { }
+    public Activity(Long tenantId, Long typeId, Instant occurredAt, Long companyId, Long contactId,
+            Long opportunityId, String description, String result, Long actor) {
+        this.tenantId = tenantId; this.typeId = typeId; this.occurredAt = occurredAt;
+        this.companyId = companyId; this.contactId = contactId; this.opportunityId = opportunityId;
+        this.description = description.strip(); this.result = result.strip(); this.createdBy = actor;
+        this.createdAt = Instant.now();
+    }
     public Long getId() { return id; }
     public Long getTenantId() { return tenantId; }
     public Long getTypeId() { return typeId; }

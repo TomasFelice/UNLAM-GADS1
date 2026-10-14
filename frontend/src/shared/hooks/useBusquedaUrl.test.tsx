@@ -18,6 +18,13 @@ describe("filtros mediante URL", () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
+  it("conserva la página recibida por URL al montar", () => {
+    render(<MemoryRouter initialEntries={["/listado?q=evento&page=3"]}><BancoDePrueba /></MemoryRouter>);
+    act(() => vi.advanceTimersByTime(1000));
+    expect(screen.getByText(/page=3/)).toBeInTheDocument();
+    expect(screen.getByLabelText("Buscar")).toHaveValue("evento");
+  });
+
   it("aplica debounce a la búsqueda y reinicia la página", () => {
     render(<MemoryRouter initialEntries={["/listado?page=3&status=POTENCIAL"]}><BancoDePrueba /></MemoryRouter>);
 

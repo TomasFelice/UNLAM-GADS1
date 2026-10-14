@@ -8,7 +8,7 @@ CRM especializado en la gestión comercial de **salones de eventos corporativos*
 |---|---|---|
 | Integración frontend/backend | 24/09/2026 | Implementada; validación manual desplegada pendiente |
 | Entrega 1 | 24/09/2026 | Backend y frontend integrados; recorrido desplegado pendiente |
-| Entrega final | 12/11/2026 | Pendiente |
+| Entrega final | 12/11/2026 | CRM implementado; testing local aprobado por el usuario y OpenSpec archivado el 13/10; ensayo publicado §11.8 pendiente |
 
 ## Estructura del repositorio
 
@@ -39,3 +39,5 @@ Detalle en [`frontend/README.md`](frontend/README.md).
 - [Cómo usar el contexto con Claude, Codex y ChatGPT/API](docs/asistentes.md)
 - [Plan de la maqueta de frontend](docs/planificacion/plan-frontend-maqueta.md)
 - [Decisiones abiertas del frontend](docs/decisiones/decisiones-frontend.md)
+- [Validación integrada de entrega final](openspec/changes/archive/2026-10-13-completar-crm-entrega-final/validacion-punto-11-2026-10-10.md)
+- [Cierre de OpenSpec y ensayo remoto pendiente](openspec/changes/archive/2026-10-13-completar-crm-entrega-final/cierre-2026-10-13.md)

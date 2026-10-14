@@ -47,6 +47,9 @@ public class Opportunity extends TenantOwnedEntity {
     @Column(name = "venue_id", nullable = false)
     private Long venueId;
 
+    @Column(name = "pipeline_id", nullable = false, updatable = false)
+    private Long pipelineId;
+
     @Column(name = "stage_id", nullable = false)
     private Long stageId;
 
@@ -129,6 +132,12 @@ public class Opportunity extends TenantOwnedEntity {
      * (docs/arquitectura/02-modulos-y-capas.md). {@code ChangeStageService} es quien
      * decide si el destino es válido antes de llamar acá.
      */
+    public Long getPipelineId() { return pipelineId; }
+    public void initializePipeline(Long pipelineId) {
+        if (this.pipelineId != null) throw new IllegalStateException("El embudo ya fue asignado.");
+        this.pipelineId = java.util.Objects.requireNonNull(pipelineId);
+    }
+
     public void changeStage(Long newStageId) {
         this.stageId = newStageId;
     }
@@ -154,6 +163,34 @@ public class Opportunity extends TenantOwnedEntity {
         if (eventServiceIds != null) {
             this.eventServiceIds.addAll(eventServiceIds);
         }
+    }
+
+    public Long getVersion() { return version; }
+
+    public void assign(Long salesRepId) { this.salesRepId = salesRepId; }
+
+    public void win(Long stageId, BigDecimal finalValue, Instant closedAt) {
+        this.stageId = stageId;
+        this.status = OpportunityStatus.GANADA;
+        this.finalValue = finalValue;
+        this.closedAt = closedAt;
+        this.lossReasonId = null;
+    }
+
+    public void lose(Long stageId, Long lossReasonId, Instant closedAt) {
+        this.stageId = stageId;
+        this.status = OpportunityStatus.PERDIDA;
+        this.lossReasonId = lossReasonId;
+        this.closedAt = closedAt;
+        this.finalValue = null;
+    }
+
+    public void reopen(Long stageId) {
+        this.stageId = stageId;
+        this.status = OpportunityStatus.ABIERTA;
+        this.closedAt = null;
+        this.finalValue = null;
+        this.lossReasonId = null;
     }
 
     public String getTitle() {

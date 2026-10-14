@@ -9,13 +9,14 @@ import { PaginaOportunidades } from "./PaginaOportunidades";
 let consultaRecibida = "";
 const paginaVacia = { content: [], page: 0, size: 20, totalElements: 0, totalPages: 0 };
 const servidor = setupServer(
+  http.get("http://localhost:8080/api/v1/pipelines", () => HttpResponse.json(paginaVacia)),
   http.get("http://localhost:8080/api/v1/opportunities", async ({ request }) => {
     consultaRecibida = request.url;
     await delay(30);
     return HttpResponse.json(paginaVacia);
   }),
   http.get("http://localhost:8080/api/v1/stages", () => HttpResponse.json([])),
-  http.get("http://localhost:8080/api/v1/origins", () => HttpResponse.json([])),
+  http.get("http://localhost:8080/api/v1/origins", () => HttpResponse.json({ content: [], page: 0, size: 20, totalElements: 0, totalPages: 0 })),
   http.get("http://localhost:8080/api/v1/users/assignable", () => HttpResponse.json([])),
   http.get("http://localhost:8080/api/v1/venues", () => HttpResponse.json([])),
   http.get("http://localhost:8080/api/v1/companies", () => HttpResponse.json(paginaVacia)),

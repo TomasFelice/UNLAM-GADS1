@@ -23,6 +23,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RestAuthenticationEntryPoint.class);
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException {
@@ -32,6 +34,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     static void writeProblem(HttpServletResponse response, HttpServletRequest request, HttpStatus status,
                               String code, String detail) throws IOException {
+        log.warn("Acceso rechazado status={} code={}", status.value(), code);
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");

@@ -37,8 +37,8 @@ Los registros con historia comercial usan baja lógica; no hay `deleted_at` en n
 lado del esquema implementado. La forma concreta (DT-14) quedó distinta según el tipo de
 entidad: `Company`/`Contact` no tienen un booleano de baja aparte — su propio `status`
 (`POTENCIAL`/`CLIENTE`/`INACTIVO`/`NO_CONTACTAR`) cumple ese rol, tal como lo define la
-consigna. Catálogos (`Stage` por ahora; `Venue`/`EventService`/`User` cuando tengan ABM
-en la Fase 6) usan un booleano `active` simple. Una baja no rompe referencias existentes.
+consigna. Catálogos, embudos, servicios y usuarios usan `active`; los salones usan
+`status` (`DISPONIBLE`/`MANTENIMIENTO`/`INACTIVO`). Una baja no rompe referencias existentes.
 `StageHistory` es append-only: se permite insertar, pero no editar ni eliminar — ni
 siquiera un borrado físico, `StageHistoryRepository` lo bloquea a nivel de código.
 
@@ -46,7 +46,10 @@ siquiera un borrado físico, `StageHistoryRepository` lo bloquea a nivel de cód
 
 Los casos de uso críticos se ejecutan dentro de transacciones Spring. Un cambio de etapa actualiza `Opportunity` y agrega `StageHistory` en la misma transacción; si una operación falla, ninguna modificación persiste.
 
-El servidor asigna autor y fecha de auditoría desde el contexto autenticado y su reloj. Los cambios importantes conservan, como mínimo, usuario, instante y entidad afectada. La política exacta para fecha efectiva de actividades y reapertura de oportunidades continúa pendiente.
+El servidor asigna autor y fecha de auditoría desde el contexto autenticado y su reloj.
+Las actividades conservan además la fecha no futura del hecho, indicada por el usuario.
+La reapertura exige ADMIN/SALES_MANAGER, nota y etapa OPEN activa; limpia el cierre
+vigente y conserva los anteriores como snapshots append-only (V4).
 
 ## Reservas concurrentes
 
@@ -60,10 +63,10 @@ La V1 consolidada implementa una restricción de exclusión GiST sobre tenant, s
 superponen y los instantes se persisten en UTC. El backend traduce la violación a
 `409 Conflict`.
 
-`Opportunity` ya tiene `@Version` mapeado (optimistic locking) desde que la entidad se
-creó, aunque todavía no hay ningún flujo que lo ejerza — el primero será la confirmación
-de esta sección, en la Fase 8. Las pruebas con Testcontainers deben cubrir dos
-confirmaciones simultáneas: exactamente una puede finalizar con éxito.
+`Opportunity` utiliza `@Version` y la versión esperada del formulario en edición y
+acciones. Los conflictos devuelven 409 sin sobrescritura. Las pruebas HTTP con
+Testcontainers sincronizan dos confirmaciones después del precheck: exactamente una
+gana y otra recibe 409 por GiST, también entre embudos distintos.
 
 ## Controles mínimos verificables
 

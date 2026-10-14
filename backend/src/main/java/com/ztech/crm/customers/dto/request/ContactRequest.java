@@ -1,6 +1,7 @@
 package com.ztech.crm.customers.dto.request;
 
 import com.ztech.crm.customers.domain.enums.PartyStatus;
+import com.ztech.crm.shared.validation.OptionalText;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -44,4 +45,11 @@ public record ContactRequest(
 
         String notes
 ) {
+    public ContactRequest {
+        document = OptionalText.normalize(document);
+        position = OptionalText.normalize(position);
+        email = OptionalText.normalize(email);
+        phone = OptionalText.normalize(phone);
+        notes = OptionalText.normalize(notes);
+    }
 }

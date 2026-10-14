@@ -2,6 +2,8 @@ package com.ztech.crm.customers.dto.request;
 
 import com.ztech.crm.customers.domain.enums.PartyStatus;
 import com.ztech.crm.shared.validation.ValidCuit;
+import com.ztech.crm.shared.validation.ValidWebsite;
+import com.ztech.crm.shared.validation.OptionalText;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +23,7 @@ public record CompanyRequest(
         @NotBlank(message = "El nombre comercial es obligatorio.")
         String businessName,
 
-        @Schema(description = "Opcional. Formato: 11 dígitos, con o sin guiones.", example = "30-71234567-9")
+        @Schema(description = "Opcional. 11 dígitos con verificador válido, con o sin guiones; se almacena sin guiones.", example = "30-71234567-1")
         @ValidCuit
         String cuit,
 
@@ -42,6 +44,7 @@ public record CompanyRequest(
         String locality,
 
         @Schema(example = "https://eventosdelsur.com")
+        @ValidWebsite
         String website,
 
         @NotNull(message = "El estado es obligatorio.")
@@ -55,6 +58,17 @@ public record CompanyRequest(
 
         String notes
 ) {
+    public CompanyRequest {
+        cuit = OptionalText.normalize(cuit);
+        industry = OptionalText.normalize(industry);
+        email = OptionalText.normalize(email);
+        phone = OptionalText.normalize(phone);
+        address = OptionalText.normalize(address);
+        locality = OptionalText.normalize(locality);
+        website = OptionalText.normalize(website);
+        notes = OptionalText.normalize(notes);
+    }
+
     /** Compatibilidad de construcción interna con los tests de E1; el contrato HTTP usa los campos finales. */
     public CompanyRequest(String name, String cuit, String industry, String email, String phone,
                           String address, String website, PartyStatus status, Long salesRepId,

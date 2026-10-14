@@ -1,9 +1,17 @@
 package com.ztech.crm.activities.service;
 
+import com.ztech.crm.activities.dto.response.ActivityTypeSummaryResponse;
+
 import com.ztech.crm.access.domain.Role;
 import com.ztech.crm.access.service.UserService;
 import com.ztech.crm.activities.domain.Activity;
 import com.ztech.crm.activities.dto.response.ActivityResponse;
+import com.ztech.crm.activities.dto.response.ActivityAuthorResponse;
+import com.ztech.crm.activities.dto.request.CreateActivityRequest;
+import com.ztech.crm.shared.exception.BusinessException;
+import java.util.Objects;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import com.ztech.crm.activities.repository.ActivityRepository;
 import com.ztech.crm.activities.repository.specification.ActivitySpecifications;
 import com.ztech.crm.catalogs.service.ActivityTypeService;
@@ -40,25 +48,55 @@ public class ActivityService {
     @Transactional(readOnly = true)
     public PageResponse<ActivityResponse> list(Pageable pageable) {
         Specification<Activity> specification = readable();
-        return PageResponse.from(repository.findAll(specification, pageable), this::map);
+        return PageResponse.from(repository.findAll(specification, stable(pageable)), this::map);
     }
 
     @Transactional(readOnly = true)
     public PageResponse<ActivityResponse> byCompany(Long id, Pageable pageable) {
-        companyService.getSummary(id);
-        return PageResponse.from(repository.findAll(readable().and(ActivitySpecifications.company(id)), pageable), this::map);
+        companyService.assertExists(id);
+        return PageResponse.from(repository.findAll(readable().and(ActivitySpecifications.company(id)), stable(pageable)), this::map);
     }
 
     @Transactional(readOnly = true)
     public PageResponse<ActivityResponse> byContact(Long id, Pageable pageable) {
-        contactService.getSummary(id);
-        return PageResponse.from(repository.findAll(readable().and(ActivitySpecifications.contact(id)), pageable), this::map);
+        contactService.assertExists(id);
+        return PageResponse.from(repository.findAll(readable().and(ActivitySpecifications.contact(id)), stable(pageable)), this::map);
     }
 
     @Transactional(readOnly = true)
     public PageResponse<ActivityResponse> byOpportunity(Long id, Pageable pageable) {
-        opportunityAccessService.getReadableOrThrow(id);
-        return PageResponse.from(repository.findAll(readable().and(ActivitySpecifications.opportunity(id)), pageable), this::map);
+        opportunityAccessService.getReadableContext(id);
+        return PageResponse.from(repository.findAll(readable().and(ActivitySpecifications.opportunity(id)), stable(pageable)), this::map);
+    }
+
+    @Transactional
+    public ActivityResponse create(CreateActivityRequest request) {
+        Long company = request.companyId(); Long contact = request.contactId();
+        if (request.opportunityId() != null) {
+            var context = opportunityAccessService.getReadableContext(request.opportunityId());
+            assertCompatible(company, context.companyId()); assertCompatible(contact, context.contactId());
+            company = context.companyId(); contact = context.contactId();
+        } else if (contact != null) {
+            var context = contactService.getForActivity(contact);
+            assertCompatible(company, context.companyId()); company = context.companyId();
+        } else if (company != null) {
+            companyService.getForActivity(company);
+        } else {
+            throw new BusinessException("ACTIVITY_WITHOUT_PARTY", "Elegí una empresa, un contacto o una oportunidad.");
+        }
+        activityTypeService.assertSelectable(request.typeId(), null);
+        var current = TenantContext.currentUser();
+        return map(repository.saveAndFlush(new Activity(current.tenantId(), request.typeId(), request.occurredAt(),
+                company, contact, request.opportunityId(), request.description(), request.result(), current.userId())));
+    }
+    private void assertCompatible(Long requested, Long derived) {
+        if (requested != null && !Objects.equals(requested, derived))
+            throw new BusinessException("ACTIVITY_ASSOCIATION_MISMATCH", "Las asociaciones indicadas no coinciden con el cliente de la actividad.");
+    }
+    private Pageable stable(Pageable pageable) {
+        var order = pageable.getSort();
+        if (order.getOrderFor("id") == null) order = order.and(Sort.by(Sort.Direction.DESC, "id"));
+        return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), order);
     }
 
     private Specification<Activity> readable() {
@@ -72,9 +110,11 @@ public class ActivityService {
     }
 
     private ActivityResponse map(Activity activity) {
-        return new ActivityResponse(activity.getId(), activityTypeService.getSummary(activity.getTypeId()),
+        var type = activityTypeService.getSummary(activity.getTypeId());
+        var author = userService.getIdentity(activity.getCreatedBy());
+        return new ActivityResponse(activity.getId(), new ActivityTypeSummaryResponse(type.id(), type.name(), type.active()),
                 activity.getOccurredAt(), activity.getCompanyId(), activity.getContactId(),
                 activity.getOpportunityId(), activity.getDescription(), activity.getResult(),
-                userService.getSummary(activity.getCreatedBy()), activity.getCreatedAt());
+                new ActivityAuthorResponse(author.id(), author.firstName(), author.lastName()), activity.getCreatedAt());
     }
 }

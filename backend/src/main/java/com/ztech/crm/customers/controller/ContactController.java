@@ -38,8 +38,9 @@ public class ContactController {
     @Operation(summary = "Crea un contacto")
     @ApiResponse(responseCode = "201", description = "Contacto creado")
     @ApiResponse(responseCode = "400", description = "Datos inválidos")
-    @ApiResponse(responseCode = "404", description = "La empresa relacionada no existe")
+    @ApiResponse(responseCode = "404", description = "La empresa, el responsable o el origen no existe o está fuera de alcance")
     @ApiResponse(responseCode = "409", description = "Ya existe un contacto con ese documento")
+    @ApiResponse(responseCode = "422", description = "El responsable o el nuevo origen no está activo")
     public ResponseEntity<ContactResponse> create(@Valid @RequestBody ContactRequest request,
                                                    UriComponentsBuilder uriBuilder) {
         ContactResponse response = contactService.create(request);
@@ -50,15 +51,16 @@ public class ContactController {
     @PutMapping("/{id}")
     @Operation(summary = "Edita un contacto")
     @ApiResponse(responseCode = "200", description = "Contacto actualizado")
-    @ApiResponse(responseCode = "404", description = "No existe un contacto con ese id, o la empresa relacionada no existe")
+    @ApiResponse(responseCode = "404", description = "Contacto o empresa fuera de alcance, o responsable/origen ajeno a la organización")
     @ApiResponse(responseCode = "409", description = "Ya existe un contacto con ese documento")
+    @ApiResponse(responseCode = "422", description = "El responsable o el nuevo origen no está activo; se permite conservar el origen inactivo anterior")
     public ResponseEntity<ContactResponse> update(@PathVariable Long id, @Valid @RequestBody ContactRequest request) {
         return ResponseEntity.ok(contactService.update(id, request));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Detalle de un contacto",
-            description = "Para SELLER exige asignación directa o una oportunidad propia relacionada.")
+            description = "Para SELLER exige asignación directa o una oportunidad propia relacionada. Incluye salesRepName aun si el responsable está inactivo.")
     @ApiResponse(responseCode = "200", description = "OK")
     @ApiResponse(responseCode = "404", description = "No existe un contacto con ese id")
     public ResponseEntity<ContactDetailResponse> getById(@PathVariable Long id) {
