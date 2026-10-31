@@ -64,7 +64,7 @@ test("entrega integral: login, clientes, alta breve, tablero, actividad y cierre
   await formulario.getByRole("textbox", { name: "Descripción", exact: true }).fill("Cliente confirma la propuesta integral");
   await formulario.getByRole("textbox", { name: "Resultado", exact: true }).fill("Reserva acordada");
   await formulario.getByRole("button", { name: "Guardar actividad", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("Actividad registrada.");
+  await expect(page.getByRole("region", { name: "Historial comercial", exact: true }).getByRole("status")).toContainText("Actividad registrada.");
   await page.getByRole("button", { name: "Marcar como ganada", exact: true }).click();
   await page.getByRole("combobox", { name: "Etapa destino", exact: true }).selectOption(String(etapas.find((e: any) => e.active && e.kind === "WON").id));
   await page.getByRole("spinbutton", { name: "Valor final", exact: true }).fill("450000.50");
@@ -72,7 +72,7 @@ test("entrega integral: login, clientes, alta breve, tablero, actividad y cierre
   await expect(page.getByRole("button", { name: "Reabrir oportunidad", exact: true })).toBeVisible();
   await page.reload();
   await expect(page.getByText(/Ganada · Valor final:/)).toContainText("450.000,50");
-  await expect(page.getByText("Cliente confirma la propuesta integral", { exact: false })).toHaveCount(1);
+  await expect(page.getByRole("region", { name: "Historial comercial", exact: true }).getByText("Cliente confirma la propuesta integral", { exact: false })).toHaveCount(1);
   const guardada = await (await request.get(`${API}/opportunities/${id}`, { headers })).json();
   expect(guardada.status).toBe("GANADA");
   expect(guardada.finalValue).toBe(450000.5);

@@ -27,3 +27,5 @@ anterior pasa a estado `Reemplazada` con el enlace correspondiente.
 ## Alternativas consideradas
 ## Consecuencias
 ```
+
+- [ADR-007 — Resumen comercial IA](ADR-007-resumen-comercial-ia.md).

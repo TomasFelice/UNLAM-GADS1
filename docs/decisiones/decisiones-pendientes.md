@@ -15,7 +15,7 @@ Este registro evita que decisiones funcionales o técnicas se oculten en impleme
 | DP-09 | Atributos especializados de E1 y un salón por oportunidad | **Aceptada** | 12/09 |
 | DP-10 | Búsquedas, filtros, orden y tamaño de página | **Aceptada** | 12/09 |
 | DP-11 | Stack, despliegue, pantallas, calidad, equipo y año | **Parcial** — stack cerrado | 11/09 |
-| DP-12 | Incorporación y flujo de IA opcional | Diferida | Después del núcleo |
+| DP-12 | Incorporación y flujo de IA opcional | Aceptada | Resumen Gemini Free Tier; ADR-007 |
 
 Las decisiones **técnicas** del backend (DT-00..DT-24) se registran aparte, en
 `docs/context/03-decisiones-tecnicas.md`, y las que alteran arquitectura tienen su ADR.
@@ -248,3 +248,11 @@ reapertura conservan sus criterios aprobados; su implementación sigue en §8.
 - Alternativas consideradas:
 - Consecuencias y pruebas necesarias:
 ```
+
+## DP-12 — Resumen comercial con IA
+
+Aceptada por decisión del usuario, registrada el 31/10/2026. Generación automática
+en el detalle autorizado, fuentes revisables, resumen efímero y sólo Gemini Free Tier.
+Función apagada por defecto y evaluación real con clave nueva pendiente.
+Ver [ADR-007](adr/ADR-007-resumen-comercial-ia.md) y el
+[cambio](../../openspec/changes/incorporar-resumen-comercial-ia/tasks.md).

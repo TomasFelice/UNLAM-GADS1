@@ -1,3 +1,4 @@
+import { actualizarContextoComercial } from "../../shared/api/revisionesComerciales";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { components } from "../../shared/api/esquema-api";
 import { solicitarApi } from "../../shared/api/clienteApi";
@@ -14,8 +15,8 @@ export function useRegistrarActividad() {
   const cache = useQueryClient();
   return useMutation({
     mutationFn: (datos: SolicitudActividad) => solicitarApi<Actividad>("/activities", { method: "POST", body: datos }),
-    onSuccess: async () => {
+    onSuccess: async (_, datos) => actualizarContextoComercial(cache, datos.opportunityId, async () => {
       await Promise.all(["actividades", "empresas", "contactos", "oportunidades"].map(clave => cache.invalidateQueries({ queryKey: [clave] })));
-    },
+    }),
   });
 }

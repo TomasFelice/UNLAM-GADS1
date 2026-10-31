@@ -3230,6 +3230,51 @@
           "event": []
         }
       ]
+    },
+    {
+      "name": "Resumen comercial IA (opcional)",
+      "description": "Sin body ni clave Gemini en cliente. Con IA apagada se comprueba AI_NOT_CONFIGURED; en pruebas se usa proveedor HTTP simulado. Una llamada real consume cuota si se habilitó expresamente en backend.",
+      "item": [
+        {
+          "name": "Generar resumen comercial efímero",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/opportunities/{{opportunityId}}/commercial-summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "opportunities",
+                "{{opportunityId}}",
+                "commercial-summary"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const summary = pm.response.json();",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Resumen con cobertura y fuentes del servidor', () => {",
+                  "    pm.expect(summary.opportunityId).to.equal(Number(pm.collectionVariables.get('opportunityId')));",
+                  "    pm.expect(summary).to.have.property('coverage');",
+                  "    pm.expect(summary.sources).to.be.an('array');",
+                  "    pm.expect(summary.sections).to.have.all.keys('clientNeeds', 'currentSituation', 'agreementsAndObjections', 'unconfirmedInformation');",
+                  "  });",
+                  "} else {",
+                  "  pm.test('Función opcional apagada', () => { pm.response.to.have.status(503); pm.expect(summary.code).to.equal('AI_NOT_CONFIGURED'); });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "event": [
@@ -3240,7 +3285,7 @@
         "exec": [
           "const url = pm.request.url.toString();",
           "const method = pm.request.method;",
-          "const expected = /change-password|reset-password/.test(url) ? 204 : method === 'POST' && !/auth\\/login|stages\\/reorder|\\/default|\\/stage$|\\/assign$|\\/win$|\\/lose$|\\/reopen$/.test(url) ? 201 : 200;",
+          "const expected = /commercial-summary$/.test(url) ? (pm.response.code === 503 && pm.response.json().code === 'AI_NOT_CONFIGURED' ? 503 : 200) : /change-password|reset-password/.test(url) ? 204 : method === 'POST' && !/auth\\/login|stages\\/reorder|\\/default|\\/stage$|\\/assign$|\\/win$|\\/lose$|\\/reopen$/.test(url) ? 201 : 200;",
           "pm.test('Respuesta HTTP esperada', () => pm.response.to.have.status(expected));"
         ]
       }

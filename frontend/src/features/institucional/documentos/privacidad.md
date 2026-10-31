@@ -1,13 +1,13 @@
 ---
 titulo: "Política de Privacidad"
 descripcionSeo: "Política de Privacidad de Ztech CRM: qué datos tratamos, con qué fines y tus derechos según la Ley 25.326, en un proyecto académico de la UNLaM."
-vigencia: "12 de septiembre de 2026"
-resumen: "Esta política explica qué datos personales trata Ztech CRM, con qué finalidad, y qué información no recolecta hoy como maqueta académica sin backend."
+vigencia: "31 de octubre de 2026"
+resumen: "Esta política explica qué datos personales trata Ztech CRM y el flujo opcional de datos ficticios al resumen comercial con IA."
 ---
 
 ## 1. Alcance y responsable del tratamiento
 
-Esta política explica cómo tratamos los datos personales en el sitio y la plataforma de Ztech CRM (Ztech, Executive CRM), un proyecto desarrollado en el marco de un trabajo práctico académico de la Universidad Nacional de La Matanza (UNLaM). Se aplica a quienes visitan el sitio, completan el formulario de contacto o, en el futuro, crean una cuenta en la plataforma.
+Esta política explica cómo tratamos los datos personales en el sitio y la plataforma de Ztech CRM (Ztech, Executive CRM), un proyecto desarrollado en el marco de un trabajo práctico académico de la Universidad Nacional de La Matanza (UNLaM). Se aplica a quienes visitan el sitio, completan el formulario de contacto o utilizan una cuenta habilitada de la plataforma.
 
 El tratamiento de datos personales en Argentina se rige por la Ley 25.326 de Protección de Datos Personales, bajo control de la Agencia de Acceso a la Información Pública (AAIP), organismo ante el cual podés hacer valer tus derechos.
 
@@ -52,7 +52,7 @@ Esto no incluye los datos de cuenta del propio usuario (su nombre, correo electr
 
 Vamos a conservar tus datos mientras mantengas tu cuenta activa o mientras sea necesario para cumplir con las finalidades descriptas en esta política. Si solicitás la baja de tu cuenta, vamos a eliminar o anonimizar tus datos, salvo que exista una obligación legal que exija conservarlos por un plazo mayor.
 
-Mientras el sitio funcione como maqueta académica, no existe una base de datos en producción, por lo que no hay datos de visitantes almacenados que conservar.
+El CRM cuenta con backend y base de datos. El resumen de IA es efímero: no se persiste en esa base; la información comercial original mantiene su historial.
 
 ## 7. Cookies y tecnologías similares
 
@@ -69,6 +69,25 @@ Te pedimos que uses contraseñas seguras y que nos avises ante cualquier sospech
 No compartimos tus datos con terceros para fines comerciales o publicitarios. Cuando el servicio esté en producción, es posible que utilicemos proveedores de infraestructura tecnológica (como servicios de hosting o almacenamiento en la nube) para operar la plataforma. Esos proveedores van a tratar los datos únicamente siguiendo nuestras instrucciones y con fines de prestación del servicio.
 
 Si en algún momento fuera necesaria una transferencia internacional de datos, la vamos a hacer conforme a lo previsto por la Ley 25.326 y la normativa de la AAIP.
+
+### Resumen comercial opcional con IA
+
+La función de resumen está apagada por defecto. Si se habilita para la demostración
+con datos ficticios, abrir el detalle de una oportunidad autorizada solicita
+automáticamente una síntesis a Gemini API de Google. Se envían los datos comerciales
+seleccionados de la oportunidad, sus observaciones y fragmentos acotados de actividades
+y cambios de etapa. Se omiten los campos de identificación fiscal, documentos,
+email, teléfono, domicilio y credenciales. Los textos libres pueden contener nombres
+o información personal: esta selección no garantiza anonimización.
+
+En el nivel gratuito, Google puede utilizar las entradas y respuestas para mejorar
+sus productos y permitir su revisión humana, según sus
+[términos de Gemini API](https://ai.google.dev/gemini-api/terms).
+La demostración de esta función debe utilizar exclusivamente datos ficticios,
+sin información personal, confidencial o sensible. El resumen no se guarda en la
+base de datos del CRM; se reutiliza hasta cinco minutos en la memoria de la sesión
+y se descarta al cambiar de cuenta. La información comercial original conserva
+sus reglas de acceso y conservación.
 
 ## 10. Tus derechos: acceso, rectificación, actualización y supresión
 

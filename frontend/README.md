@@ -36,7 +36,7 @@ Copiá `.env.example` a `.env.local` si querés fijar la URL en desarrollo.
 
 ## Despliegue
 
-El hosting elegido es **Vercel** con integración de GitHub (ADR-005). La configuración vive en `vercel.json`: reescrituras de SPA (sin ellas, entrar directo a `/nosotros` da 404), caché inmutable para `/assets/*` y cabeceras de seguridad. La versión de entrega final se valida localmente; el usuario hará su publicación y demostración manualmente.
+El hosting elegido es **Vercel** con integración de GitHub (ADR-005). La configuración vive en `vercel.json`: reescrituras de SPA (sin ellas, entrar directo a `/nosotros` da 404), caché inmutable para `/assets/*` y cabeceras de seguridad. El 19/10/2026 se publicó `81454a8` en <https://ztech-crm.benai.com.ar>, junto con la API y las migraciones V2–V5. Ver el [registro del despliegue y sus límites](../docs/despliegue-produccion-2026-10-19.md); la demostración comercial autenticada remota sigue pendiente.
 
 En Vercel, **Root Directory tiene que ser `frontend`**, porque el repositorio es un monorepo.
 
@@ -303,3 +303,27 @@ Los formularios de acción capturan la versión al abrirse; edición conserva la
 con que se cargó. Un 409 mantiene lo escrito, bloquea el reenvío y ofrece Recargar
 datos. El cierre muestra fecha/valor o motivo y el historial conserva cierres sucesivos,
 incluso tras renombrar el motivo. Disponibilidad previa orientativa; confirmar revalida.
+
+## Resumen comercial de oportunidad
+
+El detalle revalida acceso y versión antes de habilitar el resumen automático, con
+carga independiente. No hay botón inicial. TanStack comparte solicitudes bajo
+StrictMode y reutiliza un éxito hasta cinco minutos en memoria de la misma sesión
+y oportunidad. El TTL se evalúa al volver al detalle: no genera por foco, reconexión,
+rerender ni temporizador. Una recarga completa pierde esta caché.
+
+Registrar actividad, editar, reasignar, cambiar etapa, cerrar y reabrir invalidan el
+resultado y agrupan la revalidación. Sólo el detalle activo autorizado inicia una
+actualización, serializada después de una generación anterior. Una actividad puede
+invalidar aunque la versión de oportunidad no cambie. Los cambios remotos de
+actividades no se detectan instantáneamente; siempre se muestra la fecha de contexto.
+
+Los fallos retenidos no se reintentan al montar. «Reintentar» respeta la espera
+recibida y bloquea doble solicitud. IA apagada no ofrece ese control. Las cuatro
+secciones muestran cobertura, rangos y fuentes desplegables con fragmentos exactos,
+sin depender de la página visible del historial. Todo se renderiza como texto.
+
+Los tipos proceden de OpenAPI. Configuración y clave sólo backend; ver la
+[guía de IA](../backend/docs/resumen-comercial-ia.md). El launcher E2E inyecta un
+servidor HTTP simulado y control local sólo desde el classpath de pruebas; nunca
+se incluye en el JAR de producción ni realiza llamadas a Google.

@@ -1,0 +1,13 @@
+.panel { min-width: 0; }
+.contenido, .estado { display: flex; flex-direction: column; gap: var(--e-3); align-items: stretch; }
+.aviso { color: var(--marca-indigo); font-size: var(--texto-sm); }
+.cobertura { color: var(--tinta-500); font-size: var(--texto-sm); overflow-wrap: anywhere; }
+.seccion { padding-top: var(--e-4); border-top: 1px solid var(--linea); }
+.seccion h3 { font-size: var(--texto-base); margin-bottom: var(--e-3); }
+.lista { display: flex; flex-direction: column; gap: var(--e-4); padding-left: var(--e-5); }
+.texto { white-space: pre-wrap; overflow-wrap: anywhere; }
+.fuente { margin-top: var(--e-2); padding: var(--e-3); background: var(--papel-2); border-radius: var(--radio); font-size: var(--texto-sm); }
+.fuente summary { cursor: pointer; color: var(--marca-indigo); overflow-wrap: anywhere; }
+.fuente summary:focus-visible { outline: none; box-shadow: var(--anillo-foco); }
+.fuente dl { display: flex; flex-direction: column; gap: var(--e-2); margin-top: var(--e-3); }
+.fuente dd { margin-left: var(--e-3); }

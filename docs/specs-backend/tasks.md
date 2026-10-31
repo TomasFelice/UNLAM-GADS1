@@ -9,6 +9,13 @@ requisito (`requirements.md`) y la sección de diseño (`design.md`) que cubre.
 
 ## Estado vigente — cierre de OpenSpec al 13/10/2026
 
+**Publicación posterior — 19/10/2026:** `81454a8` desplegado en Render/Vercel,
+Flyway V2–V5 aplicado en Supabase y verificaciones remotas de salud, contrato,
+CORS, acceso anónimo e interfaz pública. Ver el
+[registro de producción](../despliegue-produccion-2026-10-19.md).
+La demostración comercial autenticada remota sigue pendiente; no se completa
+§11.8 ni los recorridos remotos pendientes por inferencia.
+
 El [cambio final](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/tasks.md) está
 archivado con nueve specs sincronizadas: §1–§10 y 11.1–11.7 verificados (**71/72 tareas**). La continuación de §10 ejecutó 5 unitarias/108 IT,
 45 frontend y 21 E2E; evidencia en la [validación de §10](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/validacion-punto-10-2026-10-10.md).
@@ -90,9 +97,9 @@ referencia a OpenSpec corresponden a verificaciones posteriores.
       encontrado por test (`ErrorResponse` de Spring MVC no se aplastaba a 500)
 - [x] `shared/dto`: `PageResponse<T>` — design §8
 - [x] Actuator: `/actuator/health` responde `{"status":"UP"}` contra Supabase real
-- [ ] Deploy inicial en Render (aunque sea un esqueleto) — **pendiente**: requiere que el
-      usuario conecte el repo en su cuenta de Render (no es algo que se pueda hacer sin
-      acceso a esa cuenta) — usuario lo está gestionando
+- [x] Deploy en Render confirmado el 19/10/2026: `81454a8`, migraciones V2–V5 en
+      Supabase, salud y contrato HTTP comprobados. Ver el registro de producción;
+      no equivale a la demostración comercial autenticada remota.
 - [x] `springdoc-openapi` activo (3.1.1, con esquema Bearer JWT) — design §10 — `/v3/api-docs`
       y `/swagger-ui.html` verificados en runtime contra Supabase real
 
@@ -511,5 +518,7 @@ de cada artefacto en `design.md` §12.
 
 ## IA (opcional, después del núcleo)
 
-No se planifica en este documento hasta que el núcleo esté aprobado y estable — según la
-consigna, entra sólo después de completar y probar las funcionalidades principales.
+El usuario autorizó el cambio [incorporar-resumen-comercial-ia](../../openspec/changes/incorporar-resumen-comercial-ia/tasks.md).
+Implementa resumen efímero con fuentes y Gemini Free Tier, apagado por defecto;
+la evidencia actual y las verificaciones reales pendientes se registran en ese cambio.
+No implica publicación ni cierre de la demostración comercial remota pendiente.

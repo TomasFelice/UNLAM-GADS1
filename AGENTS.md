@@ -65,7 +65,7 @@ esa decisión concreta; avanzar con el trabajo independiente.
 2. Controllers: HTTP ↔ DTO y delegación a service; nunca entidades JPA ni repositorios.
 3. Services: transacciones, autorización y coordinación. Un módulo consume sólo el
    service de otro, nunca su repository, domain ni DTOs internos. Sin ciclos:
-   `activities → opportunities → {customers, offerings, catalogs} → access → tenancy`.
+   `assistance → {activities, opportunities}; activities → opportunities → {customers, offerings, catalogs} → access → tenancy`.
 4. Toda entidad de negocio lleva `tenant_id`; se resuelve del usuario autenticado,
    nunca del request. Filtrar lecturas y escrituras por tenant.
 5. Historial de etapas append-only: cambio de etapa e historial en una transacción.

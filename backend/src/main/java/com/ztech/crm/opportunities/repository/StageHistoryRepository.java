@@ -11,6 +11,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * {@code deleteAll()}), pero cubre los casos que realmente se podrían invocar por error.
  */
 public interface StageHistoryRepository extends JpaRepository<StageHistory, Long> {
+    long countByTenantIdAndOpportunityId(Long tenantId, Long opportunityId);
+    List<StageHistory> findByTenantIdAndOpportunityId(Long tenantId, Long opportunityId,
+            org.springframework.data.domain.Pageable pageable);
     boolean existsByTenantIdAndFromStageIdOrTenantIdAndToStageId(Long tenantId, Long fromStageId, Long otherTenantId, Long toStageId);
 
 

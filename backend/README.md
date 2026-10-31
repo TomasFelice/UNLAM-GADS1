@@ -271,7 +271,10 @@ com.ztech.crm/
 **Cierre de OpenSpec (13/10/2026)**: el usuario aprobó el testing integral local y
 autorizó archivar con §11.8 pendiente. Ver el
 [cierre](../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/cierre-2026-10-13.md).
-Las pruebas locales no certifican el ambiente remoto; no se realizó despliegue.
+Al cierre del 13/10 no se había realizado el despliegue. El 19/10/2026 se publicó
+`81454a8` en Render y Flyway aplicó V2–V5 en Supabase. El
+[registro de producción](../docs/despliegue-produccion-2026-10-19.md) distingue
+las comprobaciones remotas del testing local y de la demostración autenticada pendiente.
 
 ### Ciclo comercial y conflictos
 
@@ -309,3 +312,12 @@ V5 agrega índices por relación y cronología. La colección Postman incorpora
 **Registro de actividades e historial**, con referencias capturadas de la API.
 `ActivityRegistrationIT` cubre asociaciones, validación, alcance, páginas con empates,
 bajas y autor inactivo. La UI ofrece alta contextual y navegación completa.
+
+## Resumen comercial con IA
+
+La función está apagada por defecto y no participa del health check. Sin clave el
+CRM inicia normalmente. Ver [configuración, límites y evaluación](docs/resumen-comercial-ia.md).
+Sólo usar Gemini Free Tier comprobado en AI Studio, con una clave nueva fuera del
+repositorio. Reemplazar cualquier credencial expuesta previamente; no reutilizarla.
+No se activa facturación desde esta integración. Las variables son sólo backend;
+ninguna clave debe tener prefijo VITE_ ni incorporarse al contrato o a fixtures.

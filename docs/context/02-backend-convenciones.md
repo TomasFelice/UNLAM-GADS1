@@ -45,7 +45,8 @@ backend/
     │   │   ├── offerings/        # Venue (salón) + EventService (catering, audio, decoración)
     │   │   ├── catalogs/         # Stage, ActivityType, Origin, LossReason
     │   │   ├── opportunities/    # Opportunity, StageHistory, reserva del salón
-    │   │   └── activities/       # Activity
+    │   │   ├── activities/       # Activity
+│   │   └── assistance/       # resumen comercial efímero, sin entidades
     │   └── resources/
     │       ├── application.yml           # config base
     │       ├── application-local.yml     # perfil local
@@ -115,7 +116,7 @@ auditoría. Si algo pertenece a un módulo, va en el módulo aunque lo use otro.
 1. Un módulo consume **sólo el `service`** de otro módulo. Nunca su `repository`, su
    `domain` ni sus DTOs internos.
 2. Sin dependencias circulares. Dirección permitida:
-   `activities → opportunities → {customers, offerings, catalogs} → access → tenancy`.
+   `assistance → {activities, opportunities}; activities → opportunities → {customers, offerings, catalogs} → access → tenancy`.
 3. `opportunities` coordina clientes, salones, catálogos y usuarios, pero no toca sus
    repositorios.
 4. Si dos módulos necesitan la misma entidad, no se duplica: uno la posee y el otro la

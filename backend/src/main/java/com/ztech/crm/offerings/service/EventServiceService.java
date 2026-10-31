@@ -74,4 +74,10 @@ public class EventServiceService {
         return eventServiceRepository.findByIdAndTenantId(id, TenantContext.currentTenantId())
                 .orElseThrow(() -> new NotFoundException("No se encontró el servicio solicitado."));
     }
+
+    @Transactional(readOnly = true)
+    public EventServiceInfo getInfo(Long id) {
+        var value = getOwnedOrThrow(id);
+        return new EventServiceInfo(value.getId(), value.getName(), value.getPrice(), value.isActive());
+    }
 }

@@ -16,6 +16,14 @@ export type Sesion = {
 };
 
 const CLAVE = "ztech.crm.sesion";
+let identidadSesion = 0;
+let tokenObservado: string | undefined;
+/** Identidad opaca en memoria; distingue también tenant/cuenta sin usar JWT en claves. */
+export function obtenerIdentidadSesion() {
+  const token = obtenerSesion()?.token;
+  if (token !== tokenObservado) { tokenObservado = token; identidadSesion++; }
+  return identidadSesion;
+}
 
 function esSesion(valor: unknown): valor is Sesion {
   if (!valor || typeof valor !== "object") return false;
@@ -52,6 +60,8 @@ export function guardarSesion(sesion: Sesion, mantener: boolean) {
 }
 
 export function borrarSesion() {
+  identidadSesion++;
+  tokenObservado = undefined;
   sessionStorage.removeItem(CLAVE);
   localStorage.removeItem(CLAVE);
 }

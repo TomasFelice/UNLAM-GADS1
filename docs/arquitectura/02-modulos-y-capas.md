@@ -13,6 +13,7 @@ El backend se divide por capacidades de negocio:
 | `catalogs` | Catálogos configurables | `Stage`, `ActivityType`, `Origin`, `LossReason` |
 | `opportunities` | Embudo, asignación, cierres, reserva e historial | `Opportunity`, `StageHistory` |
 | `activities` | Interacciones e historial comercial | `Activity` |
+| `assistance` | Resumen comercial autorizado, efímero y acotado; REST Gemini | Sin persistencia |
 
 `opportunities` coordina referencias a clientes, salones, catálogos y usuarios, pero no debe manipular sus repositorios internos. Cada módulo expone operaciones a los demás **únicamente a través de su paquete `service`** ([ADR-001](../decisiones/adr/ADR-001-estructura-de-paquetes.md)).
 
@@ -30,6 +31,8 @@ flowchart LR
     activities --> customers
     activities --> opportunities
     activities --> catalogs
+    assistance --> activities
+    assistance --> opportunities
 ```
 
 Las flechas van del consumidor a la API pública del módulo consumido; no representan acceso directo a implementación. Se deben evitar dependencias circulares.
@@ -102,7 +105,8 @@ backend/src/main/java/com/ztech/crm/
 ├── offerings/      # consulta paginada y ABM ADMIN implementados (09/10)
 ├── catalogs/       # ABM ADMIN de catálogos, embudos y etapas; lecturas comerciales
 ├── opportunities/  # implementado (Fase 3-5, incluido alcance comercial)
-└── activities/     # registro append-only e históricos paginados — OpenSpec §9
+├── activities/     # registro append-only e históricos paginados — OpenSpec §9
+└── assistance/     # resumen efímero desde servicios de lectura; ADR-007
 ```
 
 Estado actualizado de oferta/catálogos/embudos al 09/10; detalle fase por fase en
@@ -148,3 +152,11 @@ El conteo vigente y el detalle de cada corte se mantienen en
 
 - Frontend: comportamiento de features con Vitest y Testing Library.
 - E2E: recorridos de entrega con Playwright.
+
+## Resumen comercial IA — decisión 31/10/2026
+
+[ADR-007](../decisiones/adr/ADR-007-resumen-comercial-ia.md) incorpora el coordinador
+`assistance → {activities, opportunities}`, sin dependencias inversas. REST JDK,
+resumen efímero y configuración apagada por defecto. Implementación y validaciones
+se siguen en [las tareas del cambio](../../openspec/changes/incorporar-resumen-comercial-ia/tasks.md);
+no implica despliegue ni validación real de Gemini.

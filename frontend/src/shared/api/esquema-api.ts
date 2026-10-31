@@ -483,6 +483,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/opportunities/{id}/commercial-summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generar resumen comercial efímero
+         * @description Sin body ni parámetros. Contexto autorizado, hasta 50 actividades y 50 transiciones, cobertura y fuentes. No escribe negocio.
+         */
+        post: operations["generate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/opportunities/{id}/assign": {
         parameters: {
             query?: never;
@@ -1248,6 +1268,80 @@ export interface components {
             note?: string;
             /** Format: int64 */
             version: number;
+        };
+        ProblemDetail: {
+            /** Format: uri */
+            type?: string;
+            title?: string;
+            /** Format: int32 */
+            status?: number;
+            detail?: string;
+            /** Format: uri */
+            instance?: string;
+            properties?: {
+                [key: string]: unknown;
+            };
+        };
+        CommercialSummaryResponse: {
+            /** Format: int64 */
+            opportunityId?: number;
+            /** Format: date-time */
+            generatedAt?: string;
+            /** Format: date-time */
+            contextAsOf?: string;
+            /** Format: int64 */
+            opportunityVersion?: number;
+            coverage?: components["schemas"]["Coverage"];
+            sections?: components["schemas"]["Sections"];
+            sources?: components["schemas"]["Source"][];
+        };
+        Coverage: {
+            /** Format: int64 */
+            totalActivities?: number;
+            /** Format: int32 */
+            includedActivities?: number;
+            /** Format: int64 */
+            totalTransitions?: number;
+            /** Format: int32 */
+            includedTransitions?: number;
+            activityRange?: components["schemas"]["Range"];
+            transitionRange?: components["schemas"]["Range"];
+            partial?: boolean;
+            textTruncated?: boolean;
+            /** Format: int32 */
+            contextCharacters?: number;
+            selectionRule?: string;
+        };
+        Item: {
+            text?: string;
+            sourceIds?: string[];
+        };
+        Range: {
+            /** Format: date-time */
+            from?: string;
+            /** Format: date-time */
+            to?: string;
+        };
+        Sections: {
+            clientNeeds?: components["schemas"]["Item"][];
+            currentSituation?: components["schemas"]["Item"][];
+            agreementsAndObjections?: components["schemas"]["Item"][];
+            unconfirmedInformation?: components["schemas"]["Item"][];
+        };
+        Source: {
+            sourceId?: string;
+            type?: string;
+            /** Format: int64 */
+            originalId?: number;
+            title?: string;
+            /** Format: date-time */
+            occurredAt?: string;
+            /** Format: date-time */
+            recordedAt?: string;
+            fragments?: {
+                [key: string]: string;
+            };
+            textTruncated?: boolean;
         };
         AssignOpportunityRequest: {
             /** Format: int64 */
@@ -3738,6 +3832,100 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["OpportunityResponse"];
+                };
+            };
+        };
+    };
+    generate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resumen con fuentes y cobertura */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CommercialSummaryResponse"];
+                };
+            };
+            /** @description Entrada no admitida */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Oportunidad no visible */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description AI_CONTEXT_CHANGED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description AI_CONTENT_BLOCKED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description AI_RATE_LIMITED o AI_QUOTA_EXCEEDED; retryAfterSeconds si se conoce */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description AI_INVALID_RESPONSE */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description AI_NOT_CONFIGURED o AI_UNAVAILABLE */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description AI_TIMEOUT */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProblemDetail"];
                 };
             };
         };

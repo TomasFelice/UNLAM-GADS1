@@ -10,6 +10,7 @@ export type DetalleDeProblema = {
   detail: string;
   code?: string;
   requestId?: string;
+  retryAfterSeconds?: number;
   errors: ErrorDeCampo[];
 };
 
@@ -47,6 +48,7 @@ export async function interpretarProblema(respuesta: Response): Promise<DetalleD
         : "No se pudo completar la operación. Intentá nuevamente.",
     code: typeof cuerpo.code === "string" ? cuerpo.code : undefined,
     requestId: typeof cuerpo.requestId === "string" ? cuerpo.requestId : undefined,
+    retryAfterSeconds: typeof cuerpo.retryAfterSeconds === "number" && Number.isFinite(cuerpo.retryAfterSeconds) && cuerpo.retryAfterSeconds >= 0 ? cuerpo.retryAfterSeconds : undefined,
     errors: Array.isArray(cuerpo.errors) ? cuerpo.errors.filter(esErrorDeCampo) : [],
   };
 }

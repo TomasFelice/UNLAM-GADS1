@@ -17,6 +17,7 @@ Este directorio traduce las definiciones funcionales y arquitectónicas del proy
 11. [Bitácora del frontend](planificacion/bitacora-frontend.md): registro breve de lo ejecutado en la rama `feature/frontend`.
 12. [Registro de decisiones](decisiones/decisiones-pendientes.md): temas que deben acordarse antes de cerrar diseño o aceptación.
 13. [Decisiones del frontend](decisiones/decisiones-frontend.md): temas abiertos que surgieron al construir la maqueta.
+14. [Despliegue de producción del 19/10/2026](despliegue-produccion-2026-10-19.md): versiones publicadas, migraciones Supabase, verificaciones y límites.
 
 ## Marca
 
@@ -48,3 +49,5 @@ Si cambia una decisión, actualizar el contexto y las specs afectados en el mism
 ## Mantenimiento
 
 Actualizar estos documentos en el mismo pull request que cambie un límite modular, contrato, tecnología, regla crítica o hito. Las decisiones de arquitectura irreversibles o costosas deben registrarse como ADR antes de implementarse.
+
+- [Resumen comercial IA: configuración y evaluación](../backend/docs/resumen-comercial-ia.md).

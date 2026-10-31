@@ -69,6 +69,17 @@ public class ActivityService {
         return PageResponse.from(repository.findAll(readable().and(ActivitySpecifications.opportunity(id)), stable(pageable)), this::map);
     }
 
+    @Transactional(readOnly = true)
+    public ActivitySummaryContext summaryContext(Long id) {
+        opportunityAccessService.getReadableContext(id);
+        var filter = ActivitySpecifications.tenant(TenantContext.currentTenantId())
+                .and(ActivitySpecifications.opportunity(id));
+        var page = repository.findAll(filter, PageRequest.of(0, 50, Sort.by(Sort.Direction.DESC, "occurredAt", "id")));
+        return new ActivitySummaryContext(page.getTotalElements(), page.stream().map(a ->
+                new ActivitySummaryContext.Fact(a.getId(), activityTypeService.getSummary(a.getTypeId()).name(),
+                        a.getOccurredAt(), a.getCreatedAt(), a.getDescription(), a.getResult())).toList());
+    }
+
     @Transactional
     public ActivityResponse create(CreateActivityRequest request) {
         Long company = request.companyId(); Long contact = request.contactId();

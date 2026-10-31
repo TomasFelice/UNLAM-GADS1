@@ -56,7 +56,8 @@ public final class LoadBaselineApplication {
 
     private static void startServer(String[] database) {
         long started = System.nanoTime();
-        ConfigurableApplicationContext context = new SpringApplication(CrmApplication.class, BaselineConfiguration.class).run(
+        ConfigurableApplicationContext context = new SpringApplication(CrmApplication.class, BaselineConfiguration.class,
+                com.ztech.crm.assistance.service.SummaryE2EConfiguration.class).run(
                             "--spring.profiles.active=test", "--DB_URL=" + database[0],
                             "--DB_USERNAME=" + database[1], "--DB_PASSWORD=" + database[2],
                             "--server.address=127.0.0.1", "--server.port=18080",

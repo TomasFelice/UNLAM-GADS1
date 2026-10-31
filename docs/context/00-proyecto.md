@@ -54,7 +54,8 @@ backend/src/main/java/com/ztech/crm/
 ├── offerings/        # Venue (salón) y EventService — el "producto o servicio" de la consigna
 ├── catalogs/         # Stage, ActivityType, Origin, LossReason
 ├── opportunities/    # Opportunity, StageHistory, reserva del salón
-└── activities/       # Activity — alta append-only e históricos paginados
+├── activities/       # Activity — alta append-only e históricos paginados
+└── assistance/       # resumen comercial efímero; ADR-007
 ```
 
 Cada módulo de negocio tiene adentro:
@@ -114,6 +115,13 @@ registra los resultados de esa sesión. El usuario confirmó testing integral lo
 satisfactorio el 13/10 y autorizó archivar con §11.8 pendiente; ver el
 [cierre](../../openspec/changes/archive/2026-10-13-completar-crm-entrega-final/cierre-2026-10-13.md).
 No se certifica el ambiente remoto desde pruebas locales.
+
+**Producción — 19/10/2026:** se publicó `81454a8` en Render y Vercel, con
+Flyway V2–V5 aplicado en Supabase. API con salud `UP`, contrato de 69 operaciones,
+CORS y rechazo anónimo comprobados; páginas públicas e ingreso revisados a 390 px.
+La demostración comercial autenticada remota sigue pendiente. Ver el
+[registro del despliegue](../despliegue-produccion-2026-10-19.md) para destinos,
+evidencia y límites; las notas de septiembre siguientes conservan su estado histórico.
 
 `requirements.md`/`design.md`/`tasks.md` (`docs/specs-backend/`) ya fueron aprobados
 por el usuario e implementación arrancó — no son un borrador esperando luz verde.
@@ -196,3 +204,18 @@ nivel sistema y usado como credencial (DP-03, `docs/specs-backend/design.md` §3
 - Cortes verticales: migración → dominio → service → controller → test.
 - Commits en imperativo, con scope: `feat(opportunities): ...`, `docs: ...`.
 - Actualizar `docs/` en el mismo PR que cambie un contrato, tecnología o regla crítica.
+
+## Resumen comercial IA — decisión 31/10/2026
+
+[ADR-007](../decisiones/adr/ADR-007-resumen-comercial-ia.md) incorpora el coordinador
+`assistance → {activities, opportunities}`, sin dependencias inversas. REST JDK,
+resumen efímero y configuración apagada por defecto. Implementación y validaciones
+se siguen en [las tareas del cambio](../../openspec/changes/incorporar-resumen-comercial-ia/tasks.md);
+no implica despliegue ni validación real de Gemini.
+
+Implementación local del 31/10: backend, contrato, panel automático y verificaciones
+independientes completados (28/31 tareas). En la continuación, el usuario confirmó
+Free Tier y autorizó configurar una clave sólo en `.env` local, ignorado por Git.
+Una generación mínima real pasó la validación; siguen pendientes las cuotas reales,
+el corpus de fidelidad y la evaluación del fallback. Sin despliegue. Ver
+[evidencia y retomada](../../openspec/changes/incorporar-resumen-comercial-ia/validacion-2026-10-31.md).
