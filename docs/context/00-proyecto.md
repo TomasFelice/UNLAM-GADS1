@@ -219,3 +219,10 @@ Free Tier y autorizó configurar una clave sólo en `.env` local, ignorado por G
 Una generación mínima real pasó la validación; siguen pendientes las cuotas reales,
 el corpus de fidelidad y la evaluación del fallback. Sin despliegue. Ver
 [evidencia y retomada](../../openspec/changes/incorporar-resumen-comercial-ia/validacion-2026-10-31.md).
+
+Publicación posterior autorizada el 31/10: commit de aplicación `a84f76a` publicado
+en la rama de trabajo y en `main`. Vercel y Render se actualizan con la configuración
+IA del backend; fallback vacío, sin migraciones nuevas. Estado y evidencia en el
+[registro de despliegue](../despliegue-produccion-2026-10-31.md).
+El usuario se encarga de las pruebas funcionales en producción; no se completan por
+inferencia los pendientes de fidelidad, cuotas ni demostración comercial remota.

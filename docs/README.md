@@ -18,6 +18,7 @@ Este directorio traduce las definiciones funcionales y arquitectónicas del proy
 12. [Registro de decisiones](decisiones/decisiones-pendientes.md): temas que deben acordarse antes de cerrar diseño o aceptación.
 13. [Decisiones del frontend](decisiones/decisiones-frontend.md): temas abiertos que surgieron al construir la maqueta.
 14. [Despliegue de producción del 19/10/2026](despliegue-produccion-2026-10-19.md): versiones publicadas, migraciones Supabase, verificaciones y límites.
+15. [Despliegue de producción del 31/10/2026](despliegue-produccion-2026-10-31.md): resumen comercial IA, configuración y verificaciones del despliegue.
 
 ## Marca
 
