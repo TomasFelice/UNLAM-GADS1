@@ -46,7 +46,7 @@ backend/
     │   │   ├── catalogs/         # Stage, ActivityType, Origin, LossReason
     │   │   ├── opportunities/    # Opportunity, StageHistory, reserva del salón
     │   │   ├── activities/       # Activity
-│   │   └── assistance/       # resumen comercial efímero, sin entidades
+│   │   └── assistance/       # resumen comercial persistido; ADR-008
     │   └── resources/
     │       ├── application.yml           # config base
     │       ├── application-local.yml     # perfil local

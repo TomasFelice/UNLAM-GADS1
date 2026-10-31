@@ -7,7 +7,7 @@ La evidencia y las tareas pendientes se registran allí; este documento describe
 
 Copiar los placeholders de `.env.example` al entorno **backend**. La función se
 deshabilita con `AI_SUMMARY_ENABLED=false`; no afecta el health general ni modifica
-el esquema. Con configuración inválida responde `503 AI_NOT_CONFIGURED`.
+el funcionamiento comercial. La migración V6 agrega la persistencia del resumen. Con configuración inválida responde `503 AI_NOT_CONFIGURED`.
 Los topes son 40 segundos totales, tres intentos, tres llamadas/minuto y veinte/día.
 Pueden reducirse según AI Studio. Se admite `gemini-3.1-flash-lite` como primario y
 `gemini-3.5-flash-lite` como candidato alternativo. El fallback inicial está vacío:
@@ -32,7 +32,7 @@ sus oportunidades. ID fuera de alcance: `404` antes de invocar Gemini.
 `assistance` reúne proyecciones inmutables de servicios de oportunidades y actividades
 en `REPEATABLE_READ`, sin red dentro de la transacción. Revalida permiso y huella
 antes de devolver el resultado: pérdida de acceso da `404`, cambio da
-`409 AI_CONTEXT_CHANGED`. No hay escrituras, generación de actividades ni locks
+`409 AI_CONTEXT_CHANGED`. No hay generación de actividades ni locks
 durante la espera de Google.
 
 - `O`: datos actuales, observaciones, estado estructurado, oferta y evento.
@@ -54,6 +54,19 @@ El contenido enviado a la API gratuita puede utilizarse para mejorar productos d
 Google: revisar [precios y tratamiento de datos](https://ai.google.dev/gemini-api/docs/pricing)
 y [términos](https://ai.google.dev/gemini-api/terms). Usar exclusivamente datos ficticios
 para la evaluación y demo de IA.
+
+## Persistencia y vigencia
+
+Según [ADR-008](../../docs/decisiones/adr/ADR-008-persistencia-resumen-comercial.md),
+V6 conserva un resultado por tenant/oportunidad en `commercial_summaries`, con
+respuesta completa, fuentes, fechas originales, huella SHA-256 y versión de prompt.
+Cada consulta autoriza y reconstruye el contexto: si coincide, devuelve el resumen
+sin llamar al proveedor ni consumir admisión/cuota. No vence por tiempo, recarga
+ni reinicio. Si cambió el contexto o el prompt, genera, revalida y reemplaza el éxito
+anterior mediante upsert en una transacción breve. Los errores no se guardan ni
+permiten entregar un resultado desactualizado. IA apagada mantiene el 503.
+La huella usa datos completos de las proyecciones acotadas y sus conteos; incluye
+actividades y catálogos aunque no cambie la versión de oportunidad. No hay polling.
 
 ## Prompt y respuesta
 

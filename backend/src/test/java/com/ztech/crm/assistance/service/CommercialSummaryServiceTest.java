@@ -22,13 +22,14 @@ class CommercialSummaryServiceTest {
             .withProperty("GEMINI_API_KEY","fake").withProperty("GEMINI_SUMMARY_FALLBACK_MODEL","gemini-3.5-flash-lite");
     private final SummarySettings settings=new SummarySettings(env);
     private final SummarySnapshotReader reader=mock(SummarySnapshotReader.class);
+    private final SummaryStore store=mock(SummaryStore.class);
     private final List<String> models=new ArrayList<>();
     private static final String EMPTY="{\"clientNeeds\":[],\"currentSituation\":[],\"agreementsAndObjections\":[],\"unconfirmedInformation\":[]}";
     private SummarySnapshot snapshot(String fingerprint){return new SummarySnapshot(1L,0L,Instant.EPOCH,fingerprint,"{}",null,List.of(new Source("O","OPPORTUNITY",1L,"Actual",null,null,Map.of(),false)));}
     private CommercialSummaryService service(SummaryGenerator generator) {
         when(reader.read(1L)).thenReturn(snapshot("same"));
         return new CommercialSummaryService(reader,settings,(model,context,timeout)->{models.add(model);return generator.generate(model,context,timeout);},
-                new SummaryResultValidator(JsonMapper.builder().build()),new SummaryAdmission(settings,time),time);
+                new SummaryResultValidator(JsonMapper.builder().build()),new SummaryAdmission(settings,time),time,store);
     }
     @Test void retriesOnlyThreeCallsAndFallbackOnlyOnLastTransientAttempt() {
         var count=new AtomicInteger();var service=service((m,c,t)->{

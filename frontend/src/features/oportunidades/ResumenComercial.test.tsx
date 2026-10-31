@@ -57,17 +57,17 @@ it("genera sólo después de autorización y comparte solicitud bajo StrictMode 
   liberar(); await waitFor(() => expect(vuelta.result.current.data).toEqual(resultado)); expect(llamadas).toBe(1);
 });
 
-it("reutiliza cinco minutos al volver, vence sólo al entrar y no genera por foco, reconexión o tiempo", async () => {
+it("consulta vigencia al volver sin consultar por foco, reconexión o tiempo", async () => {
   vi.useFakeTimers({ toFake: ["Date"] }); let llamadas = 0;
   servidor.use(http.post(`${API}/opportunities/7/commercial-summary`, () => { llamadas++; return HttpResponse.json(resultado); }));
   const vista = renderHook(() => useResumenComercial(7, 0, true), { wrapper: envolver });
   await waitFor(() => expect(vista.result.current.isSuccess).toBe(true)); vista.unmount();
   const vuelta = renderHook(() => useResumenComercial(7, 0, true), { wrapper: envolver });
-  expect(vuelta.result.current.data).toEqual(resultado); expect(llamadas).toBe(1);
+  await waitFor(() => expect(llamadas).toBe(2)); await waitFor(() => expect(vuelta.result.current.isFetching).toBe(false));
   act(() => { vi.setSystemTime(Date.now() + 300001); window.dispatchEvent(new Event("focus")); window.dispatchEvent(new Event("online")); });
-  expect(llamadas).toBe(1); vuelta.unmount();
+  expect(llamadas).toBe(2); vuelta.unmount();
   const vencida = renderHook(() => useResumenComercial(7, 0, true), { wrapper: envolver });
-  await waitFor(() => expect(llamadas).toBe(2)); await waitFor(() => expect(vencida.result.current.isFetching).toBe(false));
+  await waitFor(() => expect(llamadas).toBe(3)); await waitFor(() => expect(vencida.result.current.isFetching).toBe(false));
 });
 
 it("retiene errores al remontar y sólo reintenta manualmente, sin duplicar el doble clic", async () => {
@@ -80,14 +80,14 @@ it("retiene errores al remontar y sólo reintenta manualmente, sin duplicar el d
   await screen.findByText(/Necesidad ficticia/); expect(llamadas).toBe(2);
 });
 
-it("muestra fuentes completas fuera de página, secciones vacías y texto escapado con controles de teclado", async () => {
+it("muestra el aviso y las secciones sin metadatos ni fuentes, con texto escapado", async () => {
   servidor.use(http.post(`${API}/opportunities/7/commercial-summary`, () => HttpResponse.json(resultado)));
   const vista = render(<ResumenComercial oportunidadId={7} version={0} autorizado />, { wrapper: envolver });
   await screen.findByText(/Necesidad ficticia/); expect(screen.getAllByText("No consta en la información analizada.")).toHaveLength(3);
-  const fuente = screen.getByText("Fuente A1: Actividad fuera de página"); fuente.focus(); await userEvent.click(fuente);
-  expect(fuente.closest("details")).toHaveAttribute("open"); expect(fuente).toHaveFocus();
-  expect(screen.getByText("Fragmento exacto <img src=x>")).toBeVisible(); expect(vista.container.querySelector("script, img")).toBeNull();
-  expect(screen.getByText(/Cobertura parcial/)).toBeVisible();
+  expect(screen.getByText("Generado con IA. Revisá la información y sus fuentes.")).toBeVisible();
+  expect(vista.container.querySelector("details, summary, script, img")).toBeNull();
+  expect(screen.queryByText(/Contexto al|Generado el|actividades y|Cambios:|Actividades:|Cobertura parcial|textos recortados/)).not.toBeInTheDocument();
+  expect(screen.queryByText(/Actividad fuera de página|Fragmento exacto/)).not.toBeInTheDocument();
 });
 
 it("serializa una actualización tras una mutación durante la generación y descarta el resultado viejo", async () => {
@@ -131,7 +131,7 @@ it("una respuesta tardía no repuebla la caché al cambiar de sesión", async ()
   await new Promise(r => setTimeout(r, 30)); expect(cacheApi.getQueryCache().findAll({ queryKey: ["resumen-comercial"] })).toHaveLength(0);
 });
 
-it("al cambiar de ruta una respuesta completa sólo la caché de origen y al recargar se genera de nuevo", async () => {
+it("al cambiar de ruta una respuesta completa sólo la caché de origen y al recargar consulta el resultado persistido", async () => {
   let liberar!: () => void; const pendiente = new Promise<void>(r => { liberar = r; }); let llamadas = 0;
   servidor.use(http.post(`${API}/opportunities/:id/commercial-summary`, async ({ params }) => {
     llamadas++; if (params.id === "7" && llamadas === 1) await pendiente;
@@ -142,10 +142,10 @@ it("al cambiar de ruta una respuesta completa sólo la caché de origen y al rec
   await waitFor(() => expect(vista.result.current.data?.opportunityId).toBe(8)); liberar();
   await waitFor(() => expect(cacheApi.getQueryCache().findAll({ queryKey: ["resumen-comercial", 7] })[0]?.state.data).toBeDefined());
   expect(vista.result.current.data?.opportunityId).toBe(8);
-  vista.rerender({ id: 7 }); await waitFor(() => expect(vista.result.current.data?.opportunityId).toBe(7)); expect(llamadas).toBe(2);
+  vista.rerender({ id: 7 }); await waitFor(() => expect(vista.result.current.data?.opportunityId).toBe(7)); await waitFor(() => expect(llamadas).toBe(3)); await waitFor(() => expect(vista.result.current.isFetching).toBe(false));
   vista.unmount(); cacheApi.clear();
   const recarga = renderHook(() => useResumenComercial(7, 0, true), { wrapper: envolver });
-  await waitFor(() => expect(recarga.result.current.isSuccess).toBe(true)); expect(llamadas).toBe(3);
+  await waitFor(() => expect(recarga.result.current.isSuccess).toBe(true)); expect(llamadas).toBe(4);
 });
 
 it("una cuota con espera bloquea el reintento hasta su vencimiento", async () => {

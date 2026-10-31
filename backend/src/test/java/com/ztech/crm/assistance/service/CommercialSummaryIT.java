@@ -78,6 +78,28 @@ class CommercialSummaryIT {
         org.mockito.Mockito.doAnswer(call->{var result=call.callRealMethod();afterOpportunity.getAndSet(()->{}).run();return result;}).when(opportunityReader).read(org.mockito.ArgumentMatchers.anyLong());
     }
     @AfterAll static void stop(){if(server!=null)server.stop(0);}
+    @Test void persistsAcrossRequestsAndRolesRegeneratingOnlyForChangedContext() {
+        var a=fixture().first();var h=login(a.admin());var url=path(a.ownOpportunityId());
+        var first=send(url,null,h,200);
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM commercial_summaries WHERE tenant_id=? AND opportunity_id=?",Long.class,a.id(),a.ownOpportunityId())).isEqualTo(1);
+        status.set(503); // La lectura persistida no necesita un proveedor disponible.
+        assertThat(send(url,null,login(a.seller()),200)).isEqualTo(first);
+        assertThat(calls.get()).isEqualTo(1);
+        jdbc.update("UPDATE opportunities SET notes='Nuevo acuerdo persistido' WHERE id=?",a.ownOpportunityId());
+        send(url,null,h,503);
+        assertThat(jdbc.queryForObject("SELECT response_json FROM commercial_summaries WHERE tenant_id=? AND opportunity_id=?",String.class,a.id(),a.ownOpportunityId())).contains((String)first.get("generatedAt"));
+        status.set(200);
+        var changed=send(url,null,h,200);
+        assertThat(changed.get("generatedAt")).isNotEqualTo(first.get("generatedAt"));
+        int previous=calls.get();
+        assertThat(send(url,null,h,200)).isEqualTo(changed);assertThat(calls.get()).isEqualTo(previous);
+        // Una actividad invalida aunque no cambie la versión de oportunidad.
+        jdbc.update("INSERT INTO activities (tenant_id,type_id,occurred_at,opportunity_id,description,result,created_by) SELECT ?,id,now(),?,'Nuevo hecho','Confirmado',? FROM activity_types WHERE tenant_id=? LIMIT 1",a.id(),a.ownOpportunityId(),a.seller().id(),a.id());
+        send(url,null,h,200);assertThat(calls.get()).isEqualTo(previous+1);
+        jdbc.update("UPDATE stages SET name='Etapa renombrada' WHERE id=?",a.stageId());
+        send(url,null,h,200);assertThat(calls.get()).isEqualTo(previous+2);
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM commercial_summaries WHERE tenant_id=? AND opportunity_id=?",Long.class,a.id(),a.ownOpportunityId())).isEqualTo(1);
+    }
     @Test void threeRolesAreAuthorizedForeignScopeAndAnonymousNeverCallProviderAndNoWritesOccur() {
         var f=fixture();var a=f.first();var path=path(a.ownOpportunityId());var before=state(a);
         for(var account:List.of(a.admin(),a.manager(),a.seller())) {

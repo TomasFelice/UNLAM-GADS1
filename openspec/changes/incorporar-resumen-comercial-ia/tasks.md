@@ -62,3 +62,13 @@ Plan de implementación, no evidencia de trabajo ejecutado. Contrato funcional e
 - Aplicar este plan cuando el usuario pida implementación; esta propuesta sólo crea artefactos de planificación.
 - Archivar y sincronizar specs cuando corresponda y se solicite, preservando las verificaciones reales que hayan quedado pendientes.
 - La publicación requiere un pedido explícito separado; al realizarla, comprobar el flujo autenticado remoto y el apagado de IA sin afectar al CRM.
+
+## Revisión posterior — persistencia solicitada el 31/10/2026
+
+Las tareas anteriores conservan el registro de la implementación inicial. ADR-008
+reemplaza su decisión de resumen efímero y reutilización de cinco minutos.
+
+- [x] Persistir el último éxito por tenant/oportunidad mediante V6, con huella, versión de prompt y respuesta completa; conservar permisos y red fuera de transacciones.
+- [x] Consultar vigencia al volver o recargar, sin regenerar si no cambió el contexto; actualizar contrato, tipos, privacidad y documentación técnica.
+- [x] Verificar con PostgreSQL la reutilización entre roles, proveedor caído, cambio de notas, actividad sin incremento de versión, renombre de etapa y conservación del último éxito ante fallos.
+- [x] Verificar build, 17 pruebas frontend y 2 E2E con recarga, retorno, tres roles, actividad, errores y privacidad; ver [evidencia de persistencia](validacion-persistencia-2026-10-31.md).

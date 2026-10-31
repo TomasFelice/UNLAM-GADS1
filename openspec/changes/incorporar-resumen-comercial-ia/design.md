@@ -12,7 +12,7 @@ La decisión del usuario es **Gemini gratuito**, sin activar facturación ni usa
 
 **Goals:** síntesis automática al entrar al detalle autorizado, con carga independiente; contexto acotado y revisable; reutilización temporal y deduplicación para cuidar cuota; integración pequeña que no cambie las escrituras comerciales; pruebas deterministas separadas de la evaluación real.
 
-**Non-Goals:** persistencia duradera del resumen, migraciones, conversaciones de seguimiento, propuestas, recomendaciones de oferta, ejecución de acciones, búsquedas web, RAG, embeddings, colas, infraestructura distribuida o garantía de disponibilidad de un proveedor gratuito. La caché temporal frontend vive sólo en memoria y no es persistencia comercial.
+**Non-Goals:** conversaciones de seguimiento, propuestas, recomendaciones de oferta, ejecución de acciones, búsquedas web, RAG, embeddings, colas, infraestructura distribuida o garantía de disponibilidad de un proveedor gratuito. La caché temporal frontend vive sólo en memoria y no es persistencia comercial.
 
 ## Decisions
 
@@ -112,13 +112,13 @@ Espera exponencial con jitter (base 1 s, máximo 4 s), respetando `Retry-After`/
 
 Usar excepciones controladas que extiendan `ApiException`; mantener `ProblemDetail` y request ID. Para `429` incluir extensión JSON `retryAfterSeconds` cuando se conozca, más `Retry-After`; la UI consume la extensión sin requerir exposición CORS adicional. Ante espera desconocida mostrar «Intentá más tarde», sin inventar hora de restablecimiento. No convertir errores upstream de credenciales en `401` del CRM, ya que cerraría la sesión del usuario.
 
-### 6. Interfaz efímera y revisión
+### 6. Resumen persistido y revisión
 
 Agregar `ResumenComercial.tsx` y su CSS Module en `features/oportunidades`. Montar/habilitar el panel después de confirmar acceso al detalle mediante una lectura actual de la oportunidad; si se vuelve a la ruta, revalidar esa lectura antes de mostrar un resumen reutilizado. No generar ni mostrar resúmenes para IDs inválidos, detalles sin autorización o pantallas distintas. El resto del detalle se muestra sin esperar a Gemini.
 
 `apiResumenComercial.ts` usa tipos de OpenAPI, `solicitarApi` y una consulta TanStack específica que realiza el POST de generación. Aunque el endpoint sea POST, aquí no escribe negocio: la consulta permite reutilizar el resultado y compartir una promesa en curso. Clave por identificador opaco de sesión (no JWT), tenant, usuario, oportunidad y versión conocida. Invalidar además por actividades; no alcanza con la versión de oportunidad. No disparar una mutación desde un efecto por montaje, que podría duplicarse en StrictMode.
 
-Configurar explícitamente `staleTime` y `gcTime` de cinco minutos, `retry: false`, `retryOnMount: false`, `refetchOnWindowFocus: false`, `refetchOnReconnect: false` y sin intervalo. El TTL de reutilización se mide desde el éxito de generación; el acceso y la versión se revalidan por la lectura del detalle antes de reutilizar. Una entrada sin resultado o con un éxito vencido inicia una generación; los errores retenidos no se reintentan al remontar. No iniciar actualización por mero paso del tiempo mientras el panel permanece montado. Una recarga completa pierde la caché y puede volver a generar, dentro de los límites del backend.
+Configurar `staleTime: 0` y `gcTime` de cinco minutos, sin retry, foco, reconexión ni intervalo. Cada retorno consulta vigencia al backend; los errores retenidos requieren reintento manual. V6 y ADR-008 conservan el último éxito por tenant/oportunidad, respuesta completa, huella y versión de prompt. Sólo una diferencia de contexto o prompt genera y reemplaza el resultado, sin TTL. La recarga y los reinicios reutilizan PostgreSQL. No se mantiene una transacción durante la red.
 
 Estados: esperando validación del detalle, generando, generado, sin información por sección y error. No hay botón inicial «Generar resumen comercial» ni acción de regeneración sobre un éxito; sólo «Reintentar» ante errores recuperables. Mostrar fecha del contexto, cobertura parcial si aplica y «Generado con IA. Revisá la información y sus fuentes». Las esperas y los reintentos internos del backend se conservan; el cliente no añade otra capa de retries.
 
@@ -128,7 +128,7 @@ Conservar resultados y solicitudes en curso en la caché en memoria de esa sesi�
 
 Al registrar actividad o modificar/reasignar/cambiar etapa/cerrar/reabrir la oportunidad, invalidar la entrada afectada y retirar de pantalla el resultado anterior. Si el detalle sigue activo y autorizado, iniciar una sola actualización automática sobre la revisión local más reciente; si está fuera de pantalla, regenerar en la próxima entrada. Agrupar las señales de una misma mutación comercial para no iniciar una generación por cada invalidación. Si existe una generación anterior en curso, marcarla obsoleta y esperar a que termine antes de lanzar su sustituta; no encadenar llamadas por cada rerender o cada señal intermedia. Las restricciones del backend siguen aplicando y pueden devolver `429`.
 
-Los cambios remotos no observados no se detectan instantáneamente: una nueva versión de oportunidad observada invalida la entrada, mientras que una actividad remota puede no detectarse hasta la siguiente generación tras vencer la reutilización. Mostrar siempre `contextAsOf` y no presentar la caché como actualización en tiempo real. El TTL limita la reutilización al volver a la pantalla; no obliga a llamar de nuevo mientras el usuario lee un resumen ya mostrado.
+Los cambios remotos del contexto se detectan al volver a consultar el resumen. No hay polling ni actualización en tiempo real. Se conservan los metadatos originales del resultado persistido.
 
 La comprobación de sesión de `solicitarApi` se conserva; al ingresar, salir o expirar la sesión se vacían las entradas y se invalidan lógicamente sus tareas pendientes. Una respuesta tardía no repuebla la caché tras ese cambio ni aparece bajo otra oportunidad. `409` sin invalidación local conocida informa «La oportunidad cambió. Reintentá el resumen», sin bucle automático; `429` informa espera y habilita «Reintentar» cuando corresponda. El panel no reemplaza ni bloquea datos, actividades o acciones. Sin clave, la carga automática informa que la función no está habilitada; no es necesario un endpoint público de configuración.
 
@@ -136,9 +136,9 @@ La comprobación de sesión de `solicitarApi` se conserva; al ingresar, salir o 
 
 Pruebas unitarias de selección/presupuesto/huella, esquema y referencias, clasificador de fallos y plazos con reloj/espera inyectables. Cliente HTTP contra servidor local simulado para comprobar cabecera, `generateContent`, JSON, códigos, límite de bytes, timeout y número exacto de intentos. Ninguna prueba automática llama a Google.
 
-IT por HTTP real con PostgreSQL efímero y proveedor simulado: tres roles, anónimo, ID ajeno, cliente compartido, revalidación tras reasignación, nueva actividad durante generación, payload inspeccionado y ausencia de escrituras mediante SQL. No existe listado nuevo: cubrir también el aislamiento en las consultas de fuentes/conteos. Los fallos transitorios, JSON malformado, cuota y feature apagado se prueban sin red externa.
+IT por HTTP real con PostgreSQL efímero y proveedor simulado: tres roles, anónimo, ID ajeno, cliente compartido, revalidación tras reasignación, nueva actividad durante generación, payload inspeccionado y persistencia exclusiva del resumen sin escrituras en registros comerciales mediante SQL. No existe listado nuevo: cubrir también el aislamiento en las consultas de fuentes/conteos. Los fallos transitorios, JSON malformado, cuota y feature apagado se prueban sin red externa.
 
-Vitest para generación tras validación del detalle, carga independiente, fuentes fuera de página, StrictMode/remontaje compartiendo solicitud, TTL/retorno sin llamada nueva, entrada vencida, ausencia de generación por foco/reconexión/temporizador y reintento manual sin doble clic. Cubrir invalidaciones agrupadas, actualización serializada y descarte de respuesta tardía ante sesión/ruta. Playwright recorre login → oportunidad → resumen automático → revisar fuentes → salir/volver sin otro consumo → registrar actividad → actualización automática; prueba error/reintento sin perder acciones y 390 px/ambos temas. El launcher E2E inyecta el servidor simulado sólo en perfil de pruebas.
+Vitest para generación tras validación del detalle, carga independiente, fuentes fuera de página, StrictMode/remontaje compartiendo solicitud, retorno consultando vigencia persistida, contexto cambiado, ausencia de generación por foco/reconexión/temporizador y reintento manual sin doble clic. Cubrir invalidaciones agrupadas, actualización serializada y descarte de respuesta tardía ante sesión/ruta. Playwright recorre login → oportunidad → resumen automático → revisar fuentes → salir/volver sin otro consumo → registrar actividad → actualización automática; prueba error/reintento sin perder acciones y 390 px/ambos temas. El launcher E2E inyecta el servidor simulado sólo en perfil de pruebas.
 
 Evaluación manual separada con datos ficticios y credencial nueva, serial y de baja frecuencia: sin actividades; acuerdos consistentes; contradicción; cierre/reapertura; historial recortado; instrucción maliciosa; datos faltantes. Criterios: ninguna afirmación comercial crítica inventada, fuentes válidas para cada afirmación, cobertura honesta y estados correctos. Si un caso falla, ajustar prompt/modelo y repetir sólo los casos afectados; una respuesta con formato correcto no acredita calidad. Registrar modelo exacto, fecha, cantidad de llamadas, cuotas observadas, latencia y errores; no afirmar que tres respuestas prueban disponibilidad futura.
 
@@ -147,7 +147,7 @@ Logs: correlación actual, modelo, versión de prompt, duración, intentos, clas
 ## Risks / Trade-offs
 
 - [No hay garantía de capacidad en Free Tier] → modelos explícitos configurables, pocas llamadas, plazo/reintentos limitados y error recuperable. No afirmar que Flash-Lite tenga menor ocupación medida.
-- [Generar al abrir aumenta consumo respecto del botón] → reutilización en memoria por cinco minutos, deduplicación, sin llamadas por foco/reconexión ni precarga de otras rutas; mantener los límites backend existentes.
+- [Generar al abrir aumenta consumo respecto del botón] → reutilización persistida por huella, deduplicación, sin llamadas por foco/reconexión ni precarga de otras rutas; mantener los límites backend existentes.
 - [Cuota cero o modelos inaccesibles en el proyecto] → prueba mínima serial y revisión de AI Studio antes de habilitar; se puede elegir otro de los dos candidatos sin cambiar código. No activar pago como solución implícita.
 - [Alucinaciones y prompt injection] → sin herramientas ni autoridad de negocio, esquema/fuentes validados, evaluación y revisión humana; sigue existiendo riesgo semántico.
 - [Recorte pierde acuerdos antiguos] → cobertura visible, fragmentos exactos y acceso al historial completo normal. No llamar «resumen de toda la negociación» si es parcial.
@@ -179,3 +179,12 @@ Logs: correlación actual, modelo, versión de prompt, duración, intentos, clas
 - [Cuotas](https://ai.google.dev/gemini-api/docs/rate-limits): consultar límites reales en AI Studio; no copiar cifras antiguas como garantía.
 - [Recuperación de fallos](https://ai.google.dev/gemini-api/docs/troubleshooting): backoff para errores reintentables.
 - [Salidas estructuradas](https://ai.google.dev/gemini-api/docs/structured-output): formato JSON; no demuestra veracidad semántica.
+
+## Ajuste de presentación — 31/10/2026
+
+Por pedido del usuario posterior a la implementación inicial, el panel conserva
+únicamente el aviso «Generado con IA. Revisá la información y sus fuentes.» y las
+cuatro secciones del resumen. Se retiran fechas, conteos, rangos, indicadores de
+cobertura y todos los desplegables de fuentes. Esta decisión reemplaza las
+indicaciones de presentación anteriores; el contrato, el contexto y la validación
+de referencias del backend se mantienen. Las pruebas de frontend se ajustan a esta vista.

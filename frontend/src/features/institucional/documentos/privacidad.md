@@ -52,7 +52,7 @@ Esto no incluye los datos de cuenta del propio usuario (su nombre, correo electr
 
 Vamos a conservar tus datos mientras mantengas tu cuenta activa o mientras sea necesario para cumplir con las finalidades descriptas en esta política. Si solicitás la baja de tu cuenta, vamos a eliminar o anonimizar tus datos, salvo que exista una obligación legal que exija conservarlos por un plazo mayor.
 
-El CRM cuenta con backend y base de datos. El resumen de IA es efímero: no se persiste en esa base; la información comercial original mantiene su historial.
+El CRM cuenta con backend y base de datos. El último resumen de IA y sus fuentes se guardan por oportunidad y organización. Se reutilizan mientras no cambie su contexto; la información comercial original mantiene su historial.
 
 ## 7. Cookies y tecnologías similares
 
@@ -74,7 +74,8 @@ Si en algún momento fuera necesaria una transferencia internacional de datos, l
 
 La función de resumen está apagada por defecto. Si se habilita para la demostración
 con datos ficticios, abrir el detalle de una oportunidad autorizada solicita
-automáticamente una síntesis a Gemini API de Google. Se envían los datos comerciales
+automáticamente una síntesis, reutilizando la guardada si su contexto sigue vigente.
+Si falta o cambió el contexto, se genera con Gemini API de Google. Se envían los datos comerciales
 seleccionados de la oportunidad, sus observaciones y fragmentos acotados de actividades
 y cambios de etapa. Se omiten los campos de identificación fiscal, documentos,
 email, teléfono, domicilio y credenciales. Los textos libres pueden contener nombres
@@ -84,9 +85,10 @@ En el nivel gratuito, Google puede utilizar las entradas y respuestas para mejor
 sus productos y permitir su revisión humana, según sus
 [términos de Gemini API](https://ai.google.dev/gemini-api/terms).
 La demostración de esta función debe utilizar exclusivamente datos ficticios,
-sin información personal, confidencial o sensible. El resumen no se guarda en la
-base de datos del CRM; se reutiliza hasta cinco minutos en la memoria de la sesión
-y se descarta al cambiar de cuenta. La información comercial original conserva
+sin información personal, confidencial o sensible. El último resumen se guarda con sus fuentes y fechas en la
+base de datos del CRM y se reemplaza tras una generación válida por cambios de contexto.
+Su consulta respeta los permisos de la oportunidad y el aislamiento entre organizaciones.
+La caché del navegador se descarta al cambiar de cuenta. La información comercial original conserva
 sus reglas de acceso y conservación.
 
 ## 10. Tus derechos: acceso, rectificación, actualización y supresión

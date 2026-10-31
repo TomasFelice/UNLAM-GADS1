@@ -18,21 +18,21 @@ El sistema SHALL solicitar automáticamente el resumen al abrir el detalle de un
 - **WHEN** se consulta un listado, tablero u otra ruta, o el detalle resulta inválido o no autorizado
 - **THEN** no se solicita generar el resumen de esa oportunidad
 
-### Requirement: Reutilización temporal sin generaciones duplicadas
+### Requirement: Reutilización persistida sin generaciones duplicadas
 
-El sistema SHALL reutilizar un resumen exitoso por hasta cinco minutos en memoria, sólo para la misma sesión y oportunidad, tras confirmar acceso y versión actual. SHALL deduplicar solicitudes equivalentes en curso y no regenerar por rerender, foco, reconexión ni temporizadores. Una entrada sin resultado reutilizable SHALL iniciar una generación. La caché SHALL eliminarse al cambiar de sesión.
+El sistema SHALL persistir el último resumen exitoso por tenant y oportunidad con su huella de contexto y versión de prompt. SHALL autorizar y consultar vigencia al volver al detalle, incluso tras recarga o reinicio. SHALL reutilizar el resultado sin TTL mientras coincidan huella y prompt; sólo generará si falta o cambió alguno de ellos. SHALL deduplicar solicitudes en curso y no consultar por foco, reconexión ni temporizadores. La caché del navegador SHALL eliminarse al cambiar de sesión.
 
 #### Scenario: Remontaje y retorno rápido
-- **WHEN** se remonta el panel o se vuelve al mismo detalle con un resumen de menos de cinco minutos, acceso vigente y sin invalidaciones conocidas
+- **WHEN** se remonta el panel o se vuelve al mismo detalle con un resumen persistido, acceso vigente y contexto sin cambios
 - **THEN** se comparte la solicitud pendiente o se reutiliza el resumen, sin otra llamada a Gemini
 
-#### Scenario: Resumen vencido o recarga completa
-- **WHEN** se entra al detalle sin resumen en memoria o con uno de cinco minutos o más
+#### Scenario: Resumen ausente o contexto actualizado
+- **WHEN** se entra al detalle sin resumen persistido o con un contexto diferente al guardado
 - **THEN** se solicita automáticamente una generación nueva y no se presenta el anterior como actualizado
 
 #### Scenario: Foco y reconexión
 - **WHEN** se vuelve a enfocar la ventana, se reconecta la red o transcurren cinco minutos con el detalle montado
-- **THEN** no se dispara otra generación por esos eventos; se conserva visible la fecha del contexto mostrado
+- **THEN** no se dispara otra generación por esos eventos; se conserva el resultado sin consumir proveedor
 
 ### Requirement: Alcance comercial y aislamiento
 
@@ -62,13 +62,13 @@ El sistema SHALL analizar datos actuales de la oportunidad, sus observaciones, s
 - **WHEN** varias actividades comparten fecha o el historial excede los límites configurados
 - **THEN** se aplica un desempate estable por ID, se analiza sólo el subconjunto permitido y no se descarga todo el historial para recortarlo después
 
-### Requirement: Cobertura visible y ausencia de datos
+### Requirement: Cobertura en la API y ausencia de datos
 
-El resultado SHALL indicar fecha de generación, instante del contexto, cantidades analizadas y totales disponibles de actividades y etapas, rango temporal y recortes de texto o registros. La interfaz SHALL decir «No consta en la información analizada» cuando corresponda y SHALL evitar presentar una cobertura parcial como revisión completa.
+El resultado SHALL indicar fecha de generación, instante del contexto, cantidades analizadas y totales disponibles de actividades y etapas, rango temporal y recortes de texto o registros. La interfaz SHALL decir «No consta en la información analizada» cuando corresponda y SHALL evitar afirmar que se revisó toda la historia. Los metadatos de cobertura y fechas se conservan en la API, sin mostrarse en el panel.
 
 #### Scenario: Historial recortado
 - **WHEN** sólo se analizan las actividades más recientes o un texto se recorta
-- **THEN** la cobertura lo informa y permite revisar exactamente los fragmentos utilizados
+- **THEN** la respuesta de la API informa la cobertura y conserva exactamente los fragmentos utilizados
 
 #### Scenario: Sin actividades
 - **WHEN** la oportunidad no tiene actividades registradas
@@ -88,11 +88,11 @@ El resumen SHALL organizarse en necesidad del cliente, situación actual, acuerd
 
 ### Requirement: Fuentes verificables y respuesta validada
 
-Cada afirmación del modelo SHALL referenciar fuentes del contexto enviado. El backend SHALL validar esquema, límites y pertenencia de referencias, y completar las fuentes desde sus propios datos autorizados. La interfaz SHALL permitir desplegar esas fuentes sin depender de la página actual del historial y SHALL renderizar el contenido como texto.
+Cada afirmación del modelo SHALL referenciar fuentes del contexto enviado. El backend SHALL validar esquema, límites y pertenencia de referencias, y completar las fuentes desde sus propios datos autorizados. La interfaz SHALL mostrar únicamente el aviso «Generado con IA. Revisá la información y sus fuentes.» y las cuatro secciones del resumen, sin fechas, cobertura, rangos ni desplegables de fuentes (ajuste solicitado el 31/10/2026). SHALL renderizar el contenido como texto.
 
 #### Scenario: Fuente fuera de la página visible
 - **WHEN** una afirmación usa una actividad que no está en la página actual del historial
-- **THEN** el usuario puede desplegar su descripción, resultado y fechas enviados al modelo sin buscar páginas manualmente
+- **THEN** la API conserva su descripción, resultado y fechas enviados al modelo, y el panel muestra la afirmación sin desplegables de fuentes
 
 #### Scenario: Referencias inexistentes o formato inválido
 - **WHEN** el modelo devuelve JSON inválido, campos inesperados, referencias no enviadas o límites excedidos
@@ -148,7 +148,7 @@ El sistema SHALL limitar las llamadas salientes y las generaciones simultáneas 
 
 ### Requirement: Frescura y sesión del resultado
 
-El sistema SHALL descartar con `409 AI_CONTEXT_CHANGED` un resultado cuyo contexto cambió durante la generación. El resumen SHALL ser efímero e invalidarse ante cambios comerciales conocidos y cambios de sesión. Una mutación local confirmada SHALL iniciar una actualización automática si el detalle sigue activo. Navegar SHALL ocultar el resumen sin impedir su reutilización temporal para la oportunidad de origen. No SHALL mostrarse una respuesta tardía de otro contexto o usuario.
+El sistema SHALL descartar con `409 AI_CONTEXT_CHANGED` un resultado cuyo contexto cambió durante la generación. El resumen SHALL persistirse y reemplazarse sólo tras una generación válida para el contexto actualizado. Un fallo SHALL conservar el último éxito sin entregarlo como vigente. Cambiar de sesión SHALL vaciar la caché del navegador y revalidar acceso antes de consultar la persistencia. Una mutación local confirmada SHALL iniciar una actualización automática si el detalle sigue activo. Navegar SHALL ocultar el resumen sin impedir su reutilización persistida para la oportunidad de origen. No SHALL mostrarse una respuesta tardía de otro contexto o usuario.
 
 #### Scenario: Actividad nueva durante la generación
 - **WHEN** se registra una actividad mientras se está generando el resumen

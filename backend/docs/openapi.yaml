@@ -4,7 +4,7 @@ info:
   description: API del CRM de salones de eventos corporativos — UNLaM GADS1.
   version: v1
 servers:
-- url: http://localhost:56214
+- url: http://localhost:51856
   description: Generated server url
 security:
 - bearerAuth: []
@@ -1908,9 +1908,10 @@ paths:
     post:
       tags:
       - Asistencia comercial
-      summary: Generar resumen comercial efímero
-      description: "Sin body ni parámetros. Contexto autorizado, hasta 50 actividades\
-        \ y 50 transiciones, cobertura y fuentes. No escribe negocio."
+      summary: Consultar o generar resumen comercial persistido
+      description: "Sin body ni parámetros. Reutiliza el último resumen si la huella\
+        \ del contexto autorizado no cambió; de lo contrario genera y guarda uno nuevo.\
+        \ Hasta 50 actividades y 50 transiciones, cobertura y fuentes."
       operationId: generate
       parameters:
       - name: id

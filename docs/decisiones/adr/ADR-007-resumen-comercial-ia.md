@@ -1,6 +1,6 @@
 # ADR-007 — Resumen comercial efímero con Gemini
 
-- Estado: Aceptada
+- Estado: Aceptada; persistencia revisada por [ADR-008](ADR-008-persistencia-resumen-comercial.md)
 - Fecha: 31/10/2026
 - Alcance: DP-12 y cambio `incorporar-resumen-comercial-ia`.
 

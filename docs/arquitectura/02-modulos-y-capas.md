@@ -13,7 +13,7 @@ El backend se divide por capacidades de negocio:
 | `catalogs` | Catálogos configurables | `Stage`, `ActivityType`, `Origin`, `LossReason` |
 | `opportunities` | Embudo, asignación, cierres, reserva e historial | `Opportunity`, `StageHistory` |
 | `activities` | Interacciones e historial comercial | `Activity` |
-| `assistance` | Resumen comercial autorizado, efímero y acotado; REST Gemini | Sin persistencia |
+| `assistance` | Resumen comercial autorizado y acotado; REST Gemini | Último resumen por tenant/oportunidad (ADR-008) |
 
 `opportunities` coordina referencias a clientes, salones, catálogos y usuarios, pero no debe manipular sus repositorios internos. Cada módulo expone operaciones a los demás **únicamente a través de su paquete `service`** ([ADR-001](../decisiones/adr/ADR-001-estructura-de-paquetes.md)).
 
@@ -106,7 +106,7 @@ backend/src/main/java/com/ztech/crm/
 ├── catalogs/       # ABM ADMIN de catálogos, embudos y etapas; lecturas comerciales
 ├── opportunities/  # implementado (Fase 3-5, incluido alcance comercial)
 ├── activities/     # registro append-only e históricos paginados — OpenSpec §9
-└── assistance/     # resumen efímero desde servicios de lectura; ADR-007
+└── assistance/     # resumen persistido desde servicios de lectura; ADR-007/008
 ```
 
 Estado actualizado de oferta/catálogos/embudos al 09/10; detalle fase por fase en
@@ -157,6 +157,6 @@ El conteo vigente y el detalle de cada corte se mantienen en
 
 [ADR-007](../decisiones/adr/ADR-007-resumen-comercial-ia.md) incorpora el coordinador
 `assistance → {activities, opportunities}`, sin dependencias inversas. REST JDK,
-resumen efímero y configuración apagada por defecto. Implementación y validaciones
+persistencia del último resumen según ADR-008 y configuración apagada por defecto. Implementación y validaciones
 se siguen en [las tareas del cambio](../../openspec/changes/incorporar-resumen-comercial-ia/tasks.md);
 no implica despliegue ni validación real de Gemini.

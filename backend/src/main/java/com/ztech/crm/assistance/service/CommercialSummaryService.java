@@ -16,9 +16,11 @@ public class CommercialSummaryService {
     private final SummaryResultValidator validator;
     private final SummaryAdmission admission;
     private final SummaryTime time;
+    private final SummaryStore store;
     public CommercialSummaryService(SummarySnapshotReader snapshots,SummarySettings settings,SummaryGenerator generator,
-            SummaryResultValidator validator,SummaryAdmission admission,SummaryTime time) {
+            SummaryResultValidator validator,SummaryAdmission admission,SummaryTime time,SummaryStore store) {
         this.snapshots=snapshots;this.settings=settings;this.generator=generator;this.validator=validator;this.admission=admission;this.time=time;
+        this.store=store;
     }
     @PreAuthorize("hasAnyRole('ADMIN', 'SALES_MANAGER', 'SELLER')")
     public CommercialSummaryResponse generate(Long id) {
@@ -28,6 +30,8 @@ public class CommercialSummaryService {
             LoggerFactory.getLogger(CommercialSummaryService.class).warn("AI summary configuration unavailable; code=AI_NOT_CONFIGURED");
             throw new SummaryFailure(HttpStatus.SERVICE_UNAVAILABLE,"AI_NOT_CONFIGURED","El resumen con IA no está habilitado.");
         }
+        var saved=store.find(snapshot);
+        if(saved.isPresent())return saved.get();
         int attempts=0;String model=settings.model();String outcome="SUCCESS";
         Long inputTokens=null,outputTokens=null;
         try(var permit=admission.acquire()) {
@@ -43,8 +47,10 @@ public class CommercialSummaryService {
                     var current=snapshots.read(id); // Otra transacción breve; nunca durante la red.
                     if(time.nanos()>=deadline)throw SummaryFailure.timeout();
                     if(!snapshot.fingerprint().equals(current.fingerprint()))throw new SummaryFailure(HttpStatus.CONFLICT,"AI_CONTEXT_CHANGED","La oportunidad cambió. Reintentá el resumen.");
-                    return new CommercialSummaryResponse(id,time.now(),snapshot.contextAsOf(),snapshot.version(),
+                    var response=new CommercialSummaryResponse(id,time.now(),snapshot.contextAsOf(),snapshot.version(),
                             snapshot.coverage(),sections,snapshot.sources());
+                    store.save(snapshot,response);
+                    return response;
                 }catch(ProviderFailure failure) {
                     boolean retry=switch(failure.kind()){case TRANSIENT,TEMPORARY_RATE,TIMEOUT->true;default->false;};
                     if(!retry||attempts>=settings.maxAttempts())throw translate(failure);

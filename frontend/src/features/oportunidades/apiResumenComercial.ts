@@ -19,7 +19,7 @@ export function useResumenComercial(id: number, version: number, autorizado: boo
   const consulta = useQuery({
     queryKey: ["resumen-comercial", id, sesion, usuario, version, revision],
     enabled: autorizado && !!usuario && !estadoRevision.validando,
-    staleTime: DURACION, gcTime: DURACION, retry: false, retryOnMount: false,
+    staleTime: 0, gcTime: DURACION, retry: false, retryOnMount: false,
     refetchOnWindowFocus: false, refetchOnReconnect: false, refetchInterval: false,
     queryFn: async () => {
       let cola = trabajos.get(cache);

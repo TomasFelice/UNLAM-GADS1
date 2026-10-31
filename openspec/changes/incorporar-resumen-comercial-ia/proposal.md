@@ -13,8 +13,8 @@ El usuario eligió incorporar esta función y usar exclusivamente Gemini API gra
 - Incorporar un endpoint backend que obtiene contexto autorizado, invoca Gemini y valida la estructura y las referencias antes de entregar el resultado. No acepta contexto, tenant, instrucciones ni modelo desde el cliente.
 - Usar inicialmente `gemini-3.1-flash-lite`; alternativa configurable `gemini-3.5-flash-lite`, condicionada a disponibilidad y cuotas reales del proyecto. Excluir Flash 3.8, aliases `latest`, versiones preview y servicios pagos.
 - Contener fallos con plazo total, reintentos acotados, límites locales y estados recuperables; el CRM sigue funcionando cuando la IA no responde. No se promete menor carga ni disponibilidad por popularidad del modelo.
-- Reutilizar durante cinco minutos el resultado en memoria de la misma sesión y oportunidad, deduplicar solicitudes en curso e invalidar ante cambios comerciales. No generar por foco, reconexión o rerender; ante un fallo ofrecer «Reintentar» sin bucles automáticos.
-- Mantener el resumen efímero, sin escribir actividades, etapas ni propuestas. No requiere migración ni entrenamiento, búsqueda web, base vectorial o agente con herramientas.
+- Persistir y reutilizar el último resultado por tenant/oportunidad mientras coincidan la huella del contexto y versión de prompt, deduplicar solicitudes en curso e invalidar ante cambios comerciales. No generar por foco, reconexión o rerender; ante un fallo ofrecer «Reintentar» sin bucles automáticos.
+- Guardar el resumen mediante V6 (ADR-008), sin escribir actividades, etapas ni propuestas. No requiere entrenamiento, búsqueda web, base vectorial o agente con herramientas.
 - Documentar configuración, tratamiento de datos del nivel gratuito, pruebas reproducibles y límites de disponibilidad. La credencial compartida en la conversación no se reutiliza ni se copia; se requiere una nueva para la prueba manual.
 
 ## Capabilities

@@ -522,3 +522,10 @@ El usuario autorizó el cambio [incorporar-resumen-comercial-ia](../../openspec/
 Implementa resumen efímero con fuentes y Gemini Free Tier, apagado por defecto;
 la evidencia actual y las verificaciones reales pendientes se registran en ese cambio.
 No implica publicación ni cierre de la demostración comercial remota pendiente.
+
+## Revisión del resumen IA — 31/10/2026
+
+Persistencia del último resumen por tenant/oportunidad mediante V6, según
+[ADR-008](../decisiones/adr/ADR-008-persistencia-resumen-comercial.md).
+Reutilización por huella del contexto y versión de prompt, con autorización previa.
+Ver comportamiento vigente en [guía IA](../../backend/docs/resumen-comercial-ia.md).

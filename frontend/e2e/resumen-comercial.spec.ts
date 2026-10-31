@@ -3,7 +3,7 @@ import { elegirSelector } from "./ayudas/selectores.js";
 
 const API = "http://localhost:18080/api/v1";
 
-test("resumen automático, fuentes, retorno sin duplicados y actividad con tres roles", async ({ page, request }) => {
+test("resumen automático sin metadatos ni fuentes, retorno sin duplicados y actividad con tres roles", async ({ page, request }) => {
   test.setTimeout(180000);
   const acceso = async (rol: string) => (await request.post(`${API}/auth/login`, { data: { email: `${rol}.baseline.a@fixtures.invalid`, password: "FixtureTemporal123!" } })).json();
   const admin = await acceso("admin"); const vendedor = await acceso("seller");
@@ -30,9 +30,14 @@ test("resumen automático, fuentes, retorno sin duplicados y actividad con tres 
     const resumen = page.getByRole("region", { name: "Resumen comercial", exact: true });
     await expect(resumen.getByText("Síntesis ficticia de los hechos registrados")).toBeVisible();
     const llamadas = async () => (await (await request.get("http://localhost:18080/__tests/summary")).json()).calls;
-    expect(await llamadas()).toBe(1);
-    const fuente = resumen.locator("summary").first(); await fuente.focus(); await page.keyboard.press("Enter");
-    await expect(fuente.locator("..")).toHaveAttribute("open", ""); await expect(fuente).toBeFocused();
+    const iniciales = rol === "admin" ? 1 : 0;
+    expect(await llamadas()).toBe(iniciales);
+    await page.reload();
+    await expect(resumen.getByText("Síntesis ficticia de los hechos registrados")).toBeVisible();
+    expect(await llamadas()).toBe(iniciales);
+    await expect(resumen.getByText("Generado con IA. Revisá la información y sus fuentes.")).toBeVisible();
+    await expect(resumen.locator("details, summary")).toHaveCount(0);
+    await expect(resumen.getByText(/Contexto al|Generado el|actividades y|Cambios:|Actividades:/)).toHaveCount(0);
     for (const width of [390, 1440]) for (const tema of ["claro", "oscuro"]) {
       await page.setViewportSize({ width, height: 900 }); await page.evaluate(t => document.documentElement.dataset.tema = t, tema);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -40,7 +45,7 @@ test("resumen automático, fuentes, retorno sin duplicados y actividad con tres 
       if (rol === "seller" && tema === "claro") await resumen.screenshot({ path: `test-results/resumen-${width}.png` });
     }
     await page.getByRole("link", { name: "Oportunidades", exact: true }).first().click(); await expect(page).toHaveURL(/\/app\/oportunidades$/);
-    await page.goBack(); await expect(resumen.getByText("Síntesis ficticia de los hechos registrados")).toBeVisible(); expect(await llamadas()).toBe(1);
+    await page.goBack(); await expect(resumen.getByText("Síntesis ficticia de los hechos registrados")).toBeVisible(); expect(await llamadas()).toBe(iniciales);
     const historial = page.getByRole("region", { name: "Historial comercial", exact: true });
     await historial.getByRole("button", { name: "Registrar actividad", exact: true }).click();
     const formulario = page.getByRole("form", { name: "Registrar actividad" });
@@ -50,10 +55,16 @@ test("resumen automático, fuentes, retorno sin duplicados y actividad con tres 
     await formulario.getByRole("textbox", { name: "Resultado" }).fill("Pantalla confirmada, sin precio acordado");
     await formulario.getByRole("button", { name: /Registrar|Guardar/ }).click();
     await expect(resumen.getByText("Síntesis ficticia de los hechos registrados")).toBeVisible();
-    await expect.poll(llamadas).toBe(2);
-    const actividad = resumen.locator("summary").filter({ hasText: "Actividad" }).first(); await actividad.click();
-    await expect(resumen.getByText("Pantalla confirmada, sin precio acordado").first()).toBeVisible();
+    await expect.poll(llamadas).toBe(iniciales + 1);
+    await expect(resumen.locator("details, summary")).toHaveCount(0);
   }
+  await page.goto("/privacidad");
+  await expect(page).toHaveTitle(/privacidad/i);
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /\S/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/privacidad$/);
+  await expect(page.getByText(/El último resumen se guarda con sus fuentes y fechas/)).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 900 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect(errores).toEqual([]);
 });
 
@@ -68,6 +79,8 @@ test("errores aislados, reintento manual, cuota, timeout y función apagada", as
   const resumen = page.getByRole("region", { name: "Resumen comercial", exact: true });
   for (const [modo, mensaje] of [["unavailable", "El servicio de resumen no está disponible"], ["quota", "La cuota del proveedor"],
     ["timeout", "El resumen tardó demasiado"], ["disabled", "El resumen con IA no está habilitado"]]) {
+    const actividad = await request.post(`${API}/activities`, { headers, data: { opportunityId: id, typeId: (await (await request.get(`${API}/activity-types?size=1`, { headers })).json()).content[0].id, occurredAt: "2026-01-01T12:00:00Z", description: `Contexto ${modo}`, result: "Hecho ficticio" } });
+    expect(actividad.status()).toBe(201);
     await request.post(`http://localhost:18080/__tests/summary?mode=${modo}`); await page.goto(`/app/oportunidades/${id}`);
     await expect(resumen.getByText(new RegExp(mensaje))).toBeVisible({ timeout: 25000 });
     await expect(page).toHaveURL(new RegExp(`/app/oportunidades/${id}$`));

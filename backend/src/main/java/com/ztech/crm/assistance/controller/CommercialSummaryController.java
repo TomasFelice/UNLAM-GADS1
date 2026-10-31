@@ -20,7 +20,7 @@ public class CommercialSummaryController {
     private final CommercialSummaryService service;
     public CommercialSummaryController(CommercialSummaryService service){this.service=service;}
     @PostMapping("/{id}/commercial-summary")
-    @Operation(summary="Generar resumen comercial efímero",description="Sin body ni parámetros. Contexto autorizado, hasta 50 actividades y 50 transiciones, cobertura y fuentes. No escribe negocio.")
+    @Operation(summary="Consultar o generar resumen comercial persistido",description="Sin body ni parámetros. Reutiliza el último resumen si la huella del contexto autorizado no cambió; de lo contrario genera y guarda uno nuevo. Hasta 50 actividades y 50 transiciones, cobertura y fuentes.")
     @ApiResponses({@ApiResponse(responseCode="200",description="Resumen con fuentes y cobertura"),
             @ApiResponse(responseCode="400",description="Entrada no admitida",content=@Content(schema=@Schema(implementation=org.springframework.http.ProblemDetail.class))),@ApiResponse(responseCode="404",description="Oportunidad no visible",content=@Content(schema=@Schema(implementation=org.springframework.http.ProblemDetail.class))),
             @ApiResponse(responseCode="409",description="AI_CONTEXT_CHANGED",content=@Content(schema=@Schema(implementation=org.springframework.http.ProblemDetail.class))),@ApiResponse(responseCode="422",description="AI_CONTENT_BLOCKED",content=@Content(schema=@Schema(implementation=org.springframework.http.ProblemDetail.class))),

@@ -493,8 +493,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Generar resumen comercial efímero
-         * @description Sin body ni parámetros. Contexto autorizado, hasta 50 actividades y 50 transiciones, cobertura y fuentes. No escribe negocio.
+         * Consultar o generar resumen comercial persistido
+         * @description Sin body ni parámetros. Reutiliza el último resumen si la huella del contexto autorizado no cambió; de lo contrario genera y guarda uno nuevo. Hasta 50 actividades y 50 transiciones, cobertura y fuentes.
          */
         post: operations["generate"];
         delete?: never;

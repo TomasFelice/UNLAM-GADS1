@@ -307,21 +307,24 @@ incluso tras renombrar el motivo. Disponibilidad previa orientativa; confirmar r
 ## Resumen comercial de oportunidad
 
 El detalle revalida acceso y versión antes de habilitar el resumen automático, con
-carga independiente. No hay botón inicial. TanStack comparte solicitudes bajo
-StrictMode y reutiliza un éxito hasta cinco minutos en memoria de la misma sesión
-y oportunidad. El TTL se evalúa al volver al detalle: no genera por foco, reconexión,
-rerender ni temporizador. Una recarga completa pierde esta caché.
+carga independiente. No hay botón inicial. TanStack comparte solicitudes en curso bajo
+StrictMode. Al volver al detalle o recargar consulta al backend, que reutiliza el
+resumen persistido si la huella del contexto no cambió (ADR-008, migración V6).
+No hay vencimiento temporal del resumen ni llamadas por foco, reconexión,
+rerender o temporizador. La caché del navegador sigue aislada por sesión.
 
 Registrar actividad, editar, reasignar, cambiar etapa, cerrar y reabrir invalidan el
 resultado y agrupan la revalidación. Sólo el detalle activo autorizado inicia una
 actualización, serializada después de una generación anterior. Una actividad puede
 invalidar aunque la versión de oportunidad no cambie. Los cambios remotos de
-actividades no se detectan instantáneamente; siempre se muestra la fecha de contexto.
+actividades no se detectan instantáneamente.
 
 Los fallos retenidos no se reintentan al montar. «Reintentar» respeta la espera
 recibida y bloquea doble solicitud. IA apagada no ofrece ese control. Las cuatro
-secciones muestran cobertura, rangos y fuentes desplegables con fragmentos exactos,
-sin depender de la página visible del historial. Todo se renderiza como texto.
+secciones muestran sólo el resumen y el aviso «Generado con IA. Revisá la información
+y sus fuentes.». Por decisión del 31/10/2026, no se muestran fechas, cobertura, rangos
+ni fuentes desplegables. El contrato conserva esos datos y el backend sigue validando
+las referencias. Todo se renderiza como texto.
 
 Los tipos proceden de OpenAPI. Configuración y clave sólo backend; ver la
 [guía de IA](../backend/docs/resumen-comercial-ia.md). El launcher E2E inyecta un

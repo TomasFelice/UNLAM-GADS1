@@ -55,7 +55,7 @@ backend/src/main/java/com/ztech/crm/
 ├── catalogs/         # Stage, ActivityType, Origin, LossReason
 ├── opportunities/    # Opportunity, StageHistory, reserva del salón
 ├── activities/       # Activity — alta append-only e históricos paginados
-└── assistance/       # resumen comercial efímero; ADR-007
+└── assistance/       # resumen comercial persistido; ADR-007/008
 ```
 
 Cada módulo de negocio tiene adentro:
@@ -209,7 +209,7 @@ nivel sistema y usado como credencial (DP-03, `docs/specs-backend/design.md` §3
 
 [ADR-007](../decisiones/adr/ADR-007-resumen-comercial-ia.md) incorpora el coordinador
 `assistance → {activities, opportunities}`, sin dependencias inversas. REST JDK,
-resumen efímero y configuración apagada por defecto. Implementación y validaciones
+resumen inicialmente efímero (revisado por ADR-008) y configuración apagada por defecto. Implementación y validaciones
 se siguen en [las tareas del cambio](../../openspec/changes/incorporar-resumen-comercial-ia/tasks.md);
 no implica despliegue ni validación real de Gemini.
 
@@ -226,3 +226,5 @@ IA del backend; fallback vacío, sin migraciones nuevas. Estado y evidencia en e
 [registro de despliegue](../despliegue-produccion-2026-10-31.md).
 El usuario se encarga de las pruebas funcionales en producción; no se completan por
 inferencia los pendientes de fidelidad, cuotas ni demostración comercial remota.
+
+Revisión del 31/10: a pedido del usuario, [ADR-008](../decisiones/adr/ADR-008-persistencia-resumen-comercial.md) reemplaza el carácter efímero por persistencia en V6 y reutilización por huella, sin vencimiento temporal. Este cambio local no implica despliegue.

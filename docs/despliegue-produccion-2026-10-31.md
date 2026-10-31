@@ -81,3 +81,24 @@ proveedor Gemini simulado; no acreditan disponibilidad real del proveedor.
 
 El commit posterior que versiona este registro sólo modifica documentación; el
 commit de aplicación verificado es el indicado arriba.
+
+## Ajuste posterior del panel de IA
+
+Se publicó el frontend local con el aviso solicitado y las cuatro secciones del
+resumen, sin fechas, conteos, rangos ni desplegables de fuentes. Despliegue directo
+mediante el conector Vercel, sin commit ni push de este ajuste: base Git `b6dca05`
+con modificaciones locales. La referencia Git del despliegue identifica la base,
+no un commit que contenga el ajuste.
+
+- Despliegue `dpl_BgaG7WmbVL3JyWZWMToHiJ4XCPak`, producción, `READY`.
+- Dominio asignado: <https://ztech-crm.benai.com.ar>; HTTP `200` comprobado.
+- Bundle servido: `index-CNcdDHTk.js`; detalle `PaginaOportunidadDetalle-C5mlxojW.js`.
+  Se comprobó el aviso conservado y la ausencia del marcado de desplegables y textos
+  de metadatos retirados. El bundle conserva la API de Render y no usa la URL E2E.
+- Validación local del ajuste: build correcto, 17 pruebas Vitest y dos E2E
+  específicos correctos. Una prueba de espera de reintento falló inicialmente y pasó
+  al repetir el archivo completo. Los E2E comprobaron tres roles, ambos temas,
+  390 px/escritorio, consola y SEO noindex, con API/PostgreSQL efímeros y proveedor simulado.
+- Sin cambios en Render, base de datos ni variables de entorno. No se inició sesión
+  ni se consumió Gemini en producción para esta verificación; no se acredita aquí
+  un recorrido funcional autenticado remoto.
